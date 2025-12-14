@@ -1,161 +1,106 @@
-<svg width="1100" height="950" viewBox="0 0 1100 950" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
-    <!-- Definitions for markers, filters, etc. -->
+<svg width="1200" height="1000" viewBox="0 0 1200 1000" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
     <defs>
-        <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <marker id="arrow-main" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
             <path d="M 0 0 L 10 5 L 0 10 z" fill="#555" />
         </marker>
-        <filter id="shadow" x="-0.2" y="-0.2" width="1.4" height="1.4">
-            <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur" />
-            <feOffset in="blur" dx="2" dy="2" result="offsetBlur" />
+        <filter id="shadow-main" x="-0.2" y="-0.2" width="1.4" height="1.4">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur" />
+            <feOffset in="blur" dx="3" dy="3" result="offsetBlur" />
             <feMerge>
                 <feMergeNode in="offsetBlur" />
                 <feMergeNode in="SourceGraphic" />
             </feMerge>
         </filter>
-        <!-- Component Styles -->
         <style>
-            .box { stroke-width: 1.5; filter: url(#shadow); }
+            .box { stroke-width: 2; filter: url(#shadow-main); }
             .user-layer { fill: #E3F2FD; stroke: #90CAF9; }
             .app-layer { fill: #FFF3E0; stroke: #FFB74D; }
             .agent-core { fill: #E8F5E9; stroke: #A5D6A7; }
             .middleware-layer { fill: #FCE4EC; stroke: #F48FB1; }
-            .backend-layer { fill: #EDE7F6; stroke: #B39DDB; }
-            .data-layer { fill: #E0F2F1; stroke: #80CBC4; }
+            .detailed-module { fill: #EDE7F6; stroke: #B39DDB; }
             .ext-service { fill: #FBE9E7; stroke: #FFAB91; }
 
-            .title { font-size: 16px; font-weight: bold; text-anchor: middle; }
-            .component-text { font-size: 13px; text-anchor: middle; dominant-baseline: central; }
-            .connector-text { font-size: 12px; fill: #444; }
-            .flow-line { stroke: #555; stroke-width: 2; marker-end: url(#arrow); }
-            .data-flow-line { stroke: #0288D1; stroke-width: 1.5; stroke-dasharray: 4 2; marker-end: url(#arrow); }
+            .title { font-size: 18px; font-weight: bold; text-anchor: middle; }
+            .component-text { font-size: 14px; text-anchor: middle; }
+            .connector-text { font-size: 13px; fill: #444; }
+            .ref-text { font-size: 12px; fill: #673AB7; font-style: italic; text-anchor: middle; }
+            .flow-line { stroke: #555; stroke-width: 2.5; marker-end: url(#arrow-main); }
+            .data-flow-line { stroke: #0288D1; stroke-width: 2; stroke-dasharray: 5 3; marker-end: url(#arrow-main); }
         </style>
     </defs>
 
-    <!-- Diagram Title -->
-    <text x="550" y="40" font-size="24" font-weight="bold" text-anchor="middle">Deep Agents CLI - 技术架构图</text>
+    <text x="600" y="50" font-size="28" font-weight="bold" text-anchor="middle">Deep Agents CLI - 高层技术架构图</text>
 
-    <!-- Components -->
-
-    <!-- User Interaction Layer -->
-    <g>
-        <rect x="450" y="80" width="200" height="60" rx="10" class="box user-layer" />
-        <text x="550" y="115" class="component-text">用户终端</text>
-        <text x="550" y="98" class="title">用户</text>
+    <!-- Layers -->
+    <g id="user-layer">
+        <rect x="500" y="100" width="200" height="70" rx="10" class="box user-layer" />
+        <text x="600" y="130" class="title">用户</text>
+        <text x="600" y="150" class="component-text">终端 (Terminal)</text>
     </g>
 
-    <!-- Application Layer -->
-    <g>
-        <rect x="250" y="180" width="600" height="150" rx="10" class="box app-layer" />
-        <text x="550" y="205" class="title">应用层 (deepagents-cli)</text>
-
-        <rect x="270" y="230" width="160" height="80" rx="5" class="box app-layer" style="fill: #FFE0B2;"/>
-        <text x="350" y="260" class="component-text">main.py<tspan x="350" dy="1.2em">(入口, 参数解析)</tspan></text>
-
-        <rect x="470" y="230" width="260" height="80" rx="5" class="box app-layer" style="fill: #FFE0B2;"/>
-        <text x="600" y="255" class="component-text">execution.py (执行循环)<tspan x="600" dy="1.2em">流式输出, UI (Rich),</tspan><tspan x="600" dy="1.2em">人机回路审批</tspan></text>
-
-        <rect x="750" y="230" width="180" height="80" rx="5" class="box app-layer" style="fill: #FFE0B2;"/>
-        <text x="840" y="260" class="component-text">commands.py<tspan x="840" dy="1.2em">(斜杠命令)</tspan></text>
+    <g id="app-layer">
+        <rect x="300" y="220" width="600" height="120" rx="10" class="box app-layer" />
+        <text x="600" y="250" class="title">应用层 (Application)</text>
+        <text x="600" y="280" class="component-text">`deepagents-cli` 入口, 命令解析, UI渲染 (Rich)</text>
+        <text x="600" y="305" class="component-text" font-family="monospace">main.py, execution.py</text>
     </g>
 
-    <!-- Agent Core Layer -->
-     <g>
-        <rect x="250" y="370" width="600" height="250" rx="10" class="box agent-core" />
-        <text x="550" y="395" class="title">智能体核心</text>
+    <g id="agent-core-layer">
+        <rect x="300" y="390" width="600" height="220" rx="10" class="box agent-core" />
+        <text x="600" y="420" class="title">智能体核心 (Agent Core)</text>
+        <text x="600" y="450" class="component-text">基于 LangGraph 的可中断状态机 (Pregel)</text>
+        <text x="600" y="475" class="component-text" font-family="monospace">agent.py</text>
 
-        <rect x="450" y="420" width="200" height="80" rx="5" class="box agent-core" style="fill: #C8E6C9;"/>
-        <text x="550" y="450" class="component-text">agent.py<tspan x="550" dy="1.2em">(智能体创建)</tspan><tspan x="550" dy="1.2em">LangGraph Pregel</tspan></text>
-
-        <!-- Middleware -->
-        <rect x="270" y="520" width="560" height="80" rx="5" class="box middleware-layer"/>
-        <text x="550" y="540" class="component-text" style="font-weight:bold;">中间件栈</text>
-        <text x="345" y="570" class="component-text">AgentMemory</text>
-        <text x="475" y="570" class="component-text">SkillsMiddleware</text>
-        <text x="615" y="570" class="component-text">ShellMiddleware</text>
-        <line x1="410" y1="550" x2="410" y2="590" stroke="#F48FB1" stroke-width="1"/>
-        <line x1="540" y1="550" x2="540" y2="590" stroke="#F48FB1" stroke-width="1"/>
+        <rect x="325" y="500" width="550" height="90" rx="5" class="box middleware-layer"/>
+        <text x="600" y="530" class="title" font-size="16">中间件栈 (Middleware Stack)</text>
+        <text x="600" y="560" class="component-text">通过 `wrap_` 方法为 Agent 添加可组合的能力</text>
+        <text x="600" y="580" class="ref-text">(详见: module-architecture-middleware.svg)</text>
     </g>
 
+    <g id="detailed-modules-layer">
+        <rect x="50" y="660" width="500" height="250" rx="10" class="box detailed-module" />
+        <text x="300" y="700" class="title">后端与工具 (Backend &amp; Tools)</text>
+        <text x="300" y="740" class="component-text">提供与外部世界交互的执行层</text>
+        <text x="300" y="770" class="component-text">(文件系统, 沙箱, API)</text>
+        <text x="300" y="810" class="ref-text">详见:</text>
+        <text x="300" y="830" class="ref-text" font-weight="bold">backend_and_tools_architecture.svg</text>
 
-    <!-- Backend Layer -->
-    <g>
-        <rect x="50" y="660" width="600" height="150" rx="10" class="box backend-layer" />
-        <text x="350" y="685" class="title">后端与工具</text>
-
-        <rect x="70" y="710" width="180" height="80" rx="5" class="box backend-layer" style="fill: #D1C4E9;"/>
-        <text x="160" y="740" class="component-text">CompositeBackend<tspan x="160" dy="1.2em">(路由器)</tspan></text>
-
-        <rect x="270" y="710" width="160" height="40" rx="5" class="box backend-layer" style="fill: #D1C4E9;"/>
-        <text x="350" y="730" class="component-text">FilesystemBackend</text>
-
-        <rect x="270" y="760" width="160" height="40" rx="5" class="box backend-layer" style="fill: #D1C4E9;"/>
-        <text x="350" y="780" class="component-text">SandboxBackend</text>
-
-        <rect x="450" y="710" width="180" height="80" rx="5" class="box backend-layer" style="fill: #D1C4E9;"/>
-        <text x="540" y="735" class="component-text">工具<tspan x="540" dy="1.2em">read/write_file, shell,</tspan><tspan x="540" dy="1.2em">web_search, fetch_url</tspan></text>
-
+        <rect x="650" y="660" width="500" height="250" rx="10" class="box detailed-module" style="fill: #E0F2F1; stroke: #80CBC4;" />
+        <text x="900" y="700" class="title">数据与状态 (Data &amp; State)</text>
+        <text x="900" y="740" class="component-text">定义 Agent 的记忆和工作区</text>
+        <text x="900" y="770" class="component-text">(消息历史, 文件缓存, 技能元数据)</text>
+        <text x="900" y="810" class="ref-text">详见:</text>
+        <text x="900" y="830" class="ref-text" font-weight="bold">data_and_state_architecture.svg</text>
     </g>
 
-    <!-- External Services -->
-    <g>
-        <rect x="450" y="840" width="180" height="60" rx="10" class="box ext-service"/>
-        <text x="540" y="870" class="component-text">外部服务 (Tavily)</text>
-    </g>
-
-    <!-- Data/State Layer -->
-    <g>
-        <rect x="680" y="660" width="370" height="240" rx="10" class="box data-layer" />
-        <text x="865" y="685" class="title">数据与状态</text>
-
-        <rect x="700" y="710" width="330" height="80" rx="5" class="box data-layer" style="fill: #B2DFDB;"/>
-        <text x="865" y="735" class="component-text">~/.deepagents/&lt;agent&gt;/<tspan x="865" dy="1.2em">(全局配置)</tspan></text>
-        <text x="775" y="765" class="component-text">agent.md (用户记忆)</text>
-        <text x="945" y="765" class="component-text">skills/</text>
-
-        <rect x="700" y="800" width="330" height="80" rx="5" class="box data-layer" style="fill: #B2DFDB;"/>
-        <text x="865" y="825" class="component-text">&lt;project&gt;/.deepagents/<tspan x="865" dy="1.2em">(项目配置)</tspan></text>
-        <text x="775" y="855" class="component-text">agent.md (项目记忆)</text>
-        <text x="945" y="855" class="component-text">skills/</text>
+    <g id="external-services-layer">
+        <rect x="900" y="390" width="250" height="220" rx="10" class="box ext-service" />
+        <text x="1025" y="485" class="title">外部服务</text>
+        <text x="1025" y="515" class="component-text">LLM (Claude, GPT)</text>
+        <text x="1025" y="540" class="component-text">Tavily (搜索)</text>
     </g>
 
     <!-- Connectors -->
-    <!-- User -> App -->
-    <path d="M 550 140 V 180" class="flow-line" />
-    <text x="560" y="165" class="connector-text">执行命令</text>
+    <path d="M 600 170 V 220" class="flow-line" />
+    <text x="610" y="200" class="connector-text">执行 CLI 命令</text>
 
-    <!-- App -> Agent Core -->
-    <path d="M 550 330 V 370" class="flow-line" />
-     <text x="560" y="355" class="connector-text">execute_task</text>
+    <path d="M 600 340 V 390" class="flow-line" />
+    <text x="610" y="370" class="connector-text">创建并运行 Agent</text>
 
-    <!-- Agent Core -> Backend -->
-    <path d="M 550 620 V 660 H 350" class="flow-line" />
-    <text x="450" y="645" class="connector-text">工具调用</text>
+    <path d="M 600 610 V 660" class="flow-line" />
+    <text x="500" y="640" class="connector-text">工具调用 (委派)</text>
+    <path d="M 450 660 H 600" class="flow-line" />
+    <text x="500" y="880" class="connector-text">工具结果 (返回)</text>
+    <path d="M 450 910 H 600 V 610" class="flow-line" />
 
-    <!-- Middleware -> Data -->
-    <path d="M 720 620 V 660" class="data-flow-line" />
-    <text x="730" y="645" class="connector-text" fill="#0288D1">加载记忆/技能</text>
+    <path d="M 750 610 V 660" class="data-flow-line" />
+    <text x="760" y="640" class="connector-text" fill="#0288D1">读/写状态</text>
 
-    <!-- Backend -> Agent Core (Result) -->
-    <path d="M 350 810 V 850 H 650 V 620" class="flow-line" />
-    <text x="360" y="835" class="connector-text">工具结果</text>
+    <path d="M 900 485 H 850" class="data-flow-line" />
+    <path d="M 850 515 H 900" class="data-flow-line" />
+    <text x="790" y="505" class="connector-text" fill="#0288D1">模型请求/响应</text>
 
-    <!-- Tools -> External -->
-    <path d="M 540 790 V 840" class="flow-line" />
+    <path d="M 300 910 V 950 H 1025 V 610" class="data-flow-line" />
+    <text x="600" y="935" class="connector-text" fill="#0288D1">某些后端直接访问外部服务</text>
 
-    <!-- Agent Core -> App (Streaming Response) -->
-    <path d="M 450 370 V 330" class="flow-line" />
-    <text x="340" y="355" class="connector-text">流式输出/人机回路</text>
-
-    <!-- App -> User (UI) -->
-    <path d="M 450 180 V 140" class="flow-line" />
-    <text x="380" y="165" class="connector-text">UI 渲染</text>
-
-    <!-- Agent Core -> LLM (Implicit) -->
-    <g>
-        <rect x="900" y="420" width="150" height="80" rx="10" class="box ext-service"/>
-        <text x="975" y="460" class="component-text">LLM (例如 Claude)</text>
-    </g>
-    <path d="M 650 460 H 900" class="data-flow-line" />
-    <text x="750" y="455" class="connector-text" fill="#0288D1">模型请求/响应</text>
-    <path d="M 900 480 H 650" class="data-flow-line" />
 </svg>
