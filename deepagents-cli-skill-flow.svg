@@ -1,0 +1,109 @@
+<svg width="900" height="1100" viewBox="0 0 900 1100" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+    <defs>
+        <marker id="arrow-flow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#444" />
+        </marker>
+        <style>
+            .flow-box { filter: url(#shadow); }
+            .start-end { fill: #FFCDD2; stroke: #E57373; rx: 30; }
+            .process { fill: #BBDEFB; stroke: #64B5F6; }
+            .decision { fill: #C8E6C9; stroke: #81C78E; }
+            .data { fill: #FFF9C4; stroke: #FFF176; }
+            .io { fill: #E1BEE7; stroke: #BA68C8; }
+
+            .text-main { text-anchor: middle; font-size: 14px; }
+            .text-small { text-anchor: middle; font-size: 12px; font-style: italic;}
+
+            .flow-line { stroke: #444; stroke-width: 2; marker-end: url(#arrow-flow); }
+            .line-label { font-size: 13px; fill: #333; }
+        </style>
+        <filter id="shadow">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
+            <feOffset dx="2" dy="2" />
+            <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+    </defs>
+
+    <text x="450" y="40" font-size="22" font-weight="bold" text-anchor="middle">Deep Agents CLI - 기술 선택 흐름</text>
+    <text x="450" y="65" font-size="16" text-anchor="middle">(점진적 공개 메커니즘)</text>
+
+    <!-- Start -->
+    <rect x="350" y="100" width="200" height="60" class="flow-box start-end" />
+    <text x="450" y="135" class="text-main">CLI 세션 시작</text>
+    <path d="M 450 160 V 200" class="flow-line" />
+
+    <!-- 1. Scan Skills -->
+    <rect x="300" y="200" width="300" height="80" class="flow-box process" />
+    <text x="450" y="230" class="text-main">1. SkillsMiddleware.before_agent()</text>
+    <text x="450" y="250" class="text-small">~/.deepagents 및 ./.deepagents/skills 스캔</text>
+    <path d="M 450 280 V 320" class="flow-line" />
+
+    <!-- 2. Parse Metadata -->
+    <rect x="300" y="320" width="300" height="80" class="flow-box process" />
+    <text x="450" y="350" class="text-main">2. SKILL.md 파일에서 메타데이터 파싱</text>
+    <text x="450" y="370" class="text-small">YAML frontmatter (이름, 설명)</text>
+    <path d="M 450 400 V 440" class="flow-line" />
+
+    <!-- 3. Inject into Prompt -->
+    <g>
+        <path d="M 300 440 L 600 440 L 600 560 L 300 560 Z" class="flow-box data" />
+        <text x="450" y="470" font-weight="bold" class="text-main">3. 시스템 프롬프트에 주입</text>
+        <text x="450" y="500" font-family="monospace" font-size="12px" text-anchor="middle">
+            <tspan x="450" dy="0">사용 가능한 기술:</tspan>
+            <tspan x="450" dy="1.4em">- web-research: 웹 리서치 수행...</tspan>
+            <tspan x="450" dy="1.2em">  → `{path}/SKILL.md` 읽기</tspan>
+        </text>
+    </g>
+    <path d="M 450 560 V 600" class="flow-line" />
+
+    <!-- 4. User Request -->
+    <g>
+        <path d="M 325 600 L 575 600 L 600 640 L 575 680 L 325 680 L 300 640 Z" class="flow-box io"/>
+        <text x="450" y="645" class="text-main">4. 사용자 요청 수신</text>
+    </g>
+    <path d="M 450 680 V 720" class="flow-line" />
+
+    <!-- 5. Agent Decision -->
+    <path d="M 450 720 L 575 780 L 450 840 L 325 780 Z" class="flow-box decision" />
+    <text x="450" y="775" class="text-main">5. 기술이 작업과</text>
+    <text x="450" y="795" class="text-main">일치하는가?</text>
+
+    <!-- No Branch -->
+    <path d="M 325 780 H 150 V 900" class="flow-line" />
+    <text x="240" y="775" class="line-label">아니요</text>
+    <rect x="50" y="900" width="200" height="60" class="flow-box process" />
+    <text x="150" y="935" class="text-main">일반 도구/지식 사용</text>
+    <path d="M 150 960 V 1020 H 350" class="flow-line" />
+
+    <!-- Yes Branch -->
+    <path d="M 575 780 H 750 V 860" class="flow-line" />
+    <text x="665" y="775" class="line-label">예</text>
+
+    <!-- 6. Read SKILL.md -->
+    <rect x="600" y="860" width="300" height="80" class="flow-box io" />
+    <text x="750" y="890" class="text-main">6. `read_file`로 SKILL.md 읽기</text>
+    <text x="750" y="910" class="text-small">전체 지침 및 워크플로우 로드</text>
+
+    <path d="M 750 940 H 150 V 900" class="flow-line" style="marker-end: none;" />
+     <path d="M 150 900 H 450 V 840" class="flow-line" />
+    <text x="600" y="855" class="line-label"></text>
+
+
+    <!-- 7. Execute Skill -->
+    <rect x="300" y="860" width="300" height="80" class="flow-box process" />
+    <text x="450" y="890" class="text-main">7. SKILL.md의 지침 실행</text>
+    <text x="450" y="910"  class="text-small">도구 사용, 스크립트 실행 등</text>
+
+    <!-- Merged Path -->
+     <path d="M 575 780 H 450 V 860" class="flow-line" style="marker-end: none;" />
+
+    <path d="M 450 940 V 1000" class="flow-line" />
+
+    <!-- End -->
+    <rect x="350" y="1000" width="200" height="60" class="flow-box start-end" />
+    <text x="450" y="1035" class="text-main">작업 완료/응답</text>
+
+</svg>

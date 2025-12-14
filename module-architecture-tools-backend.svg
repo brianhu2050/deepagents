@@ -1,0 +1,84 @@
+<svg width="800" height="700" viewBox="0 0 800 700" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+    <defs>
+        <marker id="arrow-mod2" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#555" />
+        </marker>
+        <filter id="shadow-mod2" x="-0.2" y="-0.2" width="1.4" height="1.4">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur" />
+            <feOffset in="blur" dx="2" dy="2" result="offsetBlur" />
+            <feMerge>
+                <feMergeNode in="offsetBlur" />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+        <style>
+            .box { stroke-width: 1.5; filter: url(#shadow-mod2); }
+            .main-component { fill: #EDE7F6; stroke: #B39DDB; }
+            .sub-component { fill: #D1C4E9; stroke: #9575CD; }
+            .external-dep { fill: #F5F5F5; stroke: #BDBDBD; }
+            .title { font-size: 16px; font-weight: bold; text-anchor: middle; }
+            .text { font-size: 13px; text-anchor: middle; }
+            .connector { stroke: #555; stroke-width: 2; marker-end: url(#arrow-mod2); }
+            .data-flow { stroke: #0288D1; stroke-width: 1.5; stroke-dasharray: 4 2; marker-end: url(#arrow-mod2); }
+        </style>
+    </defs>
+
+    <text x="400" y="40" font-size="20" font-weight="bold" text-anchor="middle">모듈 아키텍처: 도구 및 백엔드</text>
+
+    <!-- Agent Core (as external dependency) -->
+    <rect x="300" y="80" width="200" height="60" rx="5" class="box external-dep" />
+    <text x="400" y="115" class="text">에이전트 코어 (LangGraph)</text>
+
+    <!-- CompositeBackend -->
+    <rect x="250" y="200" width="300" height="80" rx="10" class="box main-component" />
+    <text x="400" y="230" class="title">CompositeBackend</text>
+    <text x="400" y="250" class="text" style="font-style: italic;">(요청 라우터)</text>
+
+    <!-- Backend Implementations -->
+    <rect x="100" y="340" width="250" height="120" rx="5" class="box sub-component" />
+    <text x="225" y="365" class="text" style="font-weight:bold;">FilesystemBackend</text>
+    <text x="225" y="395" class="text">로컬 파일 작업</text>
+    <text x="225" y="415" class="text">(읽기, 쓰기, ls, glob, grep)</text>
+
+    <rect x="450" y="340" width="250" height="120" rx="5" class="box sub-component" />
+    <text x="575" y="365" class="text" style="font-weight:bold;">SandboxBackend</text>
+    <text x="575" y="395" class="text">원격 샌드박스 작업</text>
+    <text x="575" y="415" class="text">(Modal, Daytona 등)</text>
+
+    <!-- Standalone Tools -->
+    <rect x="100" y="520" width="600" height="120" rx="10" class="box main-component" />
+    <text x="400" y="545" class="title">독립 실행형 도구 (tools.py)</text>
+
+    <rect x="125" y="570" width="160" height="50" rx="5" class="box sub-component" />
+    <text x="205" y="595" class="text">web_search</text>
+
+    <rect x="320" y="570" width="160" height="50" rx="5" class="box sub-component" />
+    <text x="400" y="595" class="text">fetch_url</text>
+
+    <rect x="515" y="570" width="160" height="50" rx="5" class="box sub-component" />
+    <text x="600" y="595" class="text">http_request</text>
+
+    <!-- External Services -->
+    <rect x="50" y="640" width="160" height="50" rx="5" class="box external-dep" />
+    <text x="130" y="665" class="text">Tavily API</text>
+
+    <rect x="590" y="640" width="160" height="50" rx="5" class="box external-dep" />
+    <text x="670" y="665" class="text">웹/API</text>
+
+    <!-- Connectors -->
+    <path d="M 400 140 V 200" class="connector" />
+    <text x="410" y="175" style="font-size:12px;">파일/셸 도구 호출</text>
+
+    <path d="M 400 280 V 340" class="connector" />
+    <path d="M 400 280 C 400 310, 225 310, 225 340" class="connector" />
+    <path d="M 400 280 C 400 310, 575 310, 575 340" class="connector" />
+    <text x="410" y="315" style="font-size:12px;">요청 라우팅</text>
+
+    <path d="M 225 460 V 490 H 400 V 520" class="connector" />
+    <path d="M 575 460 V 490 H 400 V 520" class="connector" />
+
+    <path d="M 205 620 H 130 V 640" class="data-flow" />
+    <path d="M 400 620 H 670 V 640" class="data-flow" />
+    <path d="M 595 620 H 670 V 640" class="data-flow" />
+
+</svg>
