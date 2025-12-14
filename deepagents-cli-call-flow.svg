@@ -15,12 +15,12 @@
         </style>
     </defs>
 
-    <text x="600" y="30" font-size="22" font-weight="bold" text-anchor="middle">Deep Agents CLI - 호출 흐름도 (사용자 명령어)</text>
+    <text x="600" y="30" font-size="22" font-weight="bold" text-anchor="middle">Deep Agents CLI - 调用流程图 (用户命令)</text>
 
     <!-- Lifelines -->
     <g>
         <line x1="100" y1="80" x2="100" y2="1100" class="lifeline" />
-        <text x="100" y="70" class="lifeline-text">사용자</text>
+        <text x="100" y="70" class="lifeline-text">用户</text>
     </g>
     <g>
         <line x1="300" y1="80" x2="300" y2="1100" class="lifeline" />
@@ -36,11 +36,11 @@
     </g>
      <g>
         <line x1="900" y1="80" x2="900" y2="1100" class="lifeline" />
-        <text x="900" y="70" class="lifeline-text">미들웨어</text>
+        <text x="900" y="70" class="lifeline-text">中间件</text>
     </g>
     <g>
         <line x1="1100" y1="80" x2="1100" y2="1100" class="lifeline" />
-        <text x="1100" y="70" class="lifeline-text">도구/백엔드</text>
+        <text x="1100" y="70" class="lifeline-text">工具/后端</text>
     </g>
 
     <!-- Activations and Messages -->
@@ -63,22 +63,22 @@
 
     <!-- 4. Middleware Setup -->
     <path d="M 700 185 H 895" class="message" />
-    <text x="750" y="180" class="message-text">4. 미들웨어 인스턴스화</text>
+    <text x="750" y="180" class="message-text">4. 实例化中间件</text>
     <rect x="895" y="185" width="10" height="120" class="activation" />
 
     <!-- 5. Load Memory/Skills -->
     <path d="M 900 200 H 1095" class="message" />
-    <text x="950" y="195" class="message-text">5. 메모리/기술 파일 읽기</text>
+    <text x="950" y="195" class="message-text">5. 读取记忆/技能文件</text>
     <path d="M 1095 215 H 900" class="reply-message" />
-    <text x="950" y="225" class="message-text">파일 내용</text>
+    <text x="950" y="225" class="message-text">文件内容</text>
 
     <!-- 6. Middleware before_agent hook -->
     <path d="M 895 240 H 700" class="reply-message" />
-    <text x="750" y="250" class="message-text">6. before_agent() (상태 업데이트)</text>
+    <text x="750" y="250" class="message-text">6. before_agent() (更新状态)</text>
 
     <!-- 7. Agent returns -->
     <path d="M 695 310 H 300" class="reply-message" />
-    <text x="450" y="320" class="message-text">7. 에이전트 인스턴스 반환</text>
+    <text x="450" y="320" class="message-text">7. 返回智能体实例</text>
 
     <!-- 8. Start main loop -->
     <path d="M 300 340 H 495" class="message" />
@@ -87,7 +87,7 @@
 
     <!-- 9. User input -->
     <path d="M 105 360 C 150 360, 250 360, 295 360" class="message" />
-    <text x="180" y="355" class="message-text">9. 사용자 입력 제공</text>
+    <text x="180" y="355" class="message-text">9. 提供用户输入</text>
     <path d="M 300 375 H 495" class="message" />
     <text x="350" y="370" class="message-text">10. await session.prompt_async()</text>
 
@@ -100,32 +100,32 @@
     <path d="M 700 415 H 895" class="message" />
     <text x="750" y="410" class="message-text">12. awrap_model_call()</text>
     <rect x="895" y="415" width="10" height="80" class="activation" />
-    <text x="750" y="440" class="message-text" style="font-style: italic;">(메모리/기술 프롬프트 주입)</text>
+    <text x="750" y="440" class="message-text" style="font-style: italic;">(注入记忆/技能 Prompt)</text>
 
     <!-- 13. LLM call (implicit) -->
     <path d="M 900 460 L 980 460" class="message" />
-    <text x="910" y="455" class="message-text">13. LLM 호출</text>
+    <text x="910" y="455" class="message-text">13. 调用 LLM</text>
 
     <!-- 14. Streaming back -->
     <path d="M 895 485 H 700" class="reply-message" />
-    <text x="750" y="495" class="message-text">14. 모델 응답 (스트리밍)</text>
+    <text x="750" y="495" class="message-text">14. 模型响应 (流式)</text>
 
     <!-- Note: Tool Usage -->
     <rect x="650" y="520" width="220" height="60" class="note-box" />
-    <text x="760" y="540" class="note-text" text-anchor="middle">에이전트가 도구를 사용하기로 결정</text>
-    <text x="760" y="560" class="note-text" text-anchor="middle">(예: read_file)</text>
+    <text x="760" y="540" class="note-text" text-anchor="middle">智能体决定使用工具</text>
+    <text x="760" y="560" class="note-text" text-anchor="middle">(例如 read_file)</text>
 
     <!-- 15. HITL Interrupt -->
     <path d="M 700 590 H 500" class="reply-message" />
-    <text x="550" y="600" class="message-text">15. HITL 중단 발생</text>
+    <text x="550" y="600" class="message-text">15. 触发人机回路中断</text>
 
     <!-- 16. Prompt for approval -->
     <path d="M 500 615 H 105" class="reply-message" />
-    <text x="250" y="625" class="message-text">16. 도구 사용 승인 요청</text>
+    <text x="250" y="625" class="message-text">16. 请求用户批准工具调用</text>
 
     <!-- 17. User approves -->
     <path d="M 105 650 H 500" class="message" />
-    <text x="250" y="645" class="message-text">17. 사용자 승인</text>
+    <text x="250" y="645" class="message-text">17. 用户批准</text>
 
     <!-- 18. Resume agent -->
     <path d="M 500 670 H 695" class="message" />
@@ -133,38 +133,38 @@
 
     <!-- 19. Execute Tool -->
     <path d="M 700 690 H 1095" class="message" />
-    <text x="850" y="685" class="message-text">19. 도구 실행 (예: FilesystemBackend)</text>
+    <text x="850" y="685" class="message-text">19. 执行工具 (例如 FilesystemBackend)</text>
     <rect x="1095" y="690" width="10" height="50" class="activation" />
 
     <!-- 20. Tool Result -->
     <path d="M 1095 730 H 700" class="reply-message" />
-    <text x="850" y="740" class="message-text">20. 도구 결과</text>
+    <text x="850" y="740" class="message-text">20. 工具结果</text>
 
     <!-- 21. Continue Streaming to LLM -->
     <path d="M 700 760 H 895" class="message" />
     <text x="750" y="755" class="message-text">21. awrap_model_call()</text>
      <rect x="895" y="760" width="10" height="80" class="activation" />
-    <text x="760" y="785" class="message-text" style="font-style: italic;">(도구 결과를 포함하여 프롬프트 주입)</text>
+    <text x="760" y="785" class="message-text" style="font-style: italic;">(注入包含工具结果的 Prompt)</text>
 
     <path d="M 900 800 L 980 800" class="message" />
-    <text x="910" y="795" class="message-text">22. LLM 호출</text>
+    <text x="910" y="795" class="message-text">22. 调用 LLM</text>
 
     <path d="M 895 830 H 700" class="reply-message" />
-    <text x="750" y="840" class="message-text">23. 최종 응답 (스트리밍)</text>
+    <text x="750" y="840" class="message-text">23. 最终响应 (流式)</text>
 
     <!-- 24. Final response streaming to UI -->
     <path d="M 695 870 H 500" class="reply-message" />
-    <text x="550" y="880" class="message-text">24. 최종 AI 메시지 스트림</text>
+    <text x="550" y="880" class="message-text">24. 流式传输最终 AI 消息</text>
 
     <path d="M 495 900 H 300" class="reply-message" />
-    <text x="350" y="910" class="message-text">25. UI에 텍스트 렌더링</text>
+    <text x="350" y="910" class="message-text">25. 在 UI 中渲染文本</text>
 
     <!-- 26. UI to User -->
     <path d="M 300 930 H 105" class="reply-message" />
-    <text x="150" y="940" class="message-text">26. 최종 출력 표시</text>
+    <text x="150" y="940" class="message-text">26. 显示最终输出</text>
 
     <!-- Loop -->
      <rect x="80" y="980" width="1040" height="80" class="note-box" />
-     <text x="600" y="1020" class="note-text" text-anchor="middle">사용자가 '종료'를 입력하거나 Ctrl+C를 누를 때까지 루프가 계속됩니다.</text>
+     <text x="600" y="1020" class="note-text" text-anchor="middle">循环持续，直到用户输入 "exit" 或按下 Ctrl+C</text>
 
 </svg>

@@ -32,43 +32,43 @@
     </defs>
 
     <!-- Diagram Title -->
-    <text x="550" y="40" font-size="24" font-weight="bold" text-anchor="middle">Deep Agents CLI - 기술 아키텍처</text>
+    <text x="550" y="40" font-size="24" font-weight="bold" text-anchor="middle">Deep Agents CLI - 技术架构图</text>
 
     <!-- Components -->
 
     <!-- User Interaction Layer -->
     <g>
         <rect x="450" y="80" width="200" height="60" rx="10" class="box user-layer" />
-        <text x="550" y="115" class="component-text">사용자 터미널</text>
-        <text x="550" y="98" class="title">사용자</text>
+        <text x="550" y="115" class="component-text">用户终端</text>
+        <text x="550" y="98" class="title">用户</text>
     </g>
 
     <!-- Application Layer -->
     <g>
         <rect x="250" y="180" width="600" height="150" rx="10" class="box app-layer" />
-        <text x="550" y="205" class="title">애플리케이션 계층 (deepagents-cli)</text>
+        <text x="550" y="205" class="title">应用层 (deepagents-cli)</text>
 
         <rect x="270" y="230" width="160" height="80" rx="5" class="box app-layer" style="fill: #FFE0B2;"/>
-        <text x="350" y="260" class="component-text">main.py<tspan x="350" dy="1.2em">(진입점, ArgParse)</tspan></text>
+        <text x="350" y="260" class="component-text">main.py<tspan x="350" dy="1.2em">(入口, 参数解析)</tspan></text>
 
         <rect x="470" y="230" width="260" height="80" rx="5" class="box app-layer" style="fill: #FFE0B2;"/>
-        <text x="600" y="255" class="component-text">execution.py (실행 루프)<tspan x="600" dy="1.2em">스트리밍, UI (Rich),</tspan><tspan x="600" dy="1.2em">HITL 승인</tspan></text>
+        <text x="600" y="255" class="component-text">execution.py (执行循环)<tspan x="600" dy="1.2em">流式输出, UI (Rich),</tspan><tspan x="600" dy="1.2em">人机回路审批</tspan></text>
 
         <rect x="750" y="230" width="180" height="80" rx="5" class="box app-layer" style="fill: #FFE0B2;"/>
-        <text x="840" y="260" class="component-text">commands.py<tspan x="840" dy="1.2em">(슬래시 명령어)</tspan></text>
+        <text x="840" y="260" class="component-text">commands.py<tspan x="840" dy="1.2em">(斜杠命令)</tspan></text>
     </g>
 
     <!-- Agent Core Layer -->
      <g>
         <rect x="250" y="370" width="600" height="250" rx="10" class="box agent-core" />
-        <text x="550" y="395" class="title">에이전트 코어</text>
+        <text x="550" y="395" class="title">智能体核心</text>
 
         <rect x="450" y="420" width="200" height="80" rx="5" class="box agent-core" style="fill: #C8E6C9;"/>
-        <text x="550" y="450" class="component-text">agent.py<tspan x="550" dy="1.2em">(에이전트 생성)</tspan><tspan x="550" dy="1.2em">LangGraph Pregel</tspan></text>
+        <text x="550" y="450" class="component-text">agent.py<tspan x="550" dy="1.2em">(智能体创建)</tspan><tspan x="550" dy="1.2em">LangGraph Pregel</tspan></text>
 
         <!-- Middleware -->
         <rect x="270" y="520" width="560" height="80" rx="5" class="box middleware-layer"/>
-        <text x="550" y="540" class="component-text" style="font-weight:bold;">미들웨어 스택</text>
+        <text x="550" y="540" class="component-text" style="font-weight:bold;">中间件栈</text>
         <text x="345" y="570" class="component-text">AgentMemory</text>
         <text x="475" y="570" class="component-text">SkillsMiddleware</text>
         <text x="615" y="570" class="component-text">ShellMiddleware</text>
@@ -80,10 +80,10 @@
     <!-- Backend Layer -->
     <g>
         <rect x="50" y="660" width="600" height="150" rx="10" class="box backend-layer" />
-        <text x="350" y="685" class="title">백엔드 및 도구</text>
+        <text x="350" y="685" class="title">后端与工具</text>
 
         <rect x="70" y="710" width="180" height="80" rx="5" class="box backend-layer" style="fill: #D1C4E9;"/>
-        <text x="160" y="740" class="component-text">CompositeBackend<tspan x="160" dy="1.2em">(라우터)</tspan></text>
+        <text x="160" y="740" class="component-text">CompositeBackend<tspan x="160" dy="1.2em">(路由器)</tspan></text>
 
         <rect x="270" y="710" width="160" height="40" rx="5" class="box backend-layer" style="fill: #D1C4E9;"/>
         <text x="350" y="730" class="component-text">FilesystemBackend</text>
@@ -92,36 +92,36 @@
         <text x="350" y="780" class="component-text">SandboxBackend</text>
 
         <rect x="450" y="710" width="180" height="80" rx="5" class="box backend-layer" style="fill: #D1C4E9;"/>
-        <text x="540" y="735" class="component-text">Tools<tspan x="540" dy="1.2em">read/write_file, shell,</tspan><tspan x="540" dy="1.2em">web_search, fetch_url</tspan></text>
+        <text x="540" y="735" class="component-text">工具<tspan x="540" dy="1.2em">read/write_file, shell,</tspan><tspan x="540" dy="1.2em">web_search, fetch_url</tspan></text>
 
     </g>
 
     <!-- External Services -->
     <g>
         <rect x="450" y="840" width="180" height="60" rx="10" class="box ext-service"/>
-        <text x="540" y="870" class="component-text">외부 서비스 (Tavily)</text>
+        <text x="540" y="870" class="component-text">外部服务 (Tavily)</text>
     </g>
 
     <!-- Data/State Layer -->
     <g>
         <rect x="680" y="660" width="370" height="240" rx="10" class="box data-layer" />
-        <text x="865" y="685" class="title">데이터 및 상태</text>
+        <text x="865" y="685" class="title">数据与状态</text>
 
         <rect x="700" y="710" width="330" height="80" rx="5" class="box data-layer" style="fill: #B2DFDB;"/>
-        <text x="865" y="735" class="component-text">~/.deepagents/&lt;agent&gt;/<tspan x="865" dy="1.2em">(글로벌 설정)</tspan></text>
-        <text x="775" y="765" class="component-text">agent.md (사용자 메모리)</text>
+        <text x="865" y="735" class="component-text">~/.deepagents/&lt;agent&gt;/<tspan x="865" dy="1.2em">(全局配置)</tspan></text>
+        <text x="775" y="765" class="component-text">agent.md (用户记忆)</text>
         <text x="945" y="765" class="component-text">skills/</text>
 
         <rect x="700" y="800" width="330" height="80" rx="5" class="box data-layer" style="fill: #B2DFDB;"/>
-        <text x="865" y="825" class="component-text">&lt;project&gt;/.deepagents/<tspan x="865" dy="1.2em">(프로젝트 설정)</tspan></text>
-        <text x="775" y="855" class="component-text">agent.md (프로젝트 메모리)</text>
+        <text x="865" y="825" class="component-text">&lt;project&gt;/.deepagents/<tspan x="865" dy="1.2em">(项目配置)</tspan></text>
+        <text x="775" y="855" class="component-text">agent.md (项目记忆)</text>
         <text x="945" y="855" class="component-text">skills/</text>
     </g>
 
     <!-- Connectors -->
     <!-- User -> App -->
     <path d="M 550 140 V 180" class="flow-line" />
-    <text x="560" y="165" class="connector-text">명령어 실행</text>
+    <text x="560" y="165" class="connector-text">执行命令</text>
 
     <!-- App -> Agent Core -->
     <path d="M 550 330 V 370" class="flow-line" />
@@ -129,33 +129,33 @@
 
     <!-- Agent Core -> Backend -->
     <path d="M 550 620 V 660 H 350" class="flow-line" />
-    <text x="450" y="645" class="connector-text">도구 호출</text>
+    <text x="450" y="645" class="connector-text">工具调用</text>
 
     <!-- Middleware -> Data -->
     <path d="M 720 620 V 660" class="data-flow-line" />
-    <text x="730" y="645" class="connector-text" fill="#0288D1">메모리/기술 로드</text>
+    <text x="730" y="645" class="connector-text" fill="#0288D1">加载记忆/技能</text>
 
     <!-- Backend -> Agent Core (Result) -->
     <path d="M 350 810 V 850 H 650 V 620" class="flow-line" />
-    <text x="360" y="835" class="connector-text">도구 결과</text>
+    <text x="360" y="835" class="connector-text">工具结果</text>
 
     <!-- Tools -> External -->
     <path d="M 540 790 V 840" class="flow-line" />
 
     <!-- Agent Core -> App (Streaming Response) -->
     <path d="M 450 370 V 330" class="flow-line" />
-    <text x="340" y="355" class="connector-text">스트리밍 출력/HITL</text>
+    <text x="340" y="355" class="connector-text">流式输出/人机回路</text>
 
     <!-- App -> User (UI) -->
     <path d="M 450 180 V 140" class="flow-line" />
-    <text x="380" y="165" class="connector-text">UI 렌더링</text>
+    <text x="380" y="165" class="connector-text">UI 渲染</text>
 
     <!-- Agent Core -> LLM (Implicit) -->
     <g>
         <rect x="900" y="420" width="150" height="80" rx="10" class="box ext-service"/>
-        <text x="975" y="460" class="component-text">LLM (예: Claude)</text>
+        <text x="975" y="460" class="component-text">LLM (例如 Claude)</text>
     </g>
     <path d="M 650 460 H 900" class="data-flow-line" />
-    <text x="750" y="455" class="connector-text" fill="#0288D1">모델 요청/응답</text>
+    <text x="750" y="455" class="connector-text" fill="#0288D1">模型请求/响应</text>
     <path d="M 900 480 H 650" class="data-flow-line" />
 </svg>

@@ -1,0 +1,99 @@
+<svg width="1000" height="750" viewBox="0 0 1000 750" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+    <defs>
+        <marker id="arrow-backend" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#444" />
+        </marker>
+        <filter id="shadow-backend">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+            <feOffset dx="2" dy="2" />
+            <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+        <style>
+            .box { stroke-width: 1.5; filter: url(#shadow-backend); }
+            .main-router { fill: #EDE7F6; stroke: #B39DDB; }
+            .backend-impl { fill: #D1C4E9; stroke: #9575CD; }
+            .interface-box { fill: #F3E5F5; stroke: #CE93D8; }
+            .caller { fill: #E8F5E9; stroke: #A5D6A7; }
+            .environment { fill: #E0F7FA; stroke: #4DD0E1; }
+            .title { font-size: 18px; font-weight: bold; text-anchor: middle; }
+            .subtitle { font-size: 14px; font-weight: bold; text-anchor: middle; }
+            .text { font-size: 13px; text-anchor: middle; }
+            .text-small { font-size: 11px; text-anchor: middle; }
+            .connector { stroke: #444; stroke-width: 2; marker-end: url(#arrow-backend); }
+            .data-flow { stroke: #00796B; stroke-width: 1.5; stroke-dasharray: 5 3; marker-end: url(#arrow-backend); }
+        </style>
+    </defs>
+
+    <text x="500" y="40" font-size="22" font-weight="bold" text-anchor="middle">Backend 模块 - 详细技术架构图</text>
+
+    <!-- Caller: Agent Core -->
+    <rect x="350" y="80" width="300" height="70" rx="10" class="box caller" />
+    <text x="500" y="110" class="subtitle">智能体核心 (Agent Core)</text>
+    <text x="500" y="130" class="text">发起工具调用 (如 `read_file`, `shell`)</text>
+
+    <path d="M 500 150 V 200" class="connector" />
+    <text x="510" y="175" class="text-small" fill="#555">请求</text>
+
+    <!-- Main Router: CompositeBackend -->
+    <rect x="200" y="200" width="600" height="120" rx="10" class="box main-router" />
+    <text x="500" y="230" class="title">CompositeBackend</text>
+    <text x="500" y="255" class="text">职责: 统一接口，根据配置路由请求</text>
+    <text x="500" y="280" class="text" font-family="monospace">default: BackendProtocol</text>
+    <text x="500" y="300" class="text" font-family="monospace">routes: dict[str, BackendProtocol]</text>
+
+    <path d="M 350 320 V 380" class="connector" />
+    <text x="360" y="350" class="text-small" fill="#555">路由到默认后端</text>
+
+    <path d="M 650 320 V 380" class="connector" />
+     <text x="660" y="350" class="text-small" fill="#555">路由到特定后端</text>
+
+
+    <!-- Backend Implementations -->
+    <g id="local-mode">
+        <rect x="50" y="380" width="400" height="280" rx="10" class="box backend-impl" />
+        <text x="250" y="410" class="title">本地模式 (Local Mode)</text>
+        <text x="250" y="435" class="text" style="font-style:italic;">当 --sandbox=none</text>
+
+        <rect x="75" y="460" width="350" height="80" rx="5" class="box interface-box" />
+        <text x="250" y="485" class="subtitle">FilesystemBackend</text>
+        <text x="250" y="510" class="text">实现: `read`, `write`, `ls`, `glob`, `grep`</text>
+
+        <rect x="75" y="560" width="350" height="80" rx="5" class="box interface-box" />
+        <text x="250" y="585" class="subtitle">ShellMiddleware</text>
+        <text x="250" y="610" class="text">实现: `shell` (通过 `subprocess`)</text>
+    </g>
+
+    <g id="sandbox-mode">
+        <rect x="550" y="380" width="400" height="280" rx="10" class="box backend-impl" />
+        <text x="750" y="410" class="title">沙箱模式 (Sandbox Mode)</text>
+        <text x="750" y="435" class="text" style="font-style:italic;">当 --sandbox=[modal|daytona|... ]</text>
+
+        <rect x="575" y="460" width="350" height="180" rx="5" class="box interface-box" />
+        <text x="750" y="485" class="subtitle">SandboxBackendProtocol</text>
+        <text x="750" y="510" class="text">(例如 `ModalBackend`, `DaytonaBackend`)</text>
+        <text x="750" y="540" class="text" style="font-weight:bold;">实现所有接口:</text>
+        <text x="750" y="565" class="text">`read`, `write`, `ls` (文件操作)</text>
+        <text x="750" y="590" class="text">`execute` (命令执行)</text>
+        <text x="750" y="615" class="text">通过 API 与远程环境交互</text>
+    </g>
+
+    <!-- Environments -->
+    <rect x="150" y="680" width="200" height="50" rx="10" class="box environment" />
+    <text x="250" y="705" class="text">本地文件系统 & Shell</text>
+
+    <rect x="650" y="680" width="200" height="50" rx="10" class="box environment" />
+    <text x="750" y="705" class="text">远程沙箱环境</text>
+
+    <!-- Data Flow lines -->
+    <path d="M 250 660 V 680" class="data-flow" />
+    <path d="M 750 640 V 680" class="data-flow" />
+
+    <!-- Result Flow -->
+    <path d="M 250 380 V 320" class="data-flow" />
+    <path d="M 500 200 V 150" class="data-flow" />
+    <path d="M 750 380 V 320" class="data-flow" />
+    <text x="440" y="175" class="text-small" fill="#00796B">结果</text>
+</svg>
