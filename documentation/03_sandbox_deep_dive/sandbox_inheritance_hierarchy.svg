@@ -1,0 +1,121 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="800" viewBox="0 0 1400 800" font-family="sans-serif">
+    <defs>
+        <marker id="arrow-inheritance" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="10" markerHeight="10" orient="auto">
+            <path d="M 0 5 L 10 0 L 10 10 z" fill="none" stroke="#333" />
+        </marker>
+        <marker id="arrow-implement" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="10" markerHeight="10" orient="auto">
+            <path d="M 0 5 L 10 0 L 10 10 z" fill="none" stroke="#333" stroke-dasharray="2 2" />
+        </marker>
+        <filter id="shadow-class" x="-0.1" y="-0.1" width="1.2" height="1.2">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur" />
+            <feOffset in="blur" dx="2" dy="2" result="offsetBlur" />
+            <feMerge>
+                <feMergeNode in="offsetBlur" />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+        <style>
+            .class-box { filter: url(#shadow-class); stroke-width: 2; }
+            .abstract-class { fill: #FFF9C4; stroke: #FBC02D; }
+            .protocol-class { fill: #FCE4EC; stroke: #EC407A; font-style: italic; }
+            .concrete-class { fill: #E0F7FA; stroke: #00ACC1; }
+            .class-title { font-size: 16px; font-weight: bold; text-anchor: middle; }
+            .class-stereotype { font-size: 12px; text-anchor: middle; fill: #666; }
+            .method-text { font-size: 14px; font-family: monospace; }
+            .field-text { font-size: 13px; font-style: italic; }
+            .connector-line { stroke: #333; stroke-width: 1.5; }
+            .label { font-size: 13px; fill: #555; text-anchor: middle; }
+        </style>
+    </defs>
+
+    <title>Deep Agents - Sandbox Architecture & Inheritance Hierarchy</title>
+    <text x="700" y="50" font-size="28" text-anchor="middle">Sandbox 架构与设计模式</text>
+
+    <!-- Components -->
+    <g id="components">
+        <!-- FilesystemMiddleware -->
+        <rect x="50" y="300" width="280" height="120" class="class-box concrete-class" rx="8" />
+        <text x="190" y="325" class="class-stereotype">&lt;Middleware&gt;</text>
+        <text x="190" y="350" class="class-title">FilesystemMiddleware</text>
+        <path d="M 60 365 H 320" stroke="#00ACC1" stroke-dasharray="3 3" />
+        <text x="70" y="390" class="method-text">.tools = [ls, read, write, ...]</text>
+        <text x="70" y="410" class="field-text">.backend: BackendProtocol</text>
+
+        <!-- BaseSandbox -->
+        <rect x="450" y="150" width="380" height="200" class="class-box abstract-class" rx="8" />
+        <text x="640" y="175" class="class-stereotype">&lt;Abstract Class&gt;</text>
+        <text x="640" y="200" class="class-title">BaseSandbox</text>
+        <path d="M 460 215 H 820" stroke="#FBC02D" stroke-dasharray="3 3" />
+        <text x="470" y="240" class="method-text">read(path): str</text>
+        <text x="470" y="260" class="method-text">ls(path): List[FileInfo]</text>
+        <text x="470" y="280" class="method-text">write(path, content): WriteResult</text>
+        <text x="470" y="300" class="method-text" font-style="italic">... (implements BackendProtocol)</text>
+        <text x="470" y="325" class="method-text" fill="#D32F2F">backend.execute(cmd)</text>
+
+        <!-- SandboxBackendProtocol -->
+        <rect x="450" y="450" width="380" height="150" class="class-box protocol-class" rx="8" />
+        <text x="640" y="475" class="class-stereotype">&lt;Protocol&gt;</text>
+        <text x="640" y="500" class="class-title">SandboxBackendProtocol</text>
+        <path d="M 460 515 H 820" stroke="#EC407A" stroke-dasharray="3 3" />
+        <text x="470" y="540" class="method-text" font-weight="bold">execute(command: str): ExecuteResponse</text>
+        <text x="470" y="560" class="field-text">... (and other methods from</text>
+        <text x="470" y="575" class="field-text">BackendProtocol)</text>
+
+        <!-- Concrete Backends -->
+        <rect x="950" y="100" width="300" height="150" class="class-box concrete-class" rx="8" />
+        <text x="1100" y="125" class="class-stereotype">&lt;Concrete Backend&gt;</text>
+        <text x="1100" y="150" class="class-title">DaytonaBackend</text>
+        <path d="M 960 165 H 1240" stroke="#00ACC1" stroke-dasharray="3 3" />
+        <text x="970" y="190" class="method-text">execute(cmd):</text>
+        <text x="980" y="210" class="method-text" fill="#00796B"># Calls Daytona API</text>
+
+        <rect x="950" y="325" width="300" height="150" class="class-box concrete-class" rx="8" />
+        <text x="1100" y="350" class="class-stereotype">&lt;Concrete Backend&gt;</text>
+        <text x="1100" y="375" class="class-title">ModalBackend</text>
+        <path d="M 960 390 H 1240" stroke="#00ACC1" stroke-dasharray="3 3" />
+        <text x="970" y="415" class="method-text">execute(cmd):</text>
+        <text x="980" y="435" class="method-text" fill="#00796B"># Runs in Modal container</text>
+
+        <rect x="950" y="550" width="300" height="150" class="class-box concrete-class" rx="8" />
+        <text x="1100" y="575" class="class-stereotype">&lt;Concrete Backend&gt;</text>
+        <text x="1100" y="600" class="class-title">RunloopBackend</text>
+        <path d="M 960 615 H 1240" stroke="#00ACC1" stroke-dasharray="3 3" />
+        <text x="970" y="640" class="method-text">execute(cmd):</text>
+        <text x="980" y="660" class="method-text" fill="#00796B"># Runs in local subprocess</text>
+    </g>
+
+    <!-- Connectors -->
+    <g id="connectors">
+        <!-- Middleware -> BaseSandbox -->
+        <path d="M 330 360 H 450" class="connector-line" />
+        <text x="390" y="355" class="label">uses</text>
+
+        <!-- BaseSandbox -> SandboxBackendProtocol -->
+        <path d="M 640 350 V 450" class="connector-line" />
+        <text x="650" y="400" class="label">delegates to</text>
+
+        <!-- Concrete Backends implement Protocol -->
+        <path d="M 830 525 H 950" class="connector-line" marker-start="url(#arrow-implement)" />
+        <line x1="1100" y1="250" x2="1100" y2="325" class="connector-line" />
+        <line x1="1100" y1="475" x2="1100" y2="550" class="connector-line" />
+        <path d="M 950 175 H 920 V 525 H 830" stroke="#333" fill="none" stroke-width="1.5" />
+        <text x="880" y="515" class="label">implements</text>
+
+    </g>
+
+    <!-- Design Pattern Notes -->
+    <g id="notes">
+        <rect x="50" y="650" width="350" height="100" fill="#F5F5F5" stroke="#BDBDBD" rx="5" />
+        <text x="225" y="675" font-weight="bold" text-anchor="middle">设计模式: Template Method</text>
+        <text x="65" y="700">`BaseSandbox` 提供了文件操作的模板 (e.g., `read`).</text>
+        <text x="65" y="720">它将具体的执行步骤委托给 `execute` 方法,</text>
+        <text x="65" y="740">该方法由具体的后端实现.</text>
+
+        <rect x="450" y="650" width="380" height="100" fill="#F5F5F5" stroke="#BDBDBD" rx="5" />
+        <text x="640" y="675" font-weight="bold" text-anchor="middle">设计模式: Strategy / Inversion of Control</text>
+        <text x="465" y="700">`FilesystemMiddleware` 依赖于 `BackendProtocol` 抽象,</text>
+        <text x="465" y="720">而不是具体的实现. 可以在运行时注入</text>
+        <text x="465" y="740">不同的后端 (策略) 来改变执行环境.</text>
+    </g>
+</svg>

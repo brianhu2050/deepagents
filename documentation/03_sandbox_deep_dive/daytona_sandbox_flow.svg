@@ -1,7 +1,8 @@
-<svg width="1500" height="900" viewBox="0 0 1500 900" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="900" viewBox="0 0 1500 900" font-family="sans-serif">
     <defs>
         <marker id="arrow-dtr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" />
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" stroke="#000000" />
         </marker>
         <filter id="shadow-dtr">
             <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
@@ -21,69 +22,69 @@
     </defs>
 
     <title>DaytonaBackend Execute Command Flow</title>
-    <text x="750" y="40" font-size="24" text-anchor="middle">DaytonaBackend - `execute` 命令执行流程图</text>
+    <text x="750" y="40" font-size="24" text-anchor="middle" fill="#000000">DaytonaBackend - `execute` 命令执行流程图</text>
 
-    <!-- Actors -->
-    <text x="150" y="100" class="actor">Agent Core</text>
-    <line x1="150" y1="110" x2="150" y2="850" stroke="#64B5F6" stroke-width="2"/>
 
-    <text x="450" y="100" class="actor">DaytonaBackend</text>
-    <line x1="450" y1="110" x2="450" y2="850" stroke="#FFD54F" stroke-width="2"/>
+    <text x="150" y="100" class="actor" font-size="18px" text-anchor="middle" fill="#000000">Agent Core</text>
+    <line x1="150" y1="110" x2="150" y2="850" stroke="#64B5F6" stroke-width="2" />
 
-    <text x="750" y="100" class="actor">Daytona Client</text>
-    <line x1="750" y1="110" x2="750" y2="850" stroke="#F06292" stroke-width="2"/>
+    <text x="450" y="100" class="actor" font-size="18px" text-anchor="middle" fill="#000000">DaytonaBackend</text>
+    <line x1="450" y1="110" x2="450" y2="850" stroke="#FFD54F" stroke-width="2" />
 
-    <text x="1050" y="100" class="actor">Daytona API</text>
-    <line x1="1050" y1="110" x2="1050" y2="850" stroke="#BDBDBD" stroke-width="2"/>
+    <text x="750" y="100" class="actor" font-size="18px" text-anchor="middle" fill="#000000">Daytona Client</text>
+    <line x1="750" y1="110" x2="750" y2="850" stroke="#F06292" stroke-width="2" />
 
-    <text x="1350" y="100" class="actor">Remote Shell</text>
-    <line x1="1350" y1="110" x2="1350" y2="850" stroke="#90A4AE" stroke-width="2"/>
+    <text x="1050" y="100" class="actor" font-size="18px" text-anchor="middle" fill="#000000">Daytona API</text>
+    <line x1="1050" y1="110" x2="1050" y2="850" stroke="#BDBDBD" stroke-width="2" />
 
-    <!-- Flow -->
-    <!-- Step 1 -->
-    <path d="M 150 150 H 450" class="arrow"/>
-    <text x="280" y="145" class="label">1. execute("pytest -v")</text>
-    <rect x="440" y="160" width="20" height="40" class="step-box" />
+    <text x="1350" y="100" class="actor" font-size="18px" text-anchor="middle" fill="#000000">Remote Shell</text>
+    <line x1="1350" y1="110" x2="1350" y2="850" stroke="#90A4AE" stroke-width="2" />
 
-    <!-- Step 2 -->
-    <path d="M 450 220 H 750" class="arrow"/>
-    <text x="560" y="215" class="label">2. self._sandbox.process.exec(command)</text>
-    <rect x="740" y="230" width="20" height="40" class="step-box" />
 
-    <!-- Step 3 -->
-    <path d="M 750 290 H 1050" class="arrow"/>
-    <text x="880" y="285" class="label">3. API Request (gRPC/HTTP)</text>
-    <rect x="1040" y="300" width="20" height="40" class="step-box" />
 
-    <!-- Step 4 -->
-    <path d="M 1050 360 H 1350" class="arrow"/>
-    <text x="1180" y="355" class="label">4. Execute on remote shell</text>
-    <rect x="1340" y="370" width="20" height="120" class="step-box" />
-    <text x="1380" y="400" class="label" text-anchor="start">$ pytest -v</text>
-    <text x="1380" y="430" class="label" text-anchor="start">...</text>
-    <text x="1380" y="460" class="label" text-anchor="start">[Process Completes]</text>
+    <path d="M 150 150 H 450" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-dtr)" />
+    <text x="280" y="145" class="label" font-size="13px" fill="#555">1. execute("pytest -v")</text>
+    <rect x="440" y="160" width="20" height="40" class="step-box" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-dtr)" />
 
-    <!-- Return Flow -->
-    <!-- Step 5 -->
-    <path d="M 1350 520 H 1050" class="arrow"/>
-    <text x="1180" y="515" class="label">5. Return output &amp; exit_code</text>
-    <rect x="1040" y="530" width="20" height="40" class="step-box" />
 
-    <!-- Step 6 -->
-    <path d="M 1050 590 H 750" class="arrow"/>
-    <text x="880" y="585" class="label">6. API Response</text>
-    <rect x="740" y="600" width="20" height="40" class="step-box" />
+    <path d="M 450 220 H 750" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-dtr)" />
+    <text x="560" y="215" class="label" font-size="13px" fill="#555">2. self._sandbox.process.exec(command)</text>
+    <rect x="740" y="230" width="20" height="40" class="step-box" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-dtr)" />
 
-    <!-- Step 7 -->
-    <path d="M 750 660 H 450" class="arrow"/>
-    <text x="560" y="655" class="label">7. Wrap in `Daytona.ProcessResult`</text>
-    <rect x="440" y="670" width="20" height="40" class="step-box" />
 
-    <!-- Step 8 -->
-    <path d="M 450 730 H 150" class="arrow"/>
-    <text x="280" y="725" class="label">8. Wrap in `ExecuteResponse`</text>
-    <rect x="140" y="740" width="20" height="40" class="step-box" />
+    <path d="M 750 290 H 1050" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-dtr)" />
+    <text x="880" y="285" class="label" font-size="13px" fill="#555">3. API Request (gRPC/HTTP)</text>
+    <rect x="1040" y="300" width="20" height="40" class="step-box" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-dtr)" />
 
-    <text x="150" y="800" class="label" text-anchor="middle">Flow Complete</text>
+
+    <path d="M 1050 360 H 1350" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-dtr)" />
+    <text x="1180" y="355" class="label" font-size="13px" fill="#555">4. Execute on remote shell</text>
+    <rect x="1340" y="370" width="20" height="120" class="step-box" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-dtr)" />
+    <text x="1380" y="400" class="label" text-anchor="start" font-size="13px" fill="#555">$ pytest -v</text>
+    <text x="1380" y="430" class="label" text-anchor="start" font-size="13px" fill="#555">...</text>
+    <text x="1380" y="460" class="label" text-anchor="start" font-size="13px" fill="#555">[Process Completes]</text>
+
+
+
+    <path d="M 1350 520 H 1050" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-dtr)" />
+    <text x="1180" y="515" class="label" font-size="13px" fill="#555">5. Return output &amp; exit_code</text>
+    <rect x="1040" y="530" width="20" height="40" class="step-box" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-dtr)" />
+
+
+    <path d="M 1050 590 H 750" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-dtr)" />
+    <text x="880" y="585" class="label" font-size="13px" fill="#555">6. API Response</text>
+    <rect x="740" y="600" width="20" height="40" class="step-box" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-dtr)" />
+
+
+    <path d="M 750 660 H 450" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-dtr)" />
+    <text x="560" y="655" class="label" font-size="13px" fill="#555">7. Wrap in `Daytona.ProcessResult`</text>
+    <rect x="440" y="670" width="20" height="40" class="step-box" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-dtr)" />
+
+
+    <path d="M 450 730 H 150" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-dtr)" />
+    <text x="280" y="725" class="label" font-size="13px" fill="#555">8. Wrap in `ExecuteResponse`</text>
+    <rect x="140" y="740" width="20" height="40" class="step-box" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-dtr)" />
+
+    <text x="150" y="800" class="label" text-anchor="middle" font-size="13px" fill="#555">Flow Complete</text>
 
 </svg>

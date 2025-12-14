@@ -1,7 +1,8 @@
-<svg width="1200" height="1500" viewBox="0 0 1200 1500" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1500" viewBox="0 0 1200 1500" font-family="sans-serif">
     <defs>
         <marker id="arrow-sf-re" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" />
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" stroke="#000000" />
         </marker>
         <filter id="shadow-sf-re">
             <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
@@ -22,97 +23,97 @@
     </defs>
 
     <title>Deep Agents Skill Flow (Redesigned)</title>
-    <text x="600" y="40" font-size="24" text-anchor="middle">技能 (Skills) 加载与使用流程图 (重构版)</text>
+    <text x="600" y="40" font-size="24" text-anchor="middle" fill="#000000">技能 (Skills) 加载与使用流程图 (重构版)</text>
 
-    <!-- Swimlanes -->
+
     <g id="swimlanes">
-        <text x="200" y="100" class="swimlane-title">SkillsMiddleware</text>
-        <line x1="200" y1="110" x2="200" y2="1450" stroke="#FFD54F" stroke-width="2"/>
+        <text x="200" y="100" class="swimlane-title" font-size="18px" text-anchor="middle" fill="#000000">SkillsMiddleware</text>
+        <line x1="200" y1="110" x2="200" y2="1450" stroke="#FFD54F" stroke-width="2" />
 
-        <text x="600" y="100" class="swimlane-title">AgentState &amp; LLM Core</text>
-        <line x1="600" y1="110" x2="600" y2="1450" stroke="#64B5F6" stroke-width="2"/>
+        <text x="600" y="100" class="swimlane-title" font-size="18px" text-anchor="middle" fill="#000000">AgentState &amp; LLM Core</text>
+        <line x1="600" y1="110" x2="600" y2="1450" stroke="#64B5F6" stroke-width="2" />
 
-        <text x="1000" y="100" class="swimlane-title">FilesystemMiddleware</text>
-        <line x1="1000" y1="110" x2="1000" y2="1450" stroke="#80CBC4" stroke-width="2"/>
+        <text x="1000" y="100" class="swimlane-title" font-size="18px" text-anchor="middle" fill="#000000">FilesystemMiddleware</text>
+        <line x1="1000" y1="110" x2="1000" y2="1450" stroke="#80CBC4" stroke-width="2" />
     </g>
 
-    <!-- Phase 1: Loading -->
+
     <text x="600" y="140" font-size="16" fill="#666" text-anchor="middle">--- 阶段一: 技能发现与加载 (before_agent) ---</text>
 
-    <rect x="190" y="170" width="20" height="200" class="step-box" style="fill: #FFFDE7;" />
-    <text x="230" y="190" class="step-text" text-anchor="start">1. `before_agent` 钩子被触发</text>
+    <rect x="190" y="170" width="20" height="200" class="step-box" style="fill: #FFFDE7;" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-sf-re)" />
+    <text x="230" y="190" class="step-text" text-anchor="start" font-size="14px" fill="#000000">1. `before_agent` 钩子被触发</text>
 
-    <path d="M 200 220 H 600" class="arrow" />
-    <text x="380" y="215" class="label">调用</text>
-    <text x="380" y="235" class="func-name">skills.load.list_skills()</text>
+    <path d="M 200 220 H 600" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-sf-re)" />
+    <text x="380" y="215" class="label" font-size="13px" fill="#555">调用</text>
+    <text x="380" y="235" class="func-name" font-family="monospace" font-size="12px" fill="#00796B">skills.load.list_skills()</text>
 
-    <text x="230" y="270" class="step-text" text-anchor="start">2. `list_skills` 扫描文件系统</text>
-    <text x="230" y="290" class="step-text" text-anchor="start">   (用户和项目目录)</text>
-    <text x="230" y="315" class="label" text-anchor="start">   内部调用 `_parse_skill_metadata`</text>
-    <text x="230" y="335" class="label" text-anchor="start">   只读取 `SKILL.md` 的元数据</text>
+    <text x="230" y="270" class="step-text" text-anchor="start" font-size="14px" fill="#000000">2. `list_skills` 扫描文件系统</text>
+    <text x="230" y="290" class="step-text" text-anchor="start" font-size="14px" fill="#000000">   (用户和项目目录)</text>
+    <text x="230" y="315" class="label" text-anchor="start" font-size="13px" fill="#555">   内部调用 `_parse_skill_metadata`</text>
+    <text x="230" y="335" class="label" text-anchor="start" font-size="13px" fill="#555">   只读取 `SKILL.md` 的元数据</text>
 
-    <path d="M 600 360 H 200" class="arrow" />
-    <text x="380" y="355" class="label">返回 `SkillMetadata` 列表</text>
-    <rect x="590" y="370" width="20" height="80" class="step-box" style="fill: #E3F2FD;" />
+    <path d="M 600 360 H 200" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-sf-re)" />
+    <text x="380" y="355" class="label" font-size="13px" fill="#555">返回 `SkillMetadata` 列表</text>
+    <rect x="590" y="370" width="20" height="80" class="step-box" style="fill: #E3F2FD;" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-sf-re)" />
 
-    <path d="M 200 400 H 600" class="arrow" style="stroke: #D32F2F;" />
-    <text x="380" y="395" class="label" style="fill: #D32F2F;">写入/更新状态</text>
-    <text x="380" y="415" class="func-name">state['skills_metadata'] = [...]</text>
+    <path d="M 200 400 H 600" class="arrow" style="stroke: #D32F2F;" stroke="#333" stroke-width="2" marker-end="url(#arrow-sf-re)" />
+    <text x="380" y="395" class="label" style="fill: #D32F2F;" font-size="13px" fill="#555">写入/更新状态</text>
+    <text x="380" y="415" class="func-name" font-family="monospace" font-size="12px" fill="#00796B">state['skills_metadata'] = [...]</text>
 
-    <!-- Phase 2: Injection -->
+
     <text x="600" y="480" font-size="16" fill="#666" text-anchor="middle">--- 阶段二: 摘要注入 (wrap_model_call) ---</text>
 
-    <rect x="190" y="510" width="20" height="200" class="step-box" style="fill: #FFFDE7;" />
-    <text x="230" y="530" class="step-text" text-anchor="start">3. `wrap_model_call` 钩子被触发</text>
+    <rect x="190" y="510" width="20" height="200" class="step-box" style="fill: #FFFDE7;" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-sf-re)" />
+    <text x="230" y="530" class="step-text" text-anchor="start" font-size="14px" fill="#000000">3. `wrap_model_call` 钩子被触发</text>
 
-    <path d="M 600 560 H 200" class="arrow" style="stroke: #2962FF; stroke-dasharray: 5, 5;" />
-    <text x="380" y="555" class="label" style="fill: #2962FF;">读取状态</text>
-    <text x="380" y="575" class="func-name">state['skills_metadata']</text>
-    <rect x="590" y="510" width="20" height="80" class="step-box" style="fill: #E3F2FD;" />
+    <path d="M 600 560 H 200" class="arrow" style="stroke: #2962FF; stroke-dasharray: 5, 5;" stroke="#333" stroke-width="2" marker-end="url(#arrow-sf-re)" />
+    <text x="380" y="555" class="label" style="fill: #2962FF;" font-size="13px" fill="#555">读取状态</text>
+    <text x="380" y="575" class="func-name" font-family="monospace" font-size="12px" fill="#00796B">state['skills_metadata']</text>
+    <rect x="590" y="510" width="20" height="80" class="step-box" style="fill: #E3F2FD;" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-sf-re)" />
 
-    <text x="230" y="620" class="step-text" text-anchor="start">4. 格式化技能列表</text>
-    <text x="230" y="640" class="func-name" text-anchor="start">   `_format_skills_list()`</text>
-    <text x="230" y="670" class="step-text" text-anchor="start">5. 追加到系统提示 (System Prompt)</text>
+    <text x="230" y="620" class="step-text" text-anchor="start" font-size="14px" fill="#000000">4. 格式化技能列表</text>
+    <text x="230" y="640" class="func-name" text-anchor="start" font-family="monospace" font-size="12px" fill="#00796B">   `_format_skills_list()`</text>
+    <text x="230" y="670" class="step-text" text-anchor="start" font-size="14px" fill="#000000">5. 追加到系统提示 (System Prompt)</text>
 
-    <path d="M 200 700 H 600" class="arrow" />
-    <text x="380" y="695" class="label">将包含技能摘要的 Prompt 发送给 LLM</text>
-    <rect x="590" y="710" width="20" height="40" class="step-box" style="fill: #E3F2FD;" />
+    <path d="M 200 700 H 600" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-sf-re)" />
+    <text x="380" y="695" class="label" font-size="13px" fill="#555">将包含技能摘要的 Prompt 发送给 LLM</text>
+    <rect x="590" y="710" width="20" height="40" class="step-box" style="fill: #E3F2FD;" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-sf-re)" />
 
-    <!-- Phase 3: Usage -->
+
     <text x="600" y="780" font-size="16" fill="#666" text-anchor="middle">--- 阶段三: 技能使用 (Progressive Disclosure) ---</text>
 
-    <rect x="590" y="810" width="20" height="150" class="step-box" style="fill: #E3F2FD;" />
-    <text x="560" y="830" class="step-text" text-anchor="end">6. LLM 分析任务, 匹配技能描述</text>
-    <text x="560" y="855" class="label" text-anchor="end">"用户任务'研究X' 匹配 'web-research'技能"</text>
-    <text x="560" y="880" class="step-text" text-anchor="end">7. LLM 决定读取技能详情</text>
-    <text x="560" y="905" class="label" text-anchor="end">遵循 Prompt 指令: "→ Read `path`"</text>
-    <text x="560" y="930" class="step-text" text-anchor="end">8. LLM 生成工具调用</text>
+    <rect x="590" y="810" width="20" height="150" class="step-box" style="fill: #E3F2FD;" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-sf-re)" />
+    <text x="560" y="830" class="step-text" text-anchor="end" font-size="14px" fill="#000000">6. LLM 分析任务, 匹配技能描述</text>
+    <text x="560" y="855" class="label" text-anchor="end" font-size="13px" fill="#555">"用户任务'研究X' 匹配 'web-research'技能"</text>
+    <text x="560" y="880" class="step-text" text-anchor="end" font-size="14px" fill="#000000">7. LLM 决定读取技能详情</text>
+    <text x="560" y="905" class="label" text-anchor="end" font-size="13px" fill="#555">遵循 Prompt 指令: "→ Read `path`"</text>
+    <text x="560" y="930" class="step-text" text-anchor="end" font-size="14px" fill="#000000">8. LLM 生成工具调用</text>
 
-    <path d="M 600 950 H 1000" class="arrow" />
-    <text x="780" y="945" class="label">Tool Call</text>
-    <text x="780" y="965" class="func-name">read_file(path=".../SKILL.md")</text>
+    <path d="M 600 950 H 1000" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-sf-re)" />
+    <text x="780" y="945" class="label" font-size="13px" fill="#555">Tool Call</text>
+    <text x="780" y="965" class="func-name" font-family="monospace" font-size="12px" fill="#00796B">read_file(path=".../SKILL.md")</text>
 
-    <rect x="990" y="970" width="20" height="150" class="step-box" style="fill: #E0F2F1;" />
-    <text x="1030" y="990" class="step-text" text-anchor="start">9. `read_file` 工具被调用</text>
-    <text x="1030" y="1015" class="label" text-anchor="start">内部委派给</text>
-    <text x="1030" y="1035" class="func-name" text-anchor="start">`self.backend.read()`</text>
-    <text x="1030" y="1060" class="step-text" text-anchor="start">10. Backend 执行读取</text>
-    <text x="1030" y="1085" class="label" text-anchor="start">(从本地磁盘/沙箱/内存)</text>
+    <rect x="990" y="970" width="20" height="150" class="step-box" style="fill: #E0F2F1;" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-sf-re)" />
+    <text x="1030" y="990" class="step-text" text-anchor="start" font-size="14px" fill="#000000">9. `read_file` 工具被调用</text>
+    <text x="1030" y="1015" class="label" text-anchor="start" font-size="13px" fill="#555">内部委派给</text>
+    <text x="1030" y="1035" class="func-name" text-anchor="start" font-family="monospace" font-size="12px" fill="#00796B">`self.backend.read()`</text>
+    <text x="1030" y="1060" class="step-text" text-anchor="start" font-size="14px" fill="#000000">10. Backend 执行读取</text>
+    <text x="1030" y="1085" class="label" text-anchor="start" font-size="13px" fill="#555">(从本地磁盘/沙箱/内存)</text>
 
-    <path d="M 1000 1110 H 600" class="arrow" />
-    <text x="780" y="1105" class="label">Tool Result (`ToolMessage`)</text>
-    <text x="780" y="1125" class="label">包含 `SKILL.md` 的完整内容</text>
+    <path d="M 1000 1110 H 600" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-sf-re)" />
+    <text x="780" y="1105" class="label" font-size="13px" fill="#555">Tool Result (`ToolMessage`)</text>
+    <text x="780" y="1125" class="label" font-size="13px" fill="#555">包含 `SKILL.md` 的完整内容</text>
 
-    <rect x="590" y="1130" width="20" height="200" class="step-box" style="fill: #E3F2FD;" />
-    <text x="560" y="1150" class="step-text" text-anchor="end">11. LLM 接收并理解技能详情</text>
-    <text x="560" y="1175" class="label" text-anchor="end">"OK, a web-research involves a</text>
-    <text x="560" y="1195" class="label" text-anchor="end">`web_search` then a `write_file`."</text>
-    <text x="560" y="1220" class="step-text" text-anchor="end">12. LLM 根据新知识</text>
-    <text x="560" y="1240" class="step-text" text-anchor="end">     生成下一步的工具调用</text>
+    <rect x="590" y="1130" width="20" height="200" class="step-box" style="fill: #E3F2FD;" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-sf-re)" />
+    <text x="560" y="1150" class="step-text" text-anchor="end" font-size="14px" fill="#000000">11. LLM 接收并理解技能详情</text>
+    <text x="560" y="1175" class="label" text-anchor="end" font-size="13px" fill="#555">"OK, a web-research involves a</text>
+    <text x="560" y="1195" class="label" text-anchor="end" font-size="13px" fill="#555">`web_search` then a `write_file`."</text>
+    <text x="560" y="1220" class="step-text" text-anchor="end" font-size="14px" fill="#000000">12. LLM 根据新知识</text>
+    <text x="560" y="1240" class="step-text" text-anchor="end" font-size="14px" fill="#000000">     生成下一步的工具调用</text>
 
-    <path d="M 600 1280 H 1000" class="arrow" />
-    <text x="780" y="1275" class="label">Tool Call</text>
-    <text x="780" y="1295" class="func-name">web_search(query="...")</text>
+    <path d="M 600 1280 H 1000" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-sf-re)" />
+    <text x="780" y="1275" class="label" font-size="13px" fill="#555">Tool Call</text>
+    <text x="780" y="1295" class="func-name" font-family="monospace" font-size="12px" fill="#00796B">web_search(query="...")</text>
 
     <text x="600" y="1380" font-size="16" fill="#666" text-anchor="middle">--- 流程继续 ---</text>
 

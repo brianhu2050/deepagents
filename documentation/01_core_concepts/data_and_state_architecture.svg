@@ -1,7 +1,8 @@
-<svg width="1600" height="1000" viewBox="0 0 1600 1000" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" font-family="sans-serif">
     <defs>
         <marker id="arrow-ds-re" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" />
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" stroke="#000000" />
         </marker>
         <filter id="shadow-ds-re">
             <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
@@ -24,100 +25,100 @@
         </style>
     </defs>
 
-    <text x="800" y="40" class="title">数据与状态 (Data &amp; State) 架构与生命周期 (重构版)</text>
+    <text x="800" y="40" class="title" font-size="24px" text-anchor="middle" fill="#000000">数据与状态 (Data &amp; State) 架构与生命周期 (重构版)</text>
 
-    <!-- Column Divider -->
-    <line x1="700" y1="80" x2="700" y2="950" class="col-divider" />
 
-    <!-- Left Column: Composition -->
+    <line x1="700" y1="80" x2="700" y2="950" class="col-divider" stroke="#BDBDBD" stroke-width="2" />
+
+
     <g id="composition">
-        <text x="350" y="120" class="subtitle">第一部分: AgentState 的组合</text>
+        <text x="350" y="120" class="subtitle" font-size="18px" text-anchor="middle" fill="#000000">第一部分: AgentState 的组合</text>
 
-        <rect x="50" y="160" width="600" height="80" rx="10" class="box" style="fill: #E3F2FD; stroke: #90CAF9;" />
-        <text x="350" y="190" text-anchor="middle" class="text" >Base AgentState</text>
-        <text x="350" y="220" text-anchor="middle" class="text-mono">messages: list[BaseMessage]</text>
+        <rect x="50" y="160" width="600" height="80" rx="10" class="box" style="fill: #E3F2FD; stroke: #90CAF9;" stroke-width="1.5" filter="url(#shadow-ds-re)" />
+        <text x="350" y="190" text-anchor="middle" class="text" font-size="14px" fill="#000000">Base AgentState</text>
+        <text x="350" y="220" text-anchor="middle" class="text-mono" font-size="13px" font-family="monospace" fill="#000000">messages: list[BaseMessage]</text>
 
-        <path d="M 150 240 V 290" class="connector" />
-        <path d="M 350 240 V 290" class="connector" />
-        <path d="M 550 240 V 290" class="connector" />
-        <text x="350" y="270" text-anchor="middle" class="text" font-size="12">被中间件继承和扩展</text>
+        <path d="M 150 240 V 290" class="connector" stroke="#333" stroke-width="2" marker-end="url(#arrow-ds-re)" />
+        <path d="M 350 240 V 290" class="connector" stroke="#333" stroke-width="2" marker-end="url(#arrow-ds-re)" />
+        <path d="M 550 240 V 290" class="connector" stroke="#333" stroke-width="2" marker-end="url(#arrow-ds-re)" />
+        <text x="350" y="270" text-anchor="middle" class="text" font-size="12" fill="#000000">被中间件继承和扩展</text>
 
-        <rect x="25" y="290" width="250" height="100" rx="10" class="box" style="fill: #FFF3E0; stroke: #FFB74D;" />
-        <text x="150" y="325" text-anchor="middle" class="text">FilesystemState</text>
-        <text x="150" y="355" text-anchor="middle" class="text-mono" fill="#0D47A1">+ files: dict</text>
+        <rect x="25" y="290" width="250" height="100" rx="10" class="box" style="fill: #FFF3E0; stroke: #FFB74D;" stroke-width="1.5" filter="url(#shadow-ds-re)" />
+        <text x="150" y="325" text-anchor="middle" class="text" font-size="14px" fill="#000000">FilesystemState</text>
+        <text x="150" y="355" text-anchor="middle" class="text-mono" fill="#0D47A1" font-size="13px" font-family="monospace">+ files: dict</text>
 
-        <rect x="300" y="290" width="250" height="100" rx="10" class="box" style="fill: #FFF3E0; stroke: #FFB74D;" />
-        <text x="425" y="325" text-anchor="middle" class="text">SkillsState</text>
-        <text x="425" y="355" text-anchor="middle" class="text-mono" fill="#0D47A1">+ skills_metadata: list</text>
+        <rect x="300" y="290" width="250" height="100" rx="10" class="box" style="fill: #FFF3E0; stroke: #FFB74D;" stroke-width="1.5" filter="url(#shadow-ds-re)" />
+        <text x="425" y="325" text-anchor="middle" class="text" font-size="14px" fill="#000000">SkillsState</text>
+        <text x="425" y="355" text-anchor="middle" class="text-mono" fill="#0D47A1" font-size="13px" font-family="monospace">+ skills_metadata: list</text>
 
-        <rect x="25" y="410" width="250" height="100" rx="10" class="box" style="fill: #FFF3E0; stroke: #FFB74D;" />
-        <text x="150" y="445" text-anchor="middle" class="text">MemoryState</text>
-        <text x="150" y="475" text-anchor="middle" class="text-mono" fill="#0D47A1">+ memory: dict</text>
+        <rect x="25" y="410" width="250" height="100" rx="10" class="box" style="fill: #FFF3E0; stroke: #FFB74D;" stroke-width="1.5" filter="url(#shadow-ds-re)" />
+        <text x="150" y="445" text-anchor="middle" class="text" font-size="14px" fill="#000000">MemoryState</text>
+        <text x="150" y="475" text-anchor="middle" class="text-mono" fill="#0D47A1" font-size="13px" font-family="monospace">+ memory: dict</text>
 
-        <text x="425" y="460" text-anchor="middle" class="text">...等其他状态</text>
+        <text x="425" y="460" text-anchor="middle" class="text" font-size="14px" fill="#000000">...等其他状态</text>
 
-        <path d="M 150 510 V 560" class="connector" />
-        <path d="M 425 510 V 560" class="connector" />
-        <text x="287.5" y="540" text-anchor="middle" class="text" font-size="12">在 Agent 创建时动态组合</text>
+        <path d="M 150 510 V 560" class="connector" stroke="#333" stroke-width="2" marker-end="url(#arrow-ds-re)" />
+        <path d="M 425 510 V 560" class="connector" stroke="#333" stroke-width="2" marker-end="url(#arrow-ds-re)" />
+        <text x="287.5" y="540" text-anchor="middle" class="text" font-size="12" fill="#000000">在 Agent 创建时动态组合</text>
 
-        <rect x="50" y="560" width="600" height="180" rx="15" class="box" style="fill: #E8F5E9; stroke: #A5D6A7;" />
-        <text x="350" y="600" text-anchor="middle" class="subtitle">最终的完整 AgentState</text>
-        <text x="350" y="640" text-anchor="middle" class="text-mono">messages: list[BaseMessage]</text>
-        <text x="350" y="665" text-anchor="middle" class="text-mono">files: dict</text>
-        <text x="350" y="690" text-anchor="middle" class="text-mono">skills_metadata: list</text>
-        <text x="350" y="715" text-anchor="middle" class="text-mono">memory: dict</text>
+        <rect x="50" y="560" width="600" height="180" rx="15" class="box" style="fill: #E8F5E9; stroke: #A5D6A7;" stroke-width="1.5" filter="url(#shadow-ds-re)" />
+        <text x="350" y="600" text-anchor="middle" class="subtitle" font-size="18px" fill="#000000">最终的完整 AgentState</text>
+        <text x="350" y="640" text-anchor="middle" class="text-mono" font-size="13px" font-family="monospace" fill="#000000">messages: list[BaseMessage]</text>
+        <text x="350" y="665" text-anchor="middle" class="text-mono" font-size="13px" font-family="monospace" fill="#000000">files: dict</text>
+        <text x="350" y="690" text-anchor="middle" class="text-mono" font-size="13px" font-family="monospace" fill="#000000">skills_metadata: list</text>
+        <text x="350" y="715" text-anchor="middle" class="text-mono" font-size="13px" font-family="monospace" fill="#000000">memory: dict</text>
     </g>
 
-    <!-- Right Column: Lifecycle -->
+
     <g id="lifecycle">
-        <text x="1150" y="120" class="subtitle">第二部分: 数据生命周期 (单一循环)</text>
+        <text x="1150" y="120" class="subtitle" font-size="18px" text-anchor="middle" fill="#000000">第二部分: 数据生命周期 (单一循环)</text>
 
-        <rect x="750" y="160" width="800" height="750" rx="15" class="box" style="fill: #FAFAFA; stroke: #E0E0E0;" />
-        <text x="1150" y="200" text-anchor="middle" class="text" >Agent 运行循环</text>
+        <rect x="750" y="160" width="800" height="750" rx="15" class="box" style="fill: #FAFAFA; stroke: #E0E0E0;" stroke-width="1.5" filter="url(#shadow-ds-re)" />
+        <text x="1150" y="200" text-anchor="middle" class="text" font-size="14px" fill="#000000">Agent 运行循环</text>
 
-        <!-- State Box -->
-        <rect x="1050" y="240" width="200" height="100" rx="10" class="box" style="fill: #E8F5E9; stroke: #A5D6A7;" />
-        <text x="1150" y="285" text-anchor="middle" class="subtitle">AgentState</text>
 
-        <!-- before_agent -->
-        <rect x="800" y="380" width="200" height="80" rx="10" class="box" />
-        <text x="900" y="410" text-anchor="middle" class="text">`before_agent`</text>
-        <path d="M 1050 300 H 900" class="read-arrow" />
+        <rect x="1050" y="240" width="200" height="100" rx="10" class="box" style="fill: #E8F5E9; stroke: #A5D6A7;" stroke-width="1.5" filter="url(#shadow-ds-re)" />
+        <text x="1150" y="285" text-anchor="middle" class="subtitle" font-size="18px" fill="#000000">AgentState</text>
+
+
+        <rect x="800" y="380" width="200" height="80" rx="10" class="box" stroke-width="1.5" filter="url(#shadow-ds-re)" />
+        <text x="900" y="410" text-anchor="middle" class="text" font-size="14px" fill="#000000">`before_agent`</text>
+        <path d="M 1050 300 H 900" class="read-arrow" stroke="#2962FF" stroke-width="1.5" marker-end="url(#arrow-ds-re)" stroke-dasharray="5, 5" />
         <text x="975" y="295" class="text" font-size="12" fill="#2962FF">读取</text>
-        <path d="M 900 420 H 1050" class="write-arrow" />
+        <path d="M 900 420 H 1050" class="write-arrow" stroke="#D32F2F" stroke-width="2" marker-end="url(#arrow-ds-re)" />
         <text x="975" y="440" class="text" font-size="12" fill="#D32F2F">写入/更新</text>
-        <text x="900" y="450" text-anchor="middle" font-size="11">(加载技能/记忆, 修复 `messages`)</text>
+        <text x="900" y="450" text-anchor="middle" font-size="11" fill="#000000">(加载技能/记忆, 修复 `messages`)</text>
 
-        <!-- wrap_model_call -->
-        <rect x="1300" y="380" width="200" height="80" rx="10" class="box" />
-        <text x="1400" y="410" text-anchor="middle" class="text">`wrap_model_call`</text>
-        <path d="M 1250 300 H 1400" class="read-arrow" />
+
+        <rect x="1300" y="380" width="200" height="80" rx="10" class="box" stroke-width="1.5" filter="url(#shadow-ds-re)" />
+        <text x="1400" y="410" text-anchor="middle" class="text" font-size="14px" fill="#000000">`wrap_model_call`</text>
+        <path d="M 1250 300 H 1400" class="read-arrow" stroke="#2962FF" stroke-width="1.5" marker-end="url(#arrow-ds-re)" stroke-dasharray="5, 5" />
         <text x="1325" y="295" class="text" font-size="12" fill="#2962FF">读取</text>
-         <text x="1400" y="450" text-anchor="middle" font-size="11">(读取技能/记忆以构建 Prompt)</text>
+         <text x="1400" y="450" text-anchor="middle" font-size="11" fill="#000000">(读取技能/记忆以构建 Prompt)</text>
 
-        <!-- LLM Call -->
-        <path d="M 1150 340 V 490" class="connector" />
-        <rect x="1050" y="490" width="200" height="80" rx="10" class="box" />
-        <text x="1150" y="520" text-anchor="middle" class="text">LLM 调用</text>
-        <text x="1150" y="550" text-anchor="middle" font-size="11">(使用构建好的 Prompt)</text>
 
-        <!-- Tool Call -->
-        <path d="M 1150 570 V 620" class="connector" />
-        <rect x="1050" y="620" width="200" height="80" rx="10" class="box" />
-        <text x="1150" y="650" text-anchor="middle" class="text">工具执行</text>
-        <text x="1150" y="680" text-anchor="middle" font-size="11">(如 `write_file`, 返回 `Command`)</text>
+        <path d="M 1150 340 V 490" class="connector" stroke="#333" stroke-width="2" marker-end="url(#arrow-ds-re)" />
+        <rect x="1050" y="490" width="200" height="80" rx="10" class="box" stroke-width="1.5" filter="url(#shadow-ds-re)" />
+        <text x="1150" y="520" text-anchor="middle" class="text" font-size="14px" fill="#000000">LLM 调用</text>
+        <text x="1150" y="550" text-anchor="middle" font-size="11" fill="#000000">(使用构建好的 Prompt)</text>
 
-        <!-- State Update -->
-        <path d="M 1150 700 V 750" class="connector" />
-        <rect x="1050" y="750" width="200" height="80" rx="10" class="box" />
-        <text x="1150" y="780" text-anchor="middle" class="text">状态更新</text>
-        <text x="1150" y="810" text-anchor="middle" font-size="11">(LangGraph 合并新消息/状态)</text>
-        <path d="M 1150 830 H 1250" class="write-arrow" />
+
+        <path d="M 1150 570 V 620" class="connector" stroke="#333" stroke-width="2" marker-end="url(#arrow-ds-re)" />
+        <rect x="1050" y="620" width="200" height="80" rx="10" class="box" stroke-width="1.5" filter="url(#shadow-ds-re)" />
+        <text x="1150" y="650" text-anchor="middle" class="text" font-size="14px" fill="#000000">工具执行</text>
+        <text x="1150" y="680" text-anchor="middle" font-size="11" fill="#000000">(如 `write_file`, 返回 `Command`)</text>
+
+
+        <path d="M 1150 700 V 750" class="connector" stroke="#333" stroke-width="2" marker-end="url(#arrow-ds-re)" />
+        <rect x="1050" y="750" width="200" height="80" rx="10" class="box" stroke-width="1.5" filter="url(#shadow-ds-re)" />
+        <text x="1150" y="780" text-anchor="middle" class="text" font-size="14px" fill="#000000">状态更新</text>
+        <text x="1150" y="810" text-anchor="middle" font-size="11" fill="#000000">(LangGraph 合并新消息/状态)</text>
+        <path d="M 1150 830 H 1250" class="write-arrow" stroke="#D32F2F" stroke-width="2" marker-end="url(#arrow-ds-re)" />
         <text x="1200" y="850" class="text" font-size="12" fill="#D32F2F">写入/更新</text>
-        <path d="M 1250 810 V 340" class="write-arrow" />
+        <path d="M 1250 810 V 340" class="write-arrow" stroke="#D32F2F" stroke-width="2" marker-end="url(#arrow-ds-re)" />
 
-        <!-- Loop -->
-        <path d="M 1150 830 V 880" class="connector" />
-        <text x="1150" y="900" text-anchor="middle" class="text">循环至下一步或结束</text>
+
+        <path d="M 1150 830 V 880" class="connector" stroke="#333" stroke-width="2" marker-end="url(#arrow-ds-re)" />
+        <text x="1150" y="900" text-anchor="middle" class="text" font-size="14px" fill="#000000">循环至下一步或结束</text>
     </g>
 </svg>
