@@ -82,7 +82,7 @@
 
     <!-- Environments -->
     <rect x="150" y="680" width="200" height="50" rx="10" class="box environment" />
-    <text x="250" y="705" class="text">本地文件系统 & Shell</text>
+    <text x="250" y="705" class="text">本地文件系统 &amp; Shell</text>
 
     <rect x="650" y="680" width="200" height="50" rx="10" class="box environment" />
     <text x="750" y="705" class="text">远程沙箱环境</text>

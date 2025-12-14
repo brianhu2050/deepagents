@@ -27,7 +27,7 @@
         </style>
     </defs>
 
-    <text x="600" y="40" font-size="22" font-weight="bold" text-anchor:="middle">Middleware 模块 - 详细技术架构图</text>
+    <text x="600" y="40" font-size="22" font-weight="bold" text-anchor="middle">Middleware 模块 - 详细技术架构图</text>
 
     <!-- Data Sources -->
     <g id="data-sources">
