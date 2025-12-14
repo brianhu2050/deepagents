@@ -19,8 +19,8 @@
             .protocol-box { fill: #F3E5F5; stroke: #CE93D8; }
             .base-box { fill: #EDE7F6; stroke: #B39DDB; }
             .impl-box { fill: #FCE4EC; stroke: #F06292; }
-            .title { font-size: 28px; font-weight: bold; text-anchor: middle; }
-            .subtitle { font-size: 20px; font-weight: bold; text-anchor: middle; }
+            .title { font-size: 28px; text-anchor: middle; }
+            .subtitle { font-size: 20px; text-anchor: middle; }
             .text { font-size: 16px; text-anchor: middle; }
             .text-small { font-size: 13px; text-anchor: middle; }
             .text-mono { font-size: 14px; font-family: monospace; }
@@ -56,7 +56,7 @@
         <text x="600" y="390" class="subtitle">2. 协议层 (The "What")</text>
 
         <rect x="400" y="430" width="400" height="100" rx="10" class="box protocol-box" />
-        <text x="600" y="460" class="text" font-weight="bold">SandboxBackendProtocol</text>
+        <text x="600" y="460" class="text" >SandboxBackendProtocol</text>
         <text x="600" y="490" class="text-small">定义了必须实现的接口</text>
         <text x="600" y="515" class="text-mono">def execute(self, command: str) -> ExecuteResponse:</text>
     </g>
@@ -70,7 +70,7 @@
         <text x="600" y="640" class="subtitle">3. 抽象基类层 (The "How, Generally")</text>
 
         <rect x="400" y="680" width="400" height="200" rx="10" class="box base-box" />
-        <text x="600" y="710" class="text" font-weight="bold">BaseSandbox</text>
+        <text x="600" y="710" class="text" >BaseSandbox</text>
         <text x="600" y="740" class="text-small" fill="#C62828">**强制**子类实现 `execute`</text>
         <text x="600" y="760" class="text-mono">@abstractmethod</text>
         <text x="600" y="780" class="text-mono">def execute(...)</text>
@@ -89,28 +89,27 @@
         <text x="600" y="990" class="subtitle">4. 具体实现层 (The "How, Specifically")</text>
 
         <rect x="80" y="1030" width="320" height="150" rx="10" class="box impl-box" />
-        <text x="240" y="1060" class="text" font-weight="bold">DaytonaBackend</text>
+        <text x="240" y="1060" class="text" >DaytonaBackend</text>
         <text x="240" y="1090" class="text-mono" fill="#C62828">def execute(...):</text>
         <text x="240" y="1115" class="text-small">  return daytona.process.exec(...)</text>
         <text x="240" y="1145" class="text-small">(同步阻塞式 API)</text>
 
         <rect x="440" y="1030" width="320" height="150" rx="10" class="box impl-box" />
-        <text x="600" y="1060" class="text" font-weight="bold">ModalBackend</text>
+        <text x="600" y="1060" class="text" >ModalBackend</text>
         <text x="600" y="1090" class="text-mono" fill="#C62828">def execute(...):</text>
         <text x="600" y="1115" class="text-small">  proc = modal.sandbox.exec(...)</text>
         <text x="600" y="1130" class="text-small">  proc.wait()</text>
         <text x="600" y="1155" class="text-small">(异步风格 API, 需显式等待)</text>
 
         <rect x="800" y="1030" width="320" height="150" rx="10" class="box impl-box" />
-        <text x="960" y="1060" class="text" font-weight="bold">RunloopBackend</text>
+        <text x="960" y="1060" class="text" >RunloopBackend</text>
         <text x="960" y="1090" class="text-mono" fill="#C62828">def execute(...):</text>
         <text x="960" y="1115" class="text-small">  return runloop.devboxes...</text>
         <text x="960" y="1130" class="text-small">  .execute_and_await_completion(...)</text>
         <text x="960" y="1155" class="text-small">(同步高级别 API)</text>
 
-        <text x="600" y="1220" class="text" font-weight="bold">调用 `execute` 时...</text>
-        <path d="M 875 280 V
- 1030 H 600" class="connector" stroke-dasharray="8 4" />
+        <text x="600" y="1220" class="text" >调用 `execute` 时...</text>
+        <path d="M 875 280 V 1030 H 600" class="connector" stroke-dasharray="8 4" />
         <text x="750" y="900" class="text-small">假设 `ModalBackend` 被选中</text>
 
         <text x="600" y="1280" class="text">调用 `read` (未被子类覆盖) 时...</text>

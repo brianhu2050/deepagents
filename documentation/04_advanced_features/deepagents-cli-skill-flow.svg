@@ -12,7 +12,7 @@
             </feMerge>
         </filter>
         <style>
-            .swimlane-title { font-size: 18px; font-weight: bold; text-anchor: middle; }
+            .swimlane-title { font-size: 18px; text-anchor: middle; }
             .step-box { fill: #FFF; stroke: #9E9E9E; stroke-width: 1.5; filter: url(#shadow-sf-re); }
             .step-text { font-size: 14px; }
             .func-name { font-family: monospace; font-size: 12px; fill: #00796B;}
@@ -22,7 +22,7 @@
     </defs>
 
     <title>Deep Agents Skill Flow (Redesigned)</title>
-    <text x="600" y="40" font-size="24" font-weight="bold" text-anchor="middle">技能 (Skills) 加载与使用流程图 (重构版)</text>
+    <text x="600" y="40" font-size="24" text-anchor="middle">技能 (Skills) 加载与使用流程图 (重构版)</text>
 
     <!-- Swimlanes -->
     <g id="swimlanes">
@@ -93,7 +93,7 @@
     <text x="780" y="965" class="func-name">read_file(path=".../SKILL.md")</text>
 
     <rect x="990" y="970" width="20" height="150" class="step-box" style="fill: #E0F2F1;" />
-    <text x="1030" y="990" class="step-text" text-anchor="start">9. `read_file` 工具被调用</g></text>
+    <text x="1030" y="990" class="step-text" text-anchor="start">9. `read_file` 工具被调用</text>
     <text x="1030" y="1015" class="label" text-anchor="start">内部委派给</text>
     <text x="1030" y="1035" class="func-name" text-anchor="start">`self.backend.read()`</text>
     <text x="1030" y="1060" class="step-text" text-anchor="start">10. Backend 执行读取</text>
@@ -104,7 +104,7 @@
     <text x="780" y="1125" class="label">包含 `SKILL.md` 的完整内容</text>
 
     <rect x="590" y="1130" width="20" height="200" class="step-box" style="fill: #E3F2FD;" />
-    <text x="560" y="1150" class="step-text" text-anchor="end">11. LLM 接收并理解技能详情</g></text>
+    <text x="560" y="1150" class="step-text" text-anchor="end">11. LLM 接收并理解技能详情</text>
     <text x="560" y="1175" class="label" text-anchor="end">"OK, a web-research involves a</text>
     <text x="560" y="1195" class="label" text-anchor="end">`web_search` then a `write_file`."</text>
     <text x="560" y="1220" class="step-text" text-anchor="end">12. LLM 根据新知识</text>

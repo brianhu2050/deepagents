@@ -19,8 +19,8 @@
             .prompt-box { fill: #E8F5E9; stroke: #81C784; }
             .tool-box { fill: #FFE0B2; stroke: #FFB74D; }
             .state-box { fill: #E0F7FA; stroke: #4DD0E1; }
-            .title { font-size: 24px; font-weight: bold; text-anchor: middle; }
-            .subtitle { font-size: 18px; font-weight: bold; text-anchor: middle; }
+            .title { font-size: 24px; text-anchor: middle; }
+            .subtitle { font-size: 18px; text-anchor: middle; }
             .text { font-size: 15px; text-anchor: middle; }
             .text-small { font-size: 12px; text-anchor: middle; }
             .connector { stroke: #333; stroke-width: 2.5; marker-end: url(#arrow-sa); }
@@ -56,7 +56,7 @@
             - **高质量范例**: 通过示例教会模型如何决策
         </text>
 
-        <text x="750" y="380" class="text" font-weight="bold">LLM 决策: "这个任务很复杂, 应该委派出去。"</text>
+        <text x="750" y="380" class="text" >LLM 决策: "这个任务很复杂, 应该委派出去。"</text>
         <text x="750" y="410" class="text">LLM 生成工具调用:</text>
         <text x="750" y="440" class="text" font-family="monospace" fill="#C62828">
             task(subagent_type="research-analyst", description="请研究A和B的优缺点并总结报告...")
@@ -75,7 +75,7 @@
         <text x="400" y="650" class="subtitle">`task` 工具内部逻辑</text>
         <text x="400" y="680" class="text">1. 验证 `subagent_type` 是否存在</text>
         <text x="400" y="710" class="text">2. 准备隔离的子代理状态</text>
-        <text x="400" y="740" class="text" font-weight="bold">3. 调用对应的子代理实例</text>
+        <text x="400" y="740" class="text" >3. 调用对应的子代理实例</text>
 
         <rect x="800" y="620" width="600" height="150" rx="10" class="box state-box" />
         <text x="1100" y="650" class="subtitle">状态隔离与创建</text>

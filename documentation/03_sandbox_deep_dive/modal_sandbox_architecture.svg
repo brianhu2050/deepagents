@@ -17,8 +17,8 @@
             .backend-box { fill: #FFFDE7; stroke: #FFD54F; }
             .client-box { fill: #FCE4EC; stroke: #F06292; }
             .remote-layer { fill: #F5F5F5; stroke: #BDBDBD; }
-            .title { font-size: 28px; font-weight: bold; text-anchor: middle; }
-            .subtitle { font-size: 20px; font-weight: bold; text-anchor: middle; }
+            .title { font-size: 28px; text-anchor: middle; }
+            .subtitle { font-size: 20px; text-anchor: middle; }
             .text { font-size: 16px; text-anchor: middle; }
             .text-small { font-size: 13px; text-anchor: middle; }
             .text-mono { font-size: 14px; font-family: monospace; }
@@ -58,7 +58,7 @@
         <rect x="550" y="120" width="400" height="700" rx="15" class="box backend-box" />
         <text x="750" y="160" class="subtitle">ModalBackend (适配器)</text>
 
-        <text x="750" y="200" class="text" font-weight="bold">实现了 `SandboxBackendProtocol`</text>
+        <text x="750" y="200" class="text" >实现了 `SandboxBackendProtocol`</text>
 
         <rect x="600" y="300" width="300" height="100" rx="10" class="box backend-box" style="fill: #FFF59D;"/>
         <text x="750" y="330" class="text-mono">.execute(cmd)</text>
@@ -103,7 +103,7 @@
         <rect x="1075" y="450" width="250" height="150" rx="10" class="box remote-layer" style="fill: #ECEFF1;" />
         <text x="1200" y="480" class="text">远程临时容器</text>
         <text x="1200" y="510" class="text-small">(Temporary Container)</text>
-        <text x="1200" y="540" class="text" font-weight="bold">Shell</text>
+        <text x="1200" y="540" class="text" >Shell</text>
         <text x="1200" y="570" class="text-mono" fill="#455A64">$ npm run build</text>
     </g>
 

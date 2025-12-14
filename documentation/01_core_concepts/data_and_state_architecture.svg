@@ -13,8 +13,8 @@
         </filter>
         <style>
             .box { stroke-width: 1.5; filter: url(#shadow-ds-re); }
-            .title { font-size: 24px; font-weight: bold; text-anchor: middle; }
-            .subtitle { font-size: 18px; font-weight: bold; text-anchor: middle; }
+            .title { font-size: 24px; text-anchor: middle; }
+            .subtitle { font-size: 18px; text-anchor: middle; }
             .text { font-size: 14px; }
             .text-mono { font-size: 13px; font-family: monospace; }
             .connector { stroke: #333; stroke-width: 2; marker-end: url(#arrow-ds-re); }
@@ -34,7 +34,7 @@
         <text x="350" y="120" class="subtitle">第一部分: AgentState 的组合</text>
 
         <rect x="50" y="160" width="600" height="80" rx="10" class="box" style="fill: #E3F2FD; stroke: #90CAF9;" />
-        <text x="350" y="190" text-anchor="middle" class="text" font-weight="bold">Base AgentState</text>
+        <text x="350" y="190" text-anchor="middle" class="text" >Base AgentState</text>
         <text x="350" y="220" text-anchor="middle" class="text-mono">messages: list[BaseMessage]</text>
 
         <path d="M 150 240 V 290" class="connector" />
@@ -73,7 +73,7 @@
         <text x="1150" y="120" class="subtitle">第二部分: 数据生命周期 (单一循环)</text>
 
         <rect x="750" y="160" width="800" height="750" rx="15" class="box" style="fill: #FAFAFA; stroke: #E0E0E0;" />
-        <text x="1150" y="200" text-anchor="middle" class="text" font-weight="bold">Agent 运行循环</text>
+        <text x="1150" y="200" text-anchor="middle" class="text" >Agent 运行循环</text>
 
         <!-- State Box -->
         <rect x="1050" y="240" width="200" height="100" rx="10" class="box" style="fill: #E8F5E9; stroke: #A5D6A7;" />

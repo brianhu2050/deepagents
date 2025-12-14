@@ -20,7 +20,7 @@
             .detailed-module { fill: #EDE7F6; stroke: #B39DDB; }
             .ext-service { fill: #FBE9E7; stroke: #FFAB91; }
 
-            .title { font-size: 18px; font-weight: bold; text-anchor: middle; }
+            .title { font-size: 18px; text-anchor: middle; }
             .component-text { font-size: 14px; text-anchor: middle; }
             .connector-text { font-size: 13px; fill: #444; }
             .ref-text { font-size: 12px; fill: #673AB7; font-style: italic; text-anchor: middle; }
@@ -29,7 +29,7 @@
         </style>
     </defs>
 
-    <text x="600" y="50" font-size="28" font-weight="bold" text-anchor="middle">Deep Agents CLI - 高层技术架构图</text>
+    <text x="600" y="50" font-size="28" text-anchor="middle">Deep Agents CLI - 高层技术架构图</text>
 
     <!-- Layers -->
     <g id="user-layer">
@@ -63,14 +63,14 @@
         <text x="300" y="740" class="component-text">提供与外部世界交互的执行层</text>
         <text x="300" y="770" class="component-text">(文件系统, 沙箱, API)</text>
         <text x="300" y="810" class="ref-text">详见:</text>
-        <text x="300" y="830" class="ref-text" font-weight="bold">backend_and_tools_architecture.svg</text>
+        <text x="300" y="830" class="ref-text" >backend_and_tools_architecture.svg</text>
 
         <rect x="650" y="660" width="500" height="250" rx="10" class="box detailed-module" style="fill: #E0F2F1; stroke: #80CBC4;" />
         <text x="900" y="700" class="title">数据与状态 (Data &amp; State)</text>
         <text x="900" y="740" class="component-text">定义 Agent 的记忆和工作区</text>
         <text x="900" y="770" class="component-text">(消息历史, 文件缓存, 技能元数据)</text>
         <text x="900" y="810" class="ref-text">详见:</text>
-        <text x="900" y="830" class="ref-text" font-weight="bold">data_and_state_architecture.svg</text>
+        <text x="900" y="830" class="ref-text" >data_and_state_architecture.svg</text>
     </g>
 
     <g id="external-services-layer">

@@ -12,7 +12,7 @@
             </feMerge>
         </filter>
         <style>
-            .swimlane-title { font-size: 20px; font-weight: bold; text-anchor: middle; }
+            .swimlane-title { font-size: 20px; text-anchor: middle; }
             .step-box { fill: #FFF; stroke: #9E9E9E; stroke-width: 1.5; filter: url(#shadow-e2e); border-radius: 5px;}
             .step-text { font-size: 14px; }
             .func-name { font-family: monospace; font-size: 13px; fill: #00796B;}
@@ -22,7 +22,7 @@
     </defs>
 
     <title>Deep Agents E2E Planning Flow</title>
-    <text x="900" y="40" font-size="28" font-weight="bold" text-anchor="middle">Deep Agents 端到端执行流程图 (E2E Flow)</text>
+    <text x="900" y="40" font-size="28" text-anchor="middle">Deep Agents 端到端执行流程图 (E2E Flow)</text>
 
     <!-- Swimlanes -->
     <g id="swimlanes">

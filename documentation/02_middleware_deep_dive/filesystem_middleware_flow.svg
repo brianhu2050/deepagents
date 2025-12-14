@@ -21,8 +21,8 @@
             .security { fill: #FFEBEE; stroke: #EF5350; }
             .prompt-inject { fill: #E8F5E9; stroke: #A5D6A7; }
             .large-file { fill: #E0F7FA; stroke: #4DD0E1; }
-            .title { font-size: 20px; font-weight: bold; text-anchor: middle; }
-            .subtitle { font-size: 16px; font-weight: bold; text-anchor: middle; }
+            .title { font-size: 20px; text-anchor: middle; }
+            .subtitle { font-size: 16px; text-anchor: middle; }
             .text { font-size: 14px; text-anchor: middle; }
             .text-small { font-size: 12px; text-anchor: middle; }
             .connector { stroke: #333; stroke-width: 2; marker-end: url(#arrow-fs); }
@@ -30,7 +30,7 @@
         </style>
     </defs>
 
-    <text x="700" y="40" font-size="28" font-weight="bold" text-anchor="middle">FilesystemMiddleware 架构与流程图</text>
+    <text x="700" y="40" font-size="28" text-anchor="middle">FilesystemMiddleware 架构与流程图</text>
 
     <!-- Agent Core -->
     <rect x="550" y="80" width="300" height="60" rx="10" class="box agent-core" />
@@ -114,7 +114,7 @@
         <text x="425" y="910" class="text">3. (如果支持) 生成命令执行 Prompt</text>
         <text x="425" y="940" class="text">4. 过滤不可用工具</text>
         <text x="425" y="970" class="text">5. 将最终 Prompt 注入模型请求</text>
-        <text x="425" y="1000" class="text" font-weight="bold">确保 LLM 知晓可用工具</text>
+        <text x="425" y="1000" class="text" >确保 LLM 知晓可用工具</text>
 
         <!-- Large File Handling -->
         <rect x="750" y="790" width="450" height="230" rx="10" class="box large-file" />
@@ -126,7 +126,7 @@
         <text x="830" y="775" class="text-small">调用 backend.write()</text>
         <text x="975" y="940" class="text">4. 返回引导消息 (路径+预览)</text>
         <text x="975" y="970" class="text">5. 引导 Agent 使用 read_file 分页读取</text>
-        <text x="975" y="1000" class="text" font-weight="bold">防止上下文溢出</text>
+        <text x="975" y="1000" class="text" >防止上下文溢出</text>
 
     </g>
 

@@ -19,9 +19,9 @@
             .message { fill: #FFFFFF; stroke: #BDBDBD; }
             .ai-message { fill: #FCE4EC; stroke: #F48FB1; }
             .tool-message { fill: #EDE7F6; stroke: #B39DDB; }
-            .patched-message { fill: #D1C4E9; stroke: #9575CD; font-weight: bold; }
-            .title { font-size: 22px; font-weight: bold; text-anchor: middle; }
-            .subtitle { font-size: 16px; font-weight: bold; text-anchor: middle; }
+            .patched-message { fill: #D1C4E9; stroke: #9575CD; }
+            .title { font-size: 22px; text-anchor: middle; }
+            .subtitle { font-size: 16px; text-anchor: middle; }
             .text { font-size: 14px; }
             .text-mono { font-size: 13px; font-family: monospace; }
             .connector { stroke: #333; stroke-width: 2; marker-end: url(#arrow-pt); }
@@ -71,7 +71,7 @@
             <text x="135" y="705" class="text">HumanMessage("用户中断或新消息")</text>
 
             <path d="M 325, 590 C 20, 650, 20, 800, 325, 800" stroke="#E53935" stroke-width="2.5" fill="none" stroke-dasharray="5 5" marker-end="url(#arrow-pt)"/>
-            <text x="150" y="750" fill="#E53935" class="text" font-weight="bold">`call_B` 找不到对应的 ToolMessage!</text>
+            <text x="150" y="750" fill="#E53935" class="text" >`call_B` 找不到对应的 ToolMessage!</text>
 
         </g>
 

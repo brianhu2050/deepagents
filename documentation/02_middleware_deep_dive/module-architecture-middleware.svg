@@ -18,8 +18,8 @@
             .mw-box { fill: #FFFDE7; stroke: #FFF176; }
             .state-box { fill: #E0F2F1; stroke: #80CBC4; }
             .prompt-box { fill: #E8F5E9; stroke: #A5D6A7; }
-            .title { font-size: 28px; font-weight: bold; text-anchor: middle; }
-            .subtitle { font-size: 20px; font-weight: bold; text-anchor: middle; }
+            .title { font-size: 28px; text-anchor: middle; }
+            .subtitle { font-size: 20px; text-anchor: middle; }
             .text { font-size: 15px; text-anchor: middle; }
             .text-small { font-size: 12px; text-anchor: middle; }
             .text-mono { font-size: 14px; font-family: monospace; }
@@ -45,19 +45,19 @@
         <text x="525" y="170" class="text-small">在 Agent 逻辑开始前执行, 主要用于读取外部源和修复状态</text>
 
         <rect x="100" y="200" width="380" height="120" rx="10" class="box mw-box" />
-        <text x="290" y="230" class="text" font-weight="bold">PatchToolCallsMiddleware</text>
+        <text x="290" y="230" class="text" >PatchToolCallsMiddleware</text>
         <text x="290" y="260" class="text-small">**职责**: 修复悬空的工具调用</text>
         <text x="290" y="280" class="text-small">**动作**: 扫描 `messages`, 为未完成的</text>
         <text x="290" y="300" class="text-small">`tool_call` 注入“已取消”的 `ToolMessage`</text>
 
         <rect x="520" y="200" width="380" height="120" rx="10" class="box mw-box" />
-        <text x="710" y="230" class="text" font-weight="bold">AgentMemoryMiddleware</text>
+        <text x="710" y="230" class="text" >AgentMemoryMiddleware</text>
         <text x="710" y="260" class="text-small">**职责**: 加载记忆</text>
         <text x="710" y="280" class="text-small">**动作**: 从 `agent.md` 文件读取内容</text>
         <text x="710" y="300" class="text-small">并填充到 `AgentState` 的 `memory` 字段</text>
 
         <rect x="310" y="340" width="380" height="120" rx="10" class="box mw-box" />
-        <text x="500" y="370" class="text" font-weight="bold">SkillsMiddleware</text>
+        <text x="500" y="370" class="text" >SkillsMiddleware</text>
         <text x="500" y="400" class="text-small">**职责**: 发现可用技能</text>
         <text x="500" y="420" class="text-small">**动作**: 扫描技能目录, 解析 `SKILL.md`</text>
         <text x="500" y="440" class="text-small">元数据并填充到 `skills_metadata` 字段</text>
@@ -79,13 +79,13 @@
         <text x="700" y="620" class="text-small">形成调用链, `ModelRequest` 被逐层“装饰”和丰富</text>
 
         <rect x="100" y="650" width="250" height="100" rx="10" class="box prompt-box" />
-        <text x="225" y="680" class="text" font-weight="bold">初始 Prompt</text>
+        <text x="225" y="680" class="text" >初始 Prompt</text>
         <text x="225" y="710" class="text-mono">"You are an AI..."</text>
 
         <path d="M 350 700 H 400" class="connector" />
 
         <rect x="400" y="650" width="280" height="200" rx="10" class="box mw-box" />
-        <text x="540" y="680" class="text" font-weight="bold">SkillsMiddleware</text>
+        <text x="540" y="680" class="text" >SkillsMiddleware</text>
         <text x="540" y="710" class="text-small">**职责**: 注入技能列表和用法</text>
         <text x="540" y="740" class="text-small">**动作**: 读取 `skills_metadata`,</text>
         <text x="540" y="760" class="text-small">填充模板, 追加到 Prompt</text>
@@ -93,7 +93,7 @@
         <path d="M 680 700 H 730" class="connector" />
 
         <rect x="730" y="650" width="280" height="200" rx="10" class="box mw-box" />
-        <text x="870" y="680" class="text" font-weight="bold">SubAgentMiddleware</text>
+        <text x="870" y="680" class="text" >SubAgentMiddleware</text>
         <text x="870" y="710" class="text-small">**职责**: 注入任务委派指南</text>
         <text x="870" y="740" class="text-small">**动作**: 追加关于何时及如何</text>
         <text x="870" y="760" class="text-small">使用 `task` 工具的详细说明</text>
@@ -101,20 +101,20 @@
         <path d="M 1010 700 H 1060" class="connector" />
 
         <rect x="400" y="870" width="280" height="150" rx="10" class="box mw-box" />
-        <text x="540" y="900" class="text" font-weight="bold">FilesystemMiddleware</text>
+        <text x="540" y="900" class="text" >FilesystemMiddleware</text>
         <text x="540" y="930" class="text-small">**职责**: 注入文件/执行能力</text>
         <text x="540" y="960" class="text-small">**动作**: 检查后端, 追加工具用法,</text>
         <text x="540" y="980" class="text-small">并可能过滤 `execute` 工具</text>
 
         <rect x="1060" y="650" width="240" height="100" rx="10" class="box prompt-box" />
-        <text x="1180" y="680" class="text" font-weight="bold">最终 Prompt</text>
+        <text x="1180" y="680" class="text" >最终 Prompt</text>
         <text x="1180" y="710" class="text-small">组合了所有部分的完整指令</text>
 
         <path d="M 870 850 V 945 H 730" class="connector" />
         <path d="M 400 775 H 225 V 800 H 400 " class="connector" />
         <text x="315" y="790" class="text-small">... 其他中间件 ...</text>
         <path d="M 540 1020 V 1050 H 1180 V 750" class="connector" />
-        <text x="860" y="1040" class="text" font-weight="bold">➡️ 发送给 LLM</text>
+        <text x="860" y="1040" class="text" >➡️ 发送给 LLM</text>
 
         <!-- Data flow from state to wrap_model_call -->
         <path d="M 1200 280 V 700 H 1010 " class="data-flow" />

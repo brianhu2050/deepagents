@@ -19,8 +19,8 @@
             .protocol-box { fill: #F3E5F5; stroke: #CE93D8; }
             .impl-box { fill: #E1BEE7; stroke: #BA68C8; }
             .composite-box { fill: #D1C4E9; stroke: #9575CD; }
-            .title { font-size: 28px; font-weight: bold; text-anchor: middle; }
-            .subtitle { font-size: 20px; font-weight: bold; text-anchor: middle; }
+            .title { font-size: 28px; text-anchor: middle; }
+            .subtitle { font-size: 20px; text-anchor: middle; }
             .text { font-size: 16px; text-anchor: middle; }
             .text-small { font-size: 13px; text-anchor: middle; }
             .text-mono { font-size: 14px; font-family: monospace; }
@@ -57,18 +57,18 @@
         <text x="800" y="225" class="text-small">位于: `FilesystemMiddleware`</text>
 
         <rect x="575" y="250" width="450" height="150" rx="10" class="box bridge-layer" style="fill: #FFF59D;" />
-        <text x="800" y="280" class="text" font-weight="bold">read_file 工具</text>
+        <text x="800" y="280" class="text" >read_file 工具</text>
         <text x="800" y="310" class="text-small">1. 接收参数: `path`</text>
         <text x="800" y="330" class="text-small" fill="#D32F2F">2. 安全校验: `_validate_path(path)`</text>
-        <text x="800" y="360" class="text" font-weight="bold">3. 委派执行:</text>
+        <text x="800" y="360" class="text" >3. 委派执行:</text>
         <text x="800" y="380" class="code-ref">self.backend.read(validated_path)</text>
 
         <rect x="575" y="420" width="450" height="180" rx="10" class="box bridge-layer" style="fill: #FFF59D;" />
-        <text x="800" y="450" class="text" font-weight="bold">execute 工具</text>
+        <text x="800" y="450" class="text" >execute 工具</text>
         <text x="800" y="480" class="text-small">1. 接收参数: `command`</text>
         <text x="800" y="510" class="text-small" fill="#00796B">2. 条件性可用:</text>
         <text x="800" y="530" class="code-ref">isinstance(backend, SandboxBackendProtocol)</text>
-        <text x="800" y="560" class="text" font-weight="bold">3. 委派执行:</text>
+        <text x="800" y="560" class="text" >3. 委派执行:</text>
         <text x="800" y="580" class="code-ref">self.backend.execute(command)</text>
     </g>
 
@@ -96,14 +96,14 @@
         <text x="1350" y="460" class="code-ref">`backends/*.py`</text>
 
         <rect x="1150" y="480" width="180" height="150" rx="10" class="box impl-box" />
-        <text x="1240" y="510" class="text" font-weight="bold">FilesystemBackend</text>
+        <text x="1240" y="510" class="text" >FilesystemBackend</text>
         <text x="1240" y="540" class="code-ref">.read()</text>
         <text x="1240" y="560" class="text-small">实现: `Path.read_text()`</text>
         <text x="1240" y="590" class="code-ref">.execute()</text>
         <text x="1240" y="610" class="text-small" fill="#D32F2F">未实现</text>
 
         <rect x="1370" y="480" width="180" height="150" rx="10" class="box impl-box" />
-        <text x="1460" y="510" class="text" font-weight="bold">DaytonaBackend</text>
+        <text x="1460" y="510" class="text" >DaytonaBackend</text>
         <text x="1460" y="540" class="code-ref">.read()</text>
         <text x="1460" y="560" class="text-small" fill="#1A237E">继承: `BaseSandbox`</text>
         <text x="1460" y="590" class="code-ref">.execute()</text>

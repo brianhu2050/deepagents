@@ -12,7 +12,7 @@
             </feMerge>
         </filter>
         <style>
-            .actor { font-size: 18px; font-weight: bold; text-anchor: middle; }
+            .actor { font-size: 18px; text-anchor: middle; }
             .step-box { fill: #FFF; stroke: #9E9E9E; stroke-width: 1.5; filter: url(#shadow-rlr); }
             .step-text { font-size: 14px; }
             .arrow { stroke: #333; stroke-width: 2; marker-end: url(#arrow-rlr); }
@@ -21,7 +21,7 @@
     </defs>
 
     <title>RunloopBackend Execute Command Flow</title>
-    <text x="750" y="40" font-size="24" font-weight="bold" text-anchor="middle">RunloopBackend - `execute` 命令执行流程图</text>
+    <text x="750" y="40" font-size="24" text-anchor="middle">RunloopBackend - `execute` 命令执行流程图</text>
 
     <!-- Actors -->
     <text x="150" y="100" class="actor">Agent Core</text>

@@ -16,8 +16,8 @@
             .prompt-base { fill: #E3F2FD; stroke: #90CAF9; }
             .prompt-mw { fill: #FFF3E0; stroke: #FFB74D; }
             .prompt-final { fill: #E8F5E9; stroke: #A5D6A7; }
-            .title { font-size: 24px; font-weight: bold; text-anchor: middle; }
-            .subtitle { font-size: 16px; font-weight: bold; }
+            .title { font-size: 24px; text-anchor: middle; }
+            .subtitle { font-size: 16px; }
             .text { font-size: 14px; }
             .text-mono { font-size: 13px; font-family: monospace; }
             .connector { stroke: #444; stroke-width: 2; marker-end: url(#arrow-pc); }
@@ -48,12 +48,12 @@
 
         <rect x="70" y="390" width="860" height="60" rx="5" class="box prompt-base" />
         <text x="80" y="420" class="text-mono" text-anchor="start">
-            <tspan font-weight="bold">追加:</tspan> FILESYSTEM_SYSTEM_PROMPT ("## Filesystem Tools...")
+            <tspan >追加:</tspan> FILESYSTEM_SYSTEM_PROMPT ("## Filesystem Tools...")
         </text>
 
         <rect x="70" y="460" width="860" height="60" rx="5" class="box prompt-base" />
         <text x="80" y="495" class="text-mono" text-anchor="start">
-            <tspan font-weight="bold" fill="#00796B">(如果后端支持 execute)</tspan>
+            <tspan fill="#00796B">(如果后端支持 execute)</tspan>
             <tspan> 追加: EXECUTION_SYSTEM_PROMPT ("## Execute Tool...")</tspan>
         </text>
     </g>
@@ -70,7 +70,7 @@
 
         <rect x="70" y="690" width="860" height="60" rx="5" class="box prompt-base" />
         <text x="80" y="720" class="text-mono" text-anchor="start">
-            <tspan font-weight="bold">追加:</tspan> TASK_SYSTEM_PROMPT ("## `task` (subagent spawner)...")
+            <tspan >追加:</tspan> TASK_SYSTEM_PROMPT ("## `task` (subagent spawner)...")
         </text>
     </g>
 
@@ -86,7 +86,7 @@
 
         <rect x="70" y="920" width="860" height="100" rx="5" class="box prompt-base" />
         <text x="80" y="950" class="text-mono" text-anchor="start">
-            <tspan font-weight="bold">追加:</tspan> SKILLS_SYSTEM_PROMPT 模板, 其中填充了:
+            <tspan >追加:</tspan> SKILLS_SYSTEM_PROMPT 模板, 其中填充了:
         </text>
         <text x="100" y="975" class="text-mono" fill="#00796B" text-anchor="start">
             - `{skills_locations}` (技能文件路径)
@@ -112,7 +112,7 @@
         <text x="170" y="1275" class="text-mono" fill="#0277BD">4. 可用技能列表与使用方法</text>
         <path d="M 170 1285 L 830 1285" stroke="#BDBDBD" stroke-width="1" stroke-dasharray="4 2" />
 
-        <text x="500" y="1320" class="text" text-anchor="middle" font-weight="bold">
+        <text x="500" y="1320" class="text" text-anchor="middle" >
             这个最终的 Prompt 被发送给 LLM, 作为其本轮推理的最高指令。
         </text>
     </g>
