@@ -9,8 +9,9 @@
     1.2. [整体架构：工厂、中间件与后端](#1-2-overall-architecture)
     1.3. [深度解析：中间件生命周期](#1-3-middleware-lifecycle)
     1.4. [深度解析：沙箱与后端协议](#1-4-sandbox-and-backend-protocol)
+    1.5. [深度解析：数据与状态管理](#1-5-data-and-state)
 2.  [**第二部分：`deepagents-cli` 应用实现**](#part-2)
-    2.1. [应用层：CLI 入口与会话管理](#2-1-application-layer)
+    2.1. [端到端执行流程](#2-1-e2e-flow)
     2.2. [核心中间件实现与协同工作](#2-2-core-middleware-in-action)
     2.3. [高级功能：技能的渐进式披露](#2-3-progressive-disclosure)
     2.4. [提示工程：动态与分层的指令构建](#2-4-prompt-engineering)
@@ -99,6 +100,34 @@
 
 这种设计使得 `FilesystemMiddleware` 可以完全与具体环境解耦。它只需要依赖 `BackendProtocol` 接口，就可以在运行时被注入任何具体的后端“策略”，从而实现智能体在不同环境下的无缝切换。
 
+<a name="1-5-data-and-state"></a>
+### 1.5. 深度解析：数据与状态管理
+
+在 `deepagents` 框架（基于 LangGraph）中，“数据与状态”（Data & State）是驱动整个智能体（Agent）运行的**核心载体**。它就像是智能体的“记忆”和“工作台”，记录了交互的完整历史，并承载了所有中间步骤产生的数据。
+
+![Data & State Architecture](./01_core_concepts/data_and_state_architecture.svg)
+
+#### 1.5.1. 核心数据结构: `AgentState`
+
+`AgentState` 是一个 `TypedDict`，一个结构化的数据容器，作为整个 LangGraph 执行图中所有节点共享的上下文。
+
+-   **`messages`: `list[BaseMessage]`**: 这是智能体状态的**基石**，记录了用户、AI 和工具之间的所有交互。它是 LLM 进行推理决策时**最重要的上下文来源**。
+
+-   **状态的扩展与组合**: `deepagents` 的中间件架构巧妙地利用了 `AgentState` 的可扩展性。每个中间件都可以定义自己的状态“切片”（Slice），这些切片在运行时被动态组合成一个最终的、完整的 `AgentState`。
+    -   **`FilesystemState(AgentState)`**: 添加 `files` 字段，用于存储一个虚拟文件系统的状态。
+    -   **`SkillsState(AgentState)`**: 添加 `skills_metadata` 字段，用于存储从文件系统加载的技能元数据。
+
+#### 1.5.2. 数据的生命周期与流动
+
+1.  **初始化**: `AgentState` 被创建，通常只包含一个初始的 `HumanMessage`。
+2.  **中间件预处理 (`before_agent`)**: 像 `SkillsMiddleware` 这样的中间件会在此阶段**填充**状态（如 `skills_metadata`），而 `PatchToolCallsMiddleware` 则会**读取并修复**状态（如 `messages` 列表）。
+3.  **模型调用 (`wrap_model_call`)**: 这是状态**最重要**的“被读取”的阶段。中间件从 `state` 中读取信息来动态构建系统提示。
+4.  **工具执行 (`wrap_tool_call`)**: 工具执行的结果（`ToolMessage`）会被生成。特殊的工具（如 `write_file`）可能会返回一个 `Command`，该命令包含对 `state` 中其他部分的直接更新。
+5.  **状态更新**: LangGraph 运行时收集所有新生成的消息和命令，并将它们合并回 `AgentState` 中。
+6.  **循环**: 更新后的 `AgentState` 将作为输入，进入下一个运行循环。
+
+`AgentState` 是 `deepagents` 框架实现模块化和可扩展性的**核心枢纽**，它作为统一的数据总线，驱动着整个智能体的执行流程。
+
 ---
 
 <a name="part-2"></a>
@@ -106,32 +135,64 @@
 
 `deepagents-cli` 是 `deepagents` 核心框架的一个强大应用实例。它展示了如何利用核心框架的组件来构建一个功能丰富的、面向开发者的命令行代码助手。
 
-<a name="2-1-application-layer"></a>
-### 2.1. 应用层：CLI 入口与会话管理
-
--   **入口 (`main.py`)**: 应用的生命周期始于 `cli_main()` 函数。它使用 `Typer` 解析命令行参数，并使用 `Rich` 库来提供美观的 UI 渲染。
--   **Agent 组装 (`agent.py`)**: `create_cli_agent()` 函数是 `deepagents-cli` 的“总装车间”。它负责：
-    1.  根据命令行参数实例化具体的**后端** (如 `DaytonaBackend`)。
-    2.  实例化所有需要的**中间件** (如 `SkillsMiddleware`, `SubAgentMiddleware`)。
-    3.  调用核心框架的 `create_deep_agent()` 工厂函数，将这些部件组装成一个可执行的 LangGraph 实例。
--   **执行循环 (`execution.py`)**: `execute_task()` 函数负责驱动 Agent 完成任务。它调用 `agent.astream()` 来流式地执行 LangGraph，并处理各种事件，如渲染 LLM 的文本输出、处理工具调用、以及在需要时暂停以等待用户批准（人机回路）。
+<a name="2-1-e2e-flow"></a>
+### 2.1. 端到端执行流程
 
 ![End-to-End Planning Flow](./00_overall_architecture/e2e_planning_flow.svg)
 
-上图详细描绘了一个请求从用户输入到最终返回的完整端到端流程，展示了 `deepagents-cli` 各个组件之间是如何协同工作的。
+上图详细描绘了一个请求从用户输入到最终返回的完整端到端流程。
+
+#### 第一阶段: 初始化 (Initialization)
+
+1.  **CLI 入口 (`main.py`)**: `cli_main()` 作为入口点，使用 `Typer` 解析命令行参数（如 `--sandbox <type>`），决定 Agent 的执行环境。
+2.  **环境设置 (`main.py`)**: `create_sandbox()` 工厂函数根据参数实例化对应的沙箱后端（如 `DaytonaBackend`）。
+3.  **Agent 组装 (`agent.py`)**: `create_cli_agent()` 是整个初始化阶段的**核心**，它像一个“总装厂”：
+    -   **实例化后端**: 创建 `CompositeBackend`，并将沙箱实例或本地 `FilesystemBackend` 设置为默认后端。
+    -   **实例化中间件**: 创建 `AgentMemoryMiddleware`, `SkillsMiddleware` 等。
+    -   **调用核心构造器**: 调用核心库的 `create_deep_agent()`，将所有部件组装成一个可执行的 `LangGraph` 实例。
+
+#### 第二阶段: 任务执行 (Task Execution)
+
+1.  **交互循环 (`main.py`)**: `simple_cli()` 启动一个 `while True` 循环，等待用户输入。
+2.  **任务派发 (`execution.py`)**: 用户输入被传递给 `execute_task()` 函数。
+3.  **Agent 图的流式执行**: `execute_task()` 调用 `agent.astream()` 来流式地执行 LangGraph。循环消费 `astream` 产生的事件，包括：
+    -   **`AIMessageChunk`**: 流式地将 Agent 的文本响应渲染到终端。
+    -   **`ToolCallChunk`**: 显示“正在使用工具...”的提示。
+    -   **中断 (`__interrupt__`)**: 如果工具调用需要人类批准，流程在此暂停。
+4.  **人机回路**: `prompt_for_tool_approval()` 渲染一个交互式菜单，等待用户批准或拒绝。
+5.  **恢复 Agent 执行**: 用户的决定被包装成 `Command(resume=...)` 对象，作为下一次 `astream` 调用的输入，使 LangGraph 从暂停处继续执行。
+6.  **任务完成**: `astream` 循环结束，等待下一次用户输入。
 
 <a name="2-2-core-middleware-in-action"></a>
 ### 2.2. 核心中间件实现与协同工作
 
-`deepagents-cli` 的强大功能主要来自于其实现的三大核心中间件：
+`deepagents-cli` 的强大功能主要来自于其实现的三大核心中间件的协同工作：
 
--   **`FilesystemMiddleware`**: 负责提供与“世界”交互的基础 I/O 和执行能力。它是 Agent 的**“手和脚”**，提供了 `ls`, `read_file`, `execute` 等基础工具。
+#### `FilesystemMiddleware` 深度解析
 
--   **`SkillsMiddleware`**: 负责为 Agent 提供可复用的、结构化的“知识”和“工作流程”。它是 Agent 的**“知识库”或“操作手册”**。它并不直接提供工具，而是教会 Agent 如何通过读取 `SKILL.md` 文件来学习和执行复杂任务。
+-   **核心职责**: 提供与“世界”交互的基础 I/O 和执行能力。它是 Agent 的**“手和脚”**。
+-   **具体功能**:
+    1.  **提供基础工具**: 暴露一套标准的文件操作工具 (`ls`, `read_file`, `write_file`, `edit_file`, `glob`, `grep`) 和一个（可选的）命令执行工具 (`execute`)。
+    2.  **抽象后端**: 将这些工具的**具体实现**与工具本身解耦，委派给可配置的后端（`StateBackend`, `FilesystemBackend`, `SandboxBackend`）。
+    3.  **动态能力宣告**: 通过 `wrap_model_call`，动态地告诉 LLM 它当前是否拥有 `execute` 的能力。
+    4.  **大结果处理**: 通过 `wrap_tool_call`，自动拦截过大的工具输出，将其存入文件并返回引导消息，防止上下文窗口溢出。
 
--   **`SubAgentMiddleware`**: 负责提供任务分解、委派和并发执行的能力。它是 Agent 的**“项目管理和委派能力”**，通过一个 `task` 工具来创建隔离的、专用的子智能体去完成复杂任务。
+#### `SkillsMiddleware` 深度解析
 
-这三者协同工作，形成了一个强大的能力矩阵。例如，主 Agent 可以通过 `SubAgentMiddleware` 将一个复杂的编码任务委派给子 Agent。子 Agent 启动后，通过 `SkillsMiddleware` 发现并学习了相关的编码技能，然后使用 `FilesystemMiddleware` 提供的工具来读取代码、执行测试，最终完成任务。
+-   **核心职责**: 为 Agent 提供可复用的、结构化的“知识”和“工作流程”。它是 Agent 的**“知识库”或“操作手册”**。
+-   **具体功能**:
+    1.  **技能发现**: 通过 `before_agent`，从文件系统（`SKILL.md` 文件）中动态发现和加载所有可用的技能元数据。
+    2.  **能力宣告 (摘要)**: 通过 `wrap_model_call`，将所有已发现技能的**名称和描述**注入到系统提示中。
+    3.  **实现渐进式披露**: 教会 LLM 一个**模式**：当任务与某个技能相关时，使用 `FilesystemMiddleware` 提供的 `read_file` 工具去**读取**该技能的详细说明文档，然后再按照文档中的步骤去操作。
+
+#### `SubAgentMiddleware` 深度解析
+
+-   **核心职责**: 提供任务分解、委派和并发执行的能力。它是 Agent 的**“项目管理和委派能力”**。
+-   **具体功能**:
+    1.  **提供 `task` 工具**: 只向 Agent 暴露一个名为 `task` 的特殊工具。
+    2.  **子代理管理**: 在内部管理一个或多个“子 Agent”，每个子 Agent 可以拥有不同的 Prompt、工具集和中间件。
+    3.  **任务隔离**: 当 `task` 工具被调用时，它会在一个**隔离的上下文**中启动一个子 Agent 来执行指定的任务描述，避免上下文污染。
+    4.  **并发与效率**: 通过详细的 Prompt，强烈地**鼓励**主 Agent 在可能的情况下，一次性发起多个并行的 `task` 工具调用，以最大限度地提高执行效率。
 
 <a name="2-3-progressive-disclosure"></a>
 ### 2.3. 高级功能：技能的渐进式披露
@@ -159,5 +220,23 @@
 -   **分层构建**: 每个中间件都负责向系统提示中添加自己那一部分的指令。`SkillsMiddleware` 添加技能摘要，`SubAgentMiddleware` 添加任务委派指南，`FilesystemMiddleware` 添加文件和执行工具的说明。
 -   **基于能力的提示**: `FilesystemMiddleware` 只在后端支持执行时才添加 `execute` 工具的说明，确保提示与能力匹配。
 -   **通过示例学习**: `SubAgentMiddleware` 的提示中包含了大量高质量的正反面示例，并附有“思维链”注释，这是一种极其有效的教会 LLM 如何进行复杂决策的方法。
+
+---
+
+## 第三部分: 高级流程深度解析
+
+除了核心架构外，`deepagents` 还支持一些高级工作流程，这些流程对于解决现实世界中的复杂问题至关重要。
+
+### 3.1. 多技能协同调用
+
+当面对一个无法通过单一技能解决的复杂用户请求时，Agent 必须具备规划、分解和协同调用多个技能的能力。
+
+[**&gt;&gt; 点击此处，查看详细的多技能调用流程文档与图解**](./multi_skill_invocation.md)
+
+### 3.2. 子智能体任务委派
+
+为了实现更强的模块化和上下文隔离，`SubAgentMiddleware` 引入了“Agent-as-a-Tool”的概念，允许主 Agent 将一个完整的子任务委派给一个独立的、隔离的子 Agent 去执行。
+
+[**&gt;&gt; 点击此处，查看详细的子智能体委派流程文档与图解**](./subagent_delegation.md)
 
 这种动态、模块化、注重“教导而非命令”的提示工程策略，是 `deepagents-cli` 能够完成复杂、多步骤任务的核心驱动力。
