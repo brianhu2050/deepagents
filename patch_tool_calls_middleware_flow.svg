@@ -1,0 +1,123 @@
+<svg width="1200" height="1000" viewBox="0 0 1200 1000" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+    <defs>
+        <marker id="arrow-pt" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" />
+        </marker>
+        <filter id="shadow-pt">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+            <feOffset dx="2" dy="2" />
+            <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+        <style>
+            .box { stroke-width: 1.5; filter: url(#shadow-pt); }
+            .runtime { fill: #E3F2FD; stroke: #90CAF9; }
+            .middleware { fill: #FFF3E0; stroke: #FFB74D; }
+            .state { fill: #E0F2F1; stroke: #80CBC4; }
+            .message { fill: #FFFFFF; stroke: #BDBDBD; }
+            .ai-message { fill: #FCE4EC; stroke: #F48FB1; }
+            .tool-message { fill: #EDE7F6; stroke: #B39DDB; }
+            .patched-message { fill: #D1C4E9; stroke: #9575CD; font-weight: bold; }
+            .title { font-size: 22px; font-weight: bold; text-anchor: middle; }
+            .subtitle { font-size: 16px; font-weight: bold; text-anchor: middle; }
+            .text { font-size: 14px; }
+            .text-mono { font-size: 13px; font-family: monospace; }
+            .connector { stroke: #333; stroke-width: 2; marker-end: url(#arrow-pt); }
+        </style>
+    </defs>
+
+    <text x="600" y="40" class="title">PatchToolCallsMiddleware 工作流程</text>
+
+    <!-- Agent Runtime -->
+    <g id="runtime">
+        <rect x="50" y="80" width="1100" height="100" rx="10" class="box runtime" />
+        <text x="600" y="115" class="subtitle">智能体运行环境 (Agent Runtime)</text>
+        <text x="600" y="145" class="text" text-anchor="middle">Agent.stream() 或 Agent.invoke() 被调用</text>
+    </g>
+
+    <path d="M 600 180 V 230" class="connector" />
+    <text x="610" y="210" class="text">触发生命周期钩子</text>
+
+    <!-- Middleware Execution -->
+    <g id="middleware">
+        <rect x="50" y="230" width="1100" height="700" rx="15" class="box middleware" />
+        <text x="600" y="265" class="title">PatchToolCallsMiddleware.before_agent() 执行</text>
+
+        <!-- Step 1: Get State -->
+        <rect x="100" y="300" width="450" height="80" rx="10" class="box state" />
+        <text x="325" y="330" class="subtitle">1. 获取当前状态 (State)</text>
+        <text x="325" y="360" class="text" text-anchor="middle">state['messages']</text>
+
+        <path d="M 325 380 V 430" class="connector" />
+
+        <!-- Step 2: Corrupted State -->
+        <g id="state-representation">
+            <rect x="100" y="430" width="450" height="350" rx="10" class="box state" />
+            <text x="325" y="460" class="subtitle">2. 发现悬空的工具调用</text>
+
+            <rect x="125" y="480" width="400" height="50" rx="5" class="box message" />
+            <text x="135" y="505" class="text">HumanMessage(...) </text>
+
+            <rect x="125" y="540" width="400" height="70" rx="5" class="box ai-message" />
+            <text x="135" y="565" class="text">AIMessage(...)</text>
+            <text x="145" y="590" class="text-mono">tool_calls: [ id='call_A', id='call_B' ]</text>
+
+            <rect x="125" y="620" width="400" height="50" rx="5" class="box tool-message" />
+            <text x="135" y="645" class="text">ToolMessage(..., tool_call_id='call_A')</text>
+
+            <rect x="125" y="680" width="400" height="50" rx="5" class="box message" />
+            <text x="135" y="705" class="text">HumanMessage("用户中断或新消息")</text>
+
+            <path d="M 325, 590 C 20, 650, 20, 800, 325, 800" stroke="#E53935" stroke-width="2.5" fill="none" stroke-dasharray="5 5" marker-end="url(#arrow-pt)"/>
+            <text x="150" y="750" fill="#E53935" class="text" font-weight="bold">`call_B` 找不到对应的 ToolMessage!</text>
+
+        </g>
+
+        <!-- Step 3: Patching -->
+        <path d="M 550 580 H 650" class="connector" />
+        <text x="560" y="575" class="text">遍历与检查</text>
+
+        <g id="patched-state">
+            <rect x="650" y="300" width="450" height="500" rx="10" class="box state" />
+            <text x="875" y="330" class="subtitle">3. 构建已修复的消息列表</text>
+
+            <rect x="675" y="350" width="400" height="50" rx="5" class="box message" />
+            <text x="685" y="375" class="text">HumanMessage(...)</text>
+
+            <rect x="675" y="410" width="400" height="70" rx="5" class="box ai-message" />
+            <text x="685" y="435" class="text">AIMessage(...)</text>
+            <text x="695" y="460" class="text-mono">tool_calls: [ id='call_A', id='call_B' ]</text>
+
+            <rect x="675" y="490" width="400" height="50" rx="5" class="box tool-message" />
+            <text x="685" y="515" class="text">ToolMessage(..., tool_call_id='call_A')</text>
+
+            <rect x="675" y="550" width="400" height="100" rx="5" class="box patched-message" />
+            <text x="685" y="575" class="text" fill="#FFFFFF">**新注入的“补丁”消息**</text>
+            <text x="685" y="600" class="text" fill="#FFFFFF">ToolMessage(</text>
+            <text x="695" y="618" class="text-mono" fill="#FFFFFF">content="...call_B was cancelled...",</text>
+            <text x="695" y="635" class="text-mono" fill="#FFFFFF">tool_call_id='call_B'</text>
+            <text x="685" y="645" class="text" fill="#FFFFFF">)</text>
+
+            <rect x="675" y="660" width="400" height="50" rx="5" class="box message" />
+            <text x="685" y="685" class="text">HumanMessage("用户中断或新消息")</text>
+             <text x="875" y="730" class="subtitle" style="font-style:italic;">列表逻辑一致性已恢复</text>
+        </g>
+
+        <!-- Step 4: Overwrite -->
+         <path d="M 875 800 V 850" class="connector" />
+        <rect x="400" y="850" width="400" height="80" rx="10" class="box middleware" />
+        <text x="600" y="880" class="subtitle">4. 返回并覆写状态</text>
+        <text x="600" y="910" class="text" text-anchor="middle" font-family="monospace">
+           return {"messages": Overwrite(patched_list)}
+        </text>
+    </g>
+
+    <path d="M 600 930 V 960" class="connector" />
+    <text x="610" y="950" class="text">状态更新</text>
+
+    <!-- Final State -->
+    <rect x="400" y="960" width="400" height="30" rx="5" class="box runtime" />
+    <text x="600" y="980" class="text" text-anchor="middle">Agent 继续执行 (使用已修复的状态)</text>
+</svg>

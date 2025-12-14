@@ -1,0 +1,122 @@
+<svg width="1500" height="1200" viewBox="0 0 1500 1200" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+    <defs>
+        <marker id="arrow-sa" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" />
+        </marker>
+        <filter id="shadow-sa">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
+            <feOffset dx="3" dy="3" />
+            <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+        <style>
+            .box { stroke-width: 2; filter: url(#shadow-sa); }
+            .main-agent { fill: #E3F2FD; stroke: #64B5F6; }
+            .middleware { fill: #FFFDE7; stroke: #FFF176; }
+            .sub-agent { fill: #FCE4EC; stroke: #F06292; }
+            .prompt-box { fill: #E8F5E9; stroke: #81C784; }
+            .tool-box { fill: #FFE0B2; stroke: #FFB74D; }
+            .state-box { fill: #E0F7FA; stroke: #4DD0E1; }
+            .title { font-size: 24px; font-weight: bold; text-anchor: middle; }
+            .subtitle { font-size: 18px; font-weight: bold; text-anchor: middle; }
+            .text { font-size: 15px; text-anchor: middle; }
+            .text-small { font-size: 12px; text-anchor: middle; }
+            .connector { stroke: #333; stroke-width: 2.5; marker-end: url(#arrow-sa); }
+            .flow-line { stroke: #555; stroke-width: 1.5; stroke-dasharray: 8 4; marker-end: url(#arrow-sa); }
+        </style>
+    </defs>
+
+    <text x="750" y="50" class="title">SubAgentMiddleware 任务委派与执行流程</text>
+
+    <!-- Main Agent / Orchestrator -->
+    <g id="main-agent">
+        <rect x="50" y="100" width="1400" height="400" rx="15" class="box main-agent" />
+        <text x="750" y="140" class="title">主智能体 (Orchestrator)</text>
+
+        <rect x="100" y="180" width="400" height="100" rx="10" class="box state-box" />
+        <text x="300" y="210" class="subtitle">主智能体状态 (State)</text>
+        <text x="300" y="240" class="text" font-family="monospace">messages: [...] (完整历史)</text>
+        <text x="300" y="265" class="text" font-family="monospace">other_state_keys: ...</text>
+
+        <rect x="550" y="180" width="800" height="280" rx="10" class="box prompt-box" />
+        <text x="950" y="210" class="subtitle">注入的系统提示 (System Prompt)</text>
+        <text x="950" y="240" class="text" style="font-style:italic;">`TASK_SYSTEM_PROMPT` &amp; `TASK_TOOL_DESCRIPTION`</text>
+        <text x="950" y="270" class="text-small" text-anchor="start" dx="-380">
+            - **指导原则**: 何时用/不用 `task` 工具
+        </text>
+        <text x="950" y="290" class="text-small" text-anchor="start" dx="-380">
+            - **并发思想**: 强调并行执行任务
+        </text>
+        <text x="950" y="310" class="text-small" text-anchor="start" dx="-380">
+            - **可用代理**: 动态列出所有 `SubAgent` 的名称和描述
+        </text>
+        <text x="950" y="330" class="text-small" text-anchor="start" dx="-380">
+            - **高质量范例**: 通过示例教会模型如何决策
+        </text>
+
+        <text x="750" y="380" class="text" font-weight="bold">LLM 决策: "这个任务很复杂, 应该委派出去。"</text>
+        <text x="750" y="410" class="text">LLM 生成工具调用:</text>
+        <text x="750" y="440" class="text" font-family="monospace" fill="#C62828">
+            task(subagent_type="research-analyst", description="请研究A和B的优缺点并总结报告...")
+        </text>
+    </g>
+
+    <path d="M 750 500 V 550" class="connector" />
+    <text x="800" y="530" class="text-small">调用 `task` 工具</text>
+
+    <!-- SubAgentMiddleware -->
+    <g id="middleware">
+        <rect x="50" y="550" width="1400" height="600" rx="15" class="box middleware" />
+        <text x="750" y="590" class="title">SubAgentMiddleware</text>
+
+        <rect x="100" y="620" width="600" height="150" rx="10" class="box tool-box" />
+        <text x="400" y="650" class="subtitle">`task` 工具内部逻辑</text>
+        <text x="400" y="680" class="text">1. 验证 `subagent_type` 是否存在</text>
+        <text x="400" y="710" class="text">2. 准备隔离的子代理状态</text>
+        <text x="400" y="740" class="text" font-weight="bold">3. 调用对应的子代理实例</text>
+
+        <rect x="800" y="620" width="600" height="150" rx="10" class="box state-box" />
+        <text x="1100" y="650" class="subtitle">状态隔离与创建</text>
+        <text x="1100" y="680" class="text">`_validate_and_prepare_state`</text>
+        <text x="1100" y="710" class="text" fill="#D32F2F">❌ 过滤掉 `messages`, `todos` 等</text>
+        <text x="1100" y="740" class="text" fill="#2E7D32">✅ 创建新的 `messages` 列表</text>
+
+        <path d="M 300 280 V 650 H 100 " class="flow-line" />
+        <text x="250" y="500" class="text-small">传入主智能体状态</text>
+    </g>
+
+    <path d="M 400 770 V 820" class="connector" />
+    <text x="450" y="800" class="text-small">Invoke("research-analyst")</text>
+
+    <!-- SubAgent Execution -->
+    <g id="sub-agent">
+        <rect x="100" y="820" width="600" height="300" rx="15" class="box sub-agent" />
+        <text x="400" y="860" class="title">子智能体执行环境</text>
+        <text x="400" y="890" class="subtitle">("research-analyst")</text>
+
+        <rect x="125" y="920" width="550" height="100" rx="10" class="box state-box" />
+        <text x="400" y="950" class="subtitle">隔离的初始状态 (State)</text>
+        <text x="400" y="980" class="text" font-family="monospace">messages: [HumanMessage(content="请研究...")]</text>
+        <text x="400" y="1005" class="text" font-family="monospace">other_state_keys: ... (继承自上层)</text>
+
+        <text x="400" y="1050" class="text" style="font-style:italic;">... 子代理独立执行多步操作 ...</text>
+        <text x="400" y="1075" class="text">(调用自己的工具, 如 `search`, `read_file`)</text>
+    </g>
+
+    <path d="M 400 1120 V 1150 H 750" class="connector" />
+    <text x="575" y="1140" class="text-small" fill="#00796B">返回最终结果</text>
+
+    <!-- Result Handling -->
+    <text x="1100" y="820" class="subtitle">结果处理与返回</text>
+    <path d="M 750 1150 V 850 H 1100" class="flow-line" />
+    <text x="1100" y="880" class="text">1. 提取子代理的最终输出消息</text>
+    <text x="1100" y="910" class="text">2. (可选) 合并子代理状态的更新</text>
+    <text x="1100" y="940" class="text">3. 包装成 `ToolMessage`</text>
+    <text x="1100" y="970" class="text" font-family="monospace" fill="#1976D2">ToolMessage(content="研究报告摘要...", tool_call_id=...)</text>
+
+    <path d="M 1100 1000 V 500 H 750" class="connector" />
+    <text x="1000" y="600" class="text-small" fill="#00796B">工具结果返回给主智能体</text>
+
+</svg>
