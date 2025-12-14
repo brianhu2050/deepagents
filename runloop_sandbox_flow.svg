@@ -1,0 +1,90 @@
+<svg width="1500" height="900" viewBox="0 0 1500 900" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+    <defs>
+        <marker id="arrow-rlr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" />
+        </marker>
+        <filter id="shadow-rlr">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+            <feOffset dx="2" dy="2" />
+            <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+        <style>
+            .actor { font-size: 18px; font-weight: bold; text-anchor: middle; }
+            .step-box { fill: #FFF; stroke: #9E9E9E; stroke-width: 1.5; filter: url(#shadow-rlr); }
+            .step-text { font-size: 14px; }
+            .arrow { stroke: #333; stroke-width: 2; marker-end: url(#arrow-rlr); }
+            .label { font-size: 13px; fill: #555; }
+        </style>
+    </defs>
+
+    <title>RunloopBackend Execute Command Flow</title>
+    <text x="750" y="40" font-size="24" font-weight="bold" text-anchor="middle">RunloopBackend - `execute` 命令执行流程图</text>
+
+    <!-- Actors -->
+    <text x="150" y="100" class="actor">Agent Core</text>
+    <line x1="150" y1="110" x2="150" y2="850" stroke="#64B5F6" stroke-width="2"/>
+
+    <text x="450" y="100" class="actor">RunloopBackend</text>
+    <line x1="450" y1="110" x2="450" y2="850" stroke="#FFD54F" stroke-width="2"/>
+
+    <text x="750" y="100" class="actor">Runloop Client</text>
+    <line x1="750" y1="110" x2="750" y2="850" stroke="#F06292" stroke-width="2"/>
+
+    <text x="1050" y="100" class="actor">Runloop API</text>
+    <line x1="1050" y1="110" x2="1050" y2="850" stroke="#BDBDBD" stroke-width="2"/>
+
+    <text x="1350" y="100" class="actor">Remote Devbox</text>
+    <line x1="1350" y1="110" x2="1350" y2="850" stroke="#90A4AE" stroke-width="2"/>
+
+    <!-- Flow -->
+    <!-- Step 1 -->
+    <path d="M 150 150 H 450" class="arrow"/>
+    <text x="280" y="145" class="label">1. execute("npm test")</text>
+    <rect x="440" y="160" width="20" height="40" class="step-box" />
+
+    <!-- Step 2 -->
+    <path d="M 450 220 H 750" class="arrow"/>
+    <text x="560" y="215" class="label">2. ._client.devboxes.execute_and_await_completion(...)</text>
+    <rect x="740" y="230" width="20" height="400" class="step-box" />
+    <text x="780" y="260" class="label" text-anchor="start">(Blocks until completion)</text>
+
+    <!-- Step 3 -->
+    <path d="M 750 290 H 1050" class="arrow"/>
+    <text x="880" y="285" class="label">3. API Request</text>
+    <rect x="1040" y="300" width="20" height="240" class="step-box" />
+
+    <!-- Step 4 -->
+    <path d="M 1050 360 H 1350" class="arrow"/>
+    <text x="1180" y="355" class="label">4. Execute on remote shell</text>
+    <rect x="1340" y="370" width="20" height="120" class="step-box" />
+    <text x="1380" y="400" class="label" text-anchor="start">$ npm test</text>
+    <text x="1380" y="430" class="label" text-anchor="start">...</text>
+    <text x="1380" y="460" class="label" text-anchor="start">[Process Completes]</text>
+
+    <!-- Return Flow -->
+    <!-- Step 5 -->
+    <path d="M 1350 520 H 1050" class="arrow"/>
+    <text x="1180" y="515" class="label">5. Return output &amp; exit_code</text>
+    <rect x="1040" y="550" width="20" height="40" class="step-box" />
+
+    <!-- Step 6 -->
+    <path d="M 1050 610 H 750" class="arrow"/>
+    <text x="880" y="605" class="label">6. API Response</text>
+    <rect x="740" y="640" width="20" height="40" class="step-box" />
+
+    <!-- Step 7 -->
+    <path d="M 750 700 H 450" class="arrow"/>
+    <text x="560" y="695" class="label">7. Wrap in `ExecuteResponse`</text>
+    <rect x="440" y="710" width="20" height="40" class="step-box" />
+
+    <!-- Step 8 -->
+    <path d="M 450 770 H 150" class="arrow"/>
+    <text x="280" y="765" class="label">8. Return result</text>
+    <rect x="140" y="780" width="20" height="40" class="step-box" />
+
+    <text x="150" y="840" class="label" text-anchor="middle">Flow Complete</text>
+
+</svg>

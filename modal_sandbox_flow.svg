@@ -1,0 +1,91 @@
+<svg width="1500" height="900" viewBox="0 0 1500 900" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+    <defs>
+        <marker id="arrow-mdr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" />
+        </marker>
+        <filter id="shadow-mdr">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+            <feOffset dx="2" dy="2" />
+            <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+        <style>
+            .actor { font-size: 18px; font-weight: bold; text-anchor: middle; }
+            .step-box { fill: #FFF; stroke: #9E9E9E; stroke-width: 1.5; filter: url(#shadow-mdr); }
+            .step-text { font-size: 14px; }
+            .arrow { stroke: #333; stroke-width: 2; marker-end: url(#arrow-mdr); }
+            .label { font-size: 13px; fill: #555; }
+        </style>
+    </defs>
+
+    <title>ModalBackend Execute Command Flow</title>
+    <text x="750" y="40" font-size="24" font-weight="bold" text-anchor="middle">ModalBackend - `execute` 命令执行流程图</text>
+
+    <!-- Actors -->
+    <text x="150" y="100" class="actor">Agent Core</text>
+    <line x1="150" y1="110" x2="150" y2="850" stroke="#64B5F6" stroke-width="2"/>
+
+    <text x="450" y="100" class="actor">ModalBackend</text>
+    <line x1="450" y1="110" x2="450" y2="850" stroke="#FFD54F" stroke-width="2"/>
+
+    <text x="750" y="100" class="actor">Modal Client</text>
+    <line x1="750" y1="110" x2="750" y2="850" stroke="#F06292" stroke-width="2"/>
+
+    <text x="1050" y="100" class="actor">Modal Platform</text>
+    <line x1="1050" y1="110" x2="1050" y2="850" stroke="#BDBDBD" stroke-width="2"/>
+
+    <text x="1350" y="100" class="actor">Remote Container</text>
+    <line x1="1350" y1="110" x2="1350" y2="850" stroke="#90A4AE" stroke-width="2"/>
+
+    <!-- Flow -->
+    <!-- Step 1 -->
+    <path d="M 150 150 H 450" class="arrow"/>
+    <text x="280" y="145" class="label">1. execute("npm run build")</text>
+    <rect x="440" y="160" width="20" height="40" class="step-box" />
+
+    <!-- Step 2 -->
+    <path d="M 450 220 H 750" class="arrow"/>
+    <text x="560" y="215" class="label">2. self._sandbox.exec("bash", ...)</text>
+    <rect x="740" y="230" width="20" height="40" class="step-box" />
+
+    <!-- Step 3 -->
+    <path d="M 750 290 H 1050" class="arrow"/>
+    <text x="880" y="285" class="label">3. API Request to start process</text>
+    <rect x="1040" y="300" width="20" height="40" class="step-box" />
+
+    <!-- Step 4 -->
+    <path d="M 1050 360 H 1350" class="arrow"/>
+    <text x="1180" y="355" class="label">4. Spawns container &amp; starts shell command</text>
+    <rect x="1340" y="370" width="20" height="40" class="step-box" />
+    <path d="M 1050 330 H 750" class="arrow" stroke-dasharray="4 4" />
+    <text x="880" y="325" class="label">Returns `Process` object immediately</text>
+
+    <!-- Step 5 -->
+    <path d="M 750 380 H 450" class="arrow" stroke-dasharray="4 4"/>
+    <text x="560" y="375" class="label">`process` object returned</text>
+    <rect x="440" y="390" width="20" height="200" class="step-box" />
+    <text x="480" y="420" class="label" text-anchor="start">5. Call `process.wait()`</text>
+    <text x="480" y="450" class="label" text-anchor="start">(Blocks execution locally)</text>
+    <path d="M 450 480 H 1350" class="arrow"/>
+    <text x="850" y="475" class="label">Blocks until remote process completes</text>
+    <rect x="1340" y="490" width="20" height="40" class="step-box" />
+
+    <!-- Return Flow -->
+    <path d="M 1350 540 H 450" class="arrow"/>
+    <text x="850" y="535" class="label">6. Process completion signal</text>
+
+    <text x="480" y="550" class="label" text-anchor="start">7. Read I/O streams</text>
+    <text x="480" y="570" class="label" text-anchor="start">`process.stdout.read()`</text>
+    <text x="480" y="590" class="label" text-anchor="start">`process.stderr.read()`</text>
+    <rect x="440" y="600" width="20" height="40" class="step-box" />
+
+    <!-- Step 8 -->
+    <path d="M 450 660 H 150" class="arrow"/>
+    <text x="280" y="655" class="label">8. Combine streams, wrap in `ExecuteResponse`</text>
+    <rect x="140" y="670" width="20" height="40" class="step-box" />
+
+    <text x="150" y="730" class="label" text-anchor="middle">Flow Complete</text>
+
+</svg>
