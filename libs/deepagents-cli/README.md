@@ -247,6 +247,51 @@ Skills follow Anthropic's [progressive disclosure pattern](https://www.anthropic
 4. **Progressive loading** - Agent reads full `SKILL.md` content with `read_file` only when a task matches the skill's description
 5. **Execute workflow** - Agent follows the step-by-step instructions in the skill file
 
+### Dynamic Tool Loading from Skills
+
+In addition to providing workflows, skills can also dynamically load new tools into the agent. This allows you to create self-contained skills that bundle both instructions and the tools needed to perform them.
+
+**How it works:**
+
+1.  **Add a `tools` key** to your `SKILL.md`'s YAML frontmatter. This key should contain a list of Python import strings for your tools.
+2.  The `ToolLoadingMiddleware` (which should be added to the agent's middleware stack) will automatically detect these tools, import them, and make them available to the agent.
+
+For security, tools can only be loaded from the `deepagents_cli.skills.contrib` namespace.
+
+**Example:**
+
+Let's say you have a tool in `libs/deepagents-cli/deepagents_cli/skills/contrib/system.py`:
+
+```python
+# libs/deepagents-cli/deepagents_cli/skills/contrib/system.py
+from datetime import datetime
+from langchain_core.tools import tool
+
+@tool
+def get_current_datetime(format: str = "%Y-%m-%d %H:%M:%S") -> str:
+    """Returns the current date and time."""
+    return datetime.now().strftime(format)
+```
+
+You can create a skill that makes this tool available to the agent:
+
+**`~/.deepagents/agent/skills/system-info/SKILL.md`**:
+
+```yaml
+---
+name: system-info
+description: Provides tools to get system information, like the current date and time.
+tools:
+  - "deepagents_cli.skills.contrib.system.get_current_datetime"
+---
+
+# System Information Skill
+
+This skill provides the `get_current_datetime` tool.
+```
+
+When the agent starts, the `get_current_datetime` tool will be automatically loaded and available for use, just like any of the built-in tools.
+
 ## Development
 
 ### Running Tests

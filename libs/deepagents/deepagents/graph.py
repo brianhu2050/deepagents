@@ -146,10 +146,29 @@ def create_deep_agent(
     if interrupt_on is not None:
         deepagent_middleware.append(HumanInTheLoopMiddleware(interrupt_on=interrupt_on))
 
+    # --- Dynamic Tool Loading Integration ---
+    # To support dynamically loaded tools from skills, we need to manually
+    # run the `before_agent` hooks of the middleware to populate the initial state.
+    # This allows us to inspect the state for any dynamically added tools
+    # (e.g., from ToolLoadingMiddleware) before the agent graph is compiled.
+
+    # Start with a baseline state that includes an empty list for messages,
+    # as some middleware may expect it to be present.
+    initial_state = {"messages": []}
+    for mw in deepagent_middleware:
+        if before_agent_update := mw.before_agent(initial_state, runtime=None):
+            initial_state.update(before_agent_update)
+
+    # Combine static tools with dynamically loaded skill tools
+    final_tools = list(tools) if tools is not None else []
+    if "skill_tools" in initial_state and isinstance(initial_state["skill_tools"], list):
+        final_tools.extend(initial_state["skill_tools"])
+
+    # Now, create the agent with the combined list of tools.
     return create_agent(
         model,
         system_prompt=system_prompt + "\n\n" + BASE_AGENT_PROMPT if system_prompt else BASE_AGENT_PROMPT,
-        tools=tools,
+        tools=final_tools,
         middleware=deepagent_middleware,
         response_format=response_format,
         context_schema=context_schema,
