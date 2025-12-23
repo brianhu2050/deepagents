@@ -3,24 +3,45 @@
 from collections.abc import Callable, Sequence
 from typing import Any
 
-from langchain.agents import create_agent
-from langchain.agents.middleware import HumanInTheLoopMiddleware, InterruptOnConfig, TodoListMiddleware
+from langgraph.graph import StateGraph, START, END
+from langgraph.prebuilt.tool_executor import ToolExecutor
+from langchain_core.messages import AIMessage, BaseMessage, ToolMessage
+from typing import Annotated, Literal
+from langchain_core.runnables import chain
+from langchain.agents.format_scratchpad.tools import format_to_tool_messages
+from langchain.agents.output_parsers.tools import ToolsAgentOutputParser
+from langchain.agents.middleware import AgentState
+from langchain.agents.middleware import (
+    HumanInTheLoopMiddleware,
+    InterruptOnConfig,
+    TodoListMiddleware,
+    apply_middleware,
+)
 from langchain.agents.middleware.summarization import SummarizationMiddleware
 from langchain.agents.middleware.types import AgentMiddleware
 from langchain.agents.structured_output import ResponseFormat
+from langchain.agents.tool_calling_agent import should_continue
 from langchain_anthropic import ChatAnthropic
 from langchain_anthropic.middleware import AnthropicPromptCachingMiddleware
 from langchain_core.language_models import BaseChatModel
+from langchain_core.messages import BaseMessage
+from langchain_core.runnables import RunnableConfig
 from langchain_core.tools import BaseTool
 from langgraph.cache.base import BaseCache
 from langgraph.graph.state import CompiledStateGraph
+from langgraph.prebuilt import ToolNode
 from langgraph.store.base import BaseStore
 from langgraph.types import Checkpointer
 
 from deepagents.backends.protocol import BackendFactory, BackendProtocol
+from deepagents.dynamic_tools import create_dynamic_tool_node
 from deepagents.middleware.filesystem import FilesystemMiddleware
 from deepagents.middleware.patch_tool_calls import PatchToolCallsMiddleware
-from deepagents.middleware.subagents import CompiledSubAgent, SubAgent, SubAgentMiddleware
+from deepagents.middleware.subagents import (
+    CompiledSubAgent,
+    SubAgent,
+    SubAgentMiddleware,
+)
 
 BASE_AGENT_PROMPT = "In order to complete the objective that the user asks of you, you have access to a number of standard tools."
 
@@ -146,35 +167,60 @@ def create_deep_agent(
     if interrupt_on is not None:
         deepagent_middleware.append(HumanInTheLoopMiddleware(interrupt_on=interrupt_on))
 
-    # --- Dynamic Tool Loading Integration ---
-    # To support dynamically loaded tools from skills, we need to manually
-    # run the `before_agent` hooks of the middleware to populate the initial state.
-    # This allows us to inspect the state for any dynamically added tools
-    # (e.g., from ToolLoadingMiddleware) before the agent graph is compiled.
+    # Determine if we need to use the dynamic tool node.
+    use_dynamic_tools = any(
+        "SkillActivationMiddleware" in m.__class__.__name__ for m in middleware
+    )
 
-    # Start with a baseline state that includes an empty list for messages,
-    # as some middleware may expect it to be present.
-    initial_state = {"messages": []}
-    for mw in deepagent_middleware:
-        if before_agent_update := mw.before_agent(initial_state, runtime=None):
-            initial_state.update(before_agent_update)
+    # Manually build the graph to allow for custom tool node injection.
+    # This logic is adapted from langchain.agents.create_agent.
+    if context_schema:
+        workflow = StateGraph(context_schema)
+    else:
+        workflow = StateGraph(AgentState)
 
-    # Combine static tools with dynamically loaded skill tools
-    final_tools = list(tools) if tools is not None else []
-    if "skill_tools" in initial_state and isinstance(initial_state["skill_tools"], list):
-        final_tools.extend(initial_state["skill_tools"])
-
-    # Now, create the agent with the combined list of tools.
-    return create_agent(
+    # Create the agent node
+    agent_runnable = apply_middleware(
         model,
-        system_prompt=system_prompt + "\n\n" + BASE_AGENT_PROMPT if system_prompt else BASE_AGENT_PROMPT,
-        tools=final_tools,
-        middleware=deepagent_middleware,
+        *deepagent_middleware,
+        system_prompt=(
+            system_prompt + "\n\n" + BASE_AGENT_PROMPT
+            if system_prompt
+            else BASE_AGENT_PROMPT
+        ),
         response_format=response_format,
-        context_schema=context_schema,
-        checkpointer=checkpointer,
-        store=store,
-        debug=debug,
         name=name,
+    )
+
+    async def agent_node(state: AgentState, config: RunnableConfig):
+        """Runs the agent."""
+        agent_outcome = await agent_runnable.ainvoke(state, config)
+        parser = ToolsAgentOutputParser()
+        parsed_outcome = parser.invoke(agent_outcome)
+        if isinstance(parsed_outcome, list):
+            return {"messages": [AIMessage(tool_calls=parsed_outcome)]}
+        else:
+            return {"messages": [AIMessage(content=parsed_outcome.return_values["output"])]}
+
+    workflow.add_node("agent", agent_node)
+
+    # Create the tool node
+    if use_dynamic_tools:
+        tool_node = create_dynamic_tool_node(tools or [])
+    else:
+        tool_node = ToolNode(tools or [])
+    workflow.add_node("tools", tool_node)
+
+    # Define edges
+    workflow.add_conditional_edges("agent", should_continue, {"tools": "tools", "__end__": END})
+    workflow.add_edge("tools", "agent")
+    workflow.add_edge(START, "agent")
+
+    # Compile the graph
+    graph = workflow.compile(
+        checkpointer=checkpointer,
+        interrupt_before=["tools"],
+        debug=debug,
         cache=cache,
-    ).with_config({"recursion_limit": 1000})
+    )
+    return graph.with_config({"recursion_limit": 1000})
