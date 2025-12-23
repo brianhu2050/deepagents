@@ -241,11 +241,64 @@ $ "create a agent.py script that implements a LangGraph agent"
 
 Skills follow Anthropic's [progressive disclosure pattern](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills) - the agent knows skills exist but only reads full instructions when needed.
 
-1. **At startup** - SkillsMiddleware scans `~/.deepagents/agent/skills/` and `.deepagents/skills/` directories
-2. **Parse metadata** - Extracts YAML frontmatter (name + description) from each `SKILL.md` file
-3. **Inject into prompt** - Adds skill list with descriptions to system prompt: "Available Skills: web-research - Use for web research tasks..."
-4. **Progressive loading** - Agent reads full `SKILL.md` content with `read_file` only when a task matches the skill's description
-5. **Execute workflow** - Agent follows the step-by-step instructions in the skill file
+The CLI supports two modes for this:
+
+1.  **Default Mode (`SkillsMiddleware`)**: At startup, the agent scans all `SKILL.md` files and injects their `name` and `description` into the system prompt. The agent knows the skills exist, but must use `read_file` to access the full instructions.
+2.  **Lazy Loading Mode (`SkillActivationMiddleware`)**: This is a more advanced pattern. Not only are the instructions progressively disclosed, but the tools associated with a skill only become available *after* the agent has used `read_file` on the corresponding `SKILL.md`.
+
+### Lazy Loading of Tools
+
+When using the `SkillActivationMiddleware`, you can bundle tools with your skills that are loaded dynamically at runtime.
+
+**How it works:**
+
+1.  **Add a `tools` key** to your `SKILL.md`'s YAML frontmatter. This key should contain a list of Python import strings for your tools.
+2.  When the agent uses the `read_file` tool to read this `SKILL.md` file, the `SkillActivationMiddleware` intercepts the action.
+3.  It parses the `tools` list, dynamically imports the tools, and adds them to the agent's set of available tools for all subsequent calls.
+
+This encourages the agent to develop a more realistic workflow of "learning" about a skill before it can use its associated capabilities.
+
+For security, tools can only be loaded from the `deepagents_cli.skills.contrib` namespace.
+
+**Example:**
+
+Let's say you have a tool in `libs/deepagents-cli/deepagents_cli/skills/contrib/system.py`:
+
+```python
+# libs/deepagents-cli/deepagents_cli/skills/contrib/system.py
+from datetime import datetime
+from langchain_core.tools import tool
+
+@tool
+def get_current_datetime(format: str = "%Y-%m-%d %H:%M:%S") -> str:
+    """Returns the current date and time."""
+    return datetime.now().strftime(format)
+```
+
+You can create a skill that makes this tool available to the agent *after* it has been read:
+
+**`~/.deepagents/agent/skills/system-info/SKILL.md`**:
+
+```yaml
+---
+name: system-info
+description: Provides tools to get system information, like the current date and time.
+tools:
+  - "deepagents_cli.skills.contrib.system.get_current_datetime"
+---
+
+# System Information Skill
+
+This skill provides the `get_current_datetime` tool.
+```
+
+**Agent's Workflow:**
+
+1.  Agent starts. The `get_current_datetime` tool is **not** available.
+2.  User asks for the time. The agent, seeing the `system-info` skill in its prompt, knows it should investigate.
+3.  The agent calls `read_file` on `~/.deepagents/agent/skills/system-info/SKILL.md`.
+4.  The `SkillActivationMiddleware` loads the `get_current_datetime` tool into the agent's context.
+5.  The agent can now successfully call `get_current_datetime` to fulfill the user's request.
 
 ## Development
 
