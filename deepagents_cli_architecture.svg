@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" font-family="Arial, sans-serif">
+  <defs>
+    <style>
+      .bg { fill: #282c34; }
+      .cli-app { fill: #21252b; stroke: #61afef; stroke-width: 2; rx: 10; }
+      .module { fill: #2c313a; stroke: #c678dd; stroke-width: 1.5; rx: 8; }
+      .storage { fill: #3e4451; stroke: #98c379; stroke-width: 1.5; rx: 5; }
+      .backend { fill: #2c313a; stroke: #e5c07b; stroke-width: 1.5; rx: 8; }
+      .main-text { fill: #e6e6e6; font-size: 20px; font-weight: bold; text-anchor: middle; }
+      .sub-text { fill: #abb2bf; font-size: 15px; text-anchor: middle; }
+      .storage-text { fill: #dcdfe4; font-size: 13px; text-anchor: middle; }
+      .arrow { stroke: #56b6c2; stroke-width: 2; marker-end: url(#arrowhead); fill: none; }
+      .arrow-text { fill: #56b6c2; font-size: 12px; text-anchor: middle; }
+    </style>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#56b6c2" />
+    </marker>
+  </defs>
+
+  <rect width="100%" height="100%" class="bg"/>
+  <title>deepagents-cli 内部技术架构</title>
+
+  <!-- Main CLI Application -->
+  <g id="cli-app">
+    <rect x="250" y="40" width="300" height="70" class="cli-app"/>
+    <text x="400" y="75" class="main-text">DeepAgents CLI Application</text>
+    <text x="400" y="95" class="sub-text">(用户交互与命令处理)</text>
+  </g>
+
+  <!-- Core Agent -->
+  <g id="deep-agent-instance">
+    <rect x="275" y="150" width="250" height="60" class="module" style="stroke: #61afef;"/>
+    <text x="400" y="180" class="main-text" style="font-size: 18px;">Deep Agent 实例</text>
+    <text x="400" y="200" class="sub-text">(由 deepagents 库创建)</text>
+  </g>
+  <path class="arrow" d="M 400 110 V 150" />
+  <text x="425" y="130" class="arrow-text">实例化</text>
+
+  <!-- CLI-specific Middlewares -->
+  <g id="cli-middlewares">
+    <text x="400" y="250" class="sub-text" style="font-weight: bold;">CLI 特定中间件</text>
+
+    <g id="skills-middleware">
+      <rect x="100" y="280" width="220" height="70" class="module"/>
+      <text x="210" y="310" class="sub-text">SkillsMiddleware</text>
+      <text x="210" y="330" class="storage-text">技能的动态加载</text>
+    </g>
+
+    <g id="memory-middleware">
+      <rect x="480" y="280" width="220" height="70" class="module"/>
+      <text x="590" y="310" class="sub-text">AgentMemoryMiddleware</text>
+      <text x="590" y="330" class="storage-text">持久化记忆管理</text>
+    </g>
+  </g>
+  <path class="arrow" d="M 350 210 C 300 230, 250 260, 210 280"/>
+  <text x="280" y="255" class="arrow-text">加载</text>
+  <path class="arrow" d="M 450 210 C 500 230, 550 260, 590 280"/>
+  <text x="520" y="255" class="arrow-text">加载</text>
+
+  <!-- Storage / Memory Files -->
+  <g id="storage">
+    <text x="400" y="390" class="sub-text" style="font-weight: bold;">持久化存储 (文件系统)</text>
+
+    <g id="skill-files">
+      <rect x="100" y="420" width="220" height="80" class="storage"/>
+      <text x="210" y="445" class="storage-text" style="font-weight:bold;">技能文件 (SKILL.md)</text>
+      <text x="210" y="465" class="storage-text">~/.deepagents/agent/skills/</text>
+      <text x="210" y="485" class="storage-text">.deepagents/skills/</text>
+    </g>
+
+    <g id="memory-files">
+      <rect x="480" y="420" width="220" height="80" class="storage"/>
+      <text x="590" y="445" class="storage-text" style="font-weight:bold;">记忆文件 (agent.md, ...)</text>
+      <text x="590" y="465" class="storage-text">~/.deepagents/agent/</text>
+      <text x="590" y="485" class="storage-text">.deepagents/</text>
+    </g>
+  </g>
+  <path class="arrow" d="M 210 350 V 420"/>
+  <text x="230" y="385" class="arrow-text">读/写</text>
+  <path class="arrow" d="M 590 350 V 420"/>
+  <text x="610" y="385" class="arrow-text">读/写</text>
+
+  <!-- Sandbox Backends -->
+  <g id="backends">
+    <text x="400" y="540" class="sub-text" style="font-weight: bold;">执行后端 (Sandbox Backends)</text>
+    <rect x="220" y="560" width="80" height="30" class="backend"/><text x="260" y="580" class="storage-text">Local</text>
+    <rect x="310" y="560" width="80" height="30" class="backend"/><text x="350" y="580" class="storage-text">Docker</text>
+    <rect x="400" y="560" width="80" height="30" class="backend"/><text x="440" y="580" class="storage-text">Daytona</text>
+    <rect x="490" y="560" width="80" height="30" class="backend"/><text x="530" y="580" class="storage-text">...</text>
+  </g>
+  <path class="arrow" d="M 400 210 C 400 350, 400 500, 400 540"/>
+  <text x="450" y="400" class="arrow-text">命令执行于</text>
+
+</svg>
