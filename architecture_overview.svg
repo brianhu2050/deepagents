@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" font-family="Arial, sans-serif">
+  <defs>
+    <style>
+      .component { fill: #282c34; stroke: #61afef; stroke-width: 2; rx: 10; }
+      .component-text { fill: #e6e6e6; font-size: 18px; font-weight: bold; text-anchor: middle; }
+      .desc-text { fill: #abb2bf; font-size: 14px; text-anchor: middle; }
+      .arrow { stroke: #98c379; stroke-width: 2; marker-end: url(#arrowhead); }
+      .arrow-text { fill: #98c379; font-size: 14px; text-anchor: middle; }
+      .layer { fill: none; stroke: #5c6370; stroke-width: 1; stroke-dasharray: 5,5; rx: 15; }
+      .layer-text { fill: #5c6370; font-size: 16px; font-weight: bold; text-anchor: middle; }
+    </style>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#98c379" />
+    </marker>
+  </defs>
+
+  <title>DeepAgents 技术架构图</title>
+
+  <!-- Layers -->
+  <rect x="50" y="350" width="700" height="180" class="layer"/>
+  <text x="400" y="340" class="layer-text">核心层 (Core Layer)</text>
+
+  <rect x="50" y="100" width="700" height="220" class="layer"/>
+  <text x="400" y="90" class="layer-text">应用与工具层 (Application & Tooling Layer)</text>
+
+  <!-- Components -->
+  <g id="deepagents">
+    <rect x="250" y="400" width="300" height="100" class="component"/>
+    <text x="400" y="440" class="component-text">deepagents</text>
+    <text x="400" y="465" class="desc-text">核心代理库 (基于 LangGraph)</text>
+  </g>
+
+  <g id="deepagents-cli">
+    <rect x="80" y="150" width="220" height="120" class="component"/>
+    <text x="190" y="190" class="component-text">deepagents-cli</text>
+    <text x="190" y="215" class="desc-text">终端编码助手</text>
+    <text x="190" y="235" class="desc-text">(用户应用)</text>
+  </g>
+
+  <g id="harbor">
+    <rect x="340" y="150" width="220" height="120" class="component"/>
+    <text x="450" y="190" class="component-text">harbor</text>
+    <text x="450" y="215" class="desc-text">代理评估工具集</text>
+     <text x="450" y="235" class="desc-text">(测试与评估)</text>
+  </g>
+
+  <g id="acp">
+    <rect x="600" y="150" width="120" height="120" class="component"/>
+    <text x="660" y="190" class="component-text">acp</text>
+    <text x="660" y="215" class="desc-text">代理客户端协议</text>
+    <text x="660" y="235" class="desc-text">(适配器)</text>
+  </g>
+
+  <!-- Arrows -->
+  <path class="arrow" d="M 190 270 V 380 Q 190 400 210 400 H 245"/>
+  <text x="220" y="320" class="arrow-text" transform="rotate(-90 220 320)">构建于</text>
+
+  <path class="arrow" d="M 450 270 V 400"/>
+  <text x="470" y="335" class="arrow-text">构建于</text>
+
+  <path class="arrow" d="M 660 270 V 380 Q 660 400 640 400 H 555"/>
+  <text x="630" y="320" class="arrow-text" transform="rotate(90 630 320)">适配</text>
+
+</svg>
