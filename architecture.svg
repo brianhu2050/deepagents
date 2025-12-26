@@ -1,0 +1,147 @@
+<svg width="1200" height="1000" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+    <style>
+        .title { font-size: 24px; font-weight: bold; text-anchor: middle; }
+        .agent-box { fill: #e3f2fd; stroke: #90caf9; stroke-width: 2; rx: 10; ry: 10; }
+        .sub-agent-box { fill: #e8f5e9; stroke: #a5d6a7; stroke-width: 2; rx: 8; ry: 8; }
+        .skill-box { fill: #fffde7; stroke: #fff59d; stroke-width: 1.5; rx: 5; ry: 5; }
+        .backend-box { fill: #fce4ec; stroke: #f8bbd0; stroke-width: 2; rx: 10; ry: 10; }
+        .storage-box { fill: #f3e5f5; stroke: #ce93d8; stroke-width: 1.5; }
+        .arrow { stroke: #616161; stroke-width: 1.5; marker-end: url(#arrowhead); }
+        .dashed-arrow { stroke: #616161; stroke-width: 1.5; stroke-dasharray: 5,5; marker-end: url(#arrowhead); }
+        .agent-title { font-size: 18px; font-weight: bold; text-anchor: middle; }
+        .sub-agent-title { font-size: 16px; font-weight: bold; text-anchor: middle; }
+        .skill-title { font-size: 14px; font-weight: 500; }
+        .skill-desc { font-size: 12px; fill: #424242; }
+        .backend-title { font-size: 16px; font-weight: bold; text-anchor: middle; }
+        .storage-title { font-size: 14px; text-anchor: middle; }
+        .flow-label { font-size: 12px; fill: #0d47a1; text-anchor: middle; }
+    </style>
+    <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#616161" />
+        </marker>
+    </defs>
+
+    <text x="600" y="40" class="title">线上故障诊断 Data+AI 系统架构 (Online Fault Diagnosis Data+AI System Architecture)</text>
+
+    <!-- Orchestrator Agent -->
+    <g id="orchestrator">
+        <rect x="450" y="80" width="300" height="80" class="agent-box" />
+        <text x="600" y="110" class="agent-title">Orchestrator Agent</text>
+        <text x="600" y="135" class="skill-desc">总指挥, 制定计划, 调度子Agent</text>
+    </g>
+
+    <!-- Sub-Agents Row -->
+    <g id="sub-agents">
+        <!-- Data Retriever -->
+        <g id="data-retriever">
+            <rect x="50" y="200" width="300" height="220" class="sub-agent-box" />
+            <text x="200" y="230" class="sub-agent-title">Data Retriever Sub-Agent</text>
+            <text x="200" y="250" class="skill-desc">数据拉取专家</text>
+
+            <!-- Skills for Retriever -->
+            <g class="skill">
+                <rect x="70" y="270" width="260" height="50" class="skill-box" />
+                <text x="80" y="290" class="skill-title">fetch_metrics</text>
+                <text x="80" y="305" class="skill-desc">从监控系统拉取指标 (e.g., Prometheus)</text>
+            </g>
+            <g class="skill">
+                <rect x="70" y="330" width="260" height="50" class="skill-box" />
+                <text x="80" y="350" class="skill-title">fetch_logs</text>
+                <text x="80" y="365" class="skill-desc">从日志系统拉取日志 (e.g., ELK, Loki)</text>
+            </g>
+        </g>
+        <!-- Data Analyzer -->
+        <g id="data-analyzer">
+            <rect x="450" y="200" width="300" height="260" class="sub-agent-box" />
+            <text x="600" y="230" class="sub-agent-title">Data Analyzer Sub-Agent</text>
+            <text x="600" y="250" class="skill-desc">数据分析专家</text>
+
+            <!-- Skills for Analyzer -->
+            <g class="skill">
+                <rect x="470" y="270" width="260" height="50" class="skill-box" />
+                <text x="480" y="290" class="skill-title">perform_statistical_analysis</text>
+                <text x="480" y="305" class="skill-desc">计算描述性统计数据 (e.g., P99)</text>
+            </g>
+            <g class="skill">
+                <rect x="470" y="330" width="260" height="50" class="skill-box" />
+                <text x="480" y="350" class="skill-title">detect_timeseries_anomalies</text>
+                <text x="480" y="365" class="skill-desc">时序异常检测</text>
+            </g>
+             <g class="skill">
+                <rect x="470" y="390" width="260" height="50" class="skill-box" />
+                <text x="480" y="410" class="skill-title">extract_log_patterns</text>
+                <text x="480" y="425" class="skill-desc">提取日志错误模式</text>
+            </g>
+        </g>
+        <!-- Data Visualizer -->
+        <g id="data-visualizer">
+            <rect x="850" y="200" width="300" height="220" class="sub-agent-box" />
+            <text x="1000" y="230" class="sub-agent-title">Data Visualizer Sub-Agent</text>
+            <text x="1000" y="250" class="skill-desc">数据可视化专家</text>
+
+            <!-- Skills for Visualizer -->
+            <g class="skill">
+                <rect x="870" y="270" width="260" height="50" class="skill-box" />
+                <text x="880" y="290" class="skill-title">plot_timeseries_chart</text>
+                <text x="880" y="305" class="skill-desc">生成带有异常标记的时序图</text>
+            </g>
+            <g class="skill">
+                <rect x="870" y="330" width="260" height="50" class="skill-box" />
+                <text x="880" y="350" class="skill-title">plot_barchart_from_json</text>
+                <text x="880" y="365" class="skill-desc">根据统计结果生成柱状图</text>
+            </g>
+        </g>
+    </g>
+
+    <!-- Arrows and Flows -->
+    <g id="flows">
+        <!-- Orchestrator to Sub-Agents -->
+        <path d="M 600 160 Q 600 180 200 195" class="arrow" stroke-width="2" fill="none" />
+        <path d="M 600 160 V 195" class="arrow" stroke-width="2" fill="none" />
+        <path d="M 600 160 Q 600 180 1000 195" class="arrow" stroke-width="2" fill="none" />
+        <text x="400" y="175" class="flow-label">1. 调度任务 (Delegate Task)</text>
+
+        <!-- Sub-Agents to Backend -->
+        <path d="M 200 420 V 495" class="arrow" fill="none" />
+        <text x="200" y="460" class="flow-label">2. 拉取数据并写入 /data/</text>
+        <path d="M 600 460 V 495" class="arrow" fill="none" />
+        <text x="600" y="475" class="flow-label">3. 读/写分析脚本与结果</text>
+        <path d="M 1000 420 V 495" class="arrow" fill="none" />
+        <text x="1000" y="460" class="flow-label">4. 读分析结果, 写图表</text>
+
+        <!-- Backend Routing -->
+         <path d="M 325 555 V 505" class="dashed-arrow" fill="none" />
+        <text x="325" y="530" class="flow-label">默认路由 (Default)</text>
+         <path d="M 875 555 V 505" class="dashed-arrow" fill="none" />
+        <text x="875" y="530" class="flow-label">路由规则 (Route: /data/)</text>
+
+        <!-- Sub-Agents to Orchestrator (Return results) -->
+        <path d="M 200 195 Q 400 170 580 160" class="dashed-arrow" fill="none" />
+        <path d="M 1000 195 Q 800 170 620 160" class="dashed-arrow" fill="none" />
+         <text x="600" y="185" class="flow-label">5. 返回结果 (Return Findings)</text>
+    </g>
+
+    <!-- Backends Row -->
+    <g id="backends">
+        <rect x="50" y="500" width="1100" height="200" class="backend-box" fill="#fff3e0" stroke="#ffcc80" />
+        <text x="600" y="530" class="backend-title">CompositeBackend: 统一数据访问层</text>
+
+        <!-- Sandbox Backend -->
+        <g id="sandbox-backend">
+            <rect x="100" y="560" width="450" height="120" class="storage-box" fill="#e3f2fd" stroke="#90caf9"/>
+            <text x="325" y="585" class="storage-title">SandboxBackend (Default)</text>
+            <text x="325" y="610" class="skill-desc">代码执行, 临时文件, 确保安全隔离</text>
+            <text x="325" y="630" class="skill-desc">路径: /workspace/, /tmp/</text>
+        </g>
+
+        <!-- Filesystem Backend -->
+        <g id="filesystem-backend">
+             <rect x="650" y="560" width="450" height="120" class="storage-box" fill="#e8f5e9" stroke="#a5d6a7"/>
+            <text x="875" y="585" class="storage-title">FilesystemBackend (Route: /data/)</text>
+            <text x="875" y="610" class="skill-desc">持久化数据存储</text>
+            <text x="875" y="630" class="skill-desc">映射到主机路径: /var/myapp/data</text>
+        </g>
+    </g>
+
+</svg>
