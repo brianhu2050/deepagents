@@ -1,20 +1,26 @@
 # Performance Diagnosis Agent
 
-This project provides a standalone agent for performance data diagnosis and analysis, built on the `deepagents` framework.
+This project is a standalone agent application that uses the `deepagents` framework to diagnose and visualize performance metrics.
 
 ## Architecture
 
-The agent is designed with a simple yet powerful architecture:
+This agent is built as a standalone application and is not an extension of the `deepagents-cli`. Its architecture is designed to be both modular and robust:
 
--   **Standalone Application:** This is a self-contained project that uses `deepagents` as a library. It is not an extension of the `deepagents-cli`.
--   **Custom Middleware:** The core logic is implemented in a custom `PerformanceDiagMiddleware`, which provides two key tools:
-    -   `query_metric`: This tool generates mock performance data, saves it to a file within the Daytona sandbox, and returns the file path. This approach is designed to handle large datasets efficiently without overloading the agent's context window.
-    -   `metric_analysis_visualize`: This "smart" tool accepts a data file path and a natural language request for a visualization. It uses an LLM to generate a Python script, which it then executes in the sandbox to produce a chart.
--   **Daytona Backend:** The agent is configured to use a real `DaytonaBackend`, which provides a secure and isolated environment for file storage and code execution.
+-   **Tools (`tools.py`):** The agent's core capabilities are defined as distinct, asynchronous tools:
+    -   `query_metric`: Fetches performance data. To handle potentially large datasets, it saves the data to a file within the sandbox and returns only the file path, preventing context window overflow.
+    -   `metric_analysis_visualize`: A "smart tool" that accepts a data file path and a user's natural language request. It uses an LLM to dynamically generate a Python visualization script, which it then executes in the sandbox to produce a chart.
+
+-   **Skills (`skills/diagnostics/SKILL.md`):** The agent's workflow is orchestrated by a `SKILL.md` file. This file provides a step-by-step guide that the agent follows, instructing it to first call `query_metric` and then pass the resulting file path to `metric_analysis_visualize`. This demonstrates how `deepagents` can follow structured, long-term plans.
+
+-   **Skills Middleware (`skills_loader/`):** Since the `SkillsMiddleware` is part of the `deepagents-cli` and not the core `deepagents` library, a copy has been included in this project to make it self-contained.
+
+-   **Backend (`DaytonaBackend`):** The agent is configured to use a real `DaytonaBackend`, providing a secure, isolated sandbox for all file operations and for executing the dynamically generated Python code.
 
 ## Setup
 
 1.  **Install Dependencies:**
+
+    This project uses a `pyproject.toml` file to manage dependencies. Install them using `pip`:
 
     ```bash
     pip install -e .
@@ -22,7 +28,7 @@ The agent is designed with a simple yet powerful architecture:
 
 2.  **Set API Keys:**
 
-    You must have `ANTHROPIC_API_KEY` and `DAYTONA_API_KEY` environment variables set. You can either set them in your shell profile or directly in `performance_diag_agent/main.py`.
+    The agent requires API keys for both Anthropic (for the LLM) and Daytona (for the sandbox). These must be set as environment variables.
 
     ```bash
     export ANTHROPIC_API_KEY="your-anthropic-api-key"
@@ -31,15 +37,10 @@ The agent is designed with a simple yet powerful architecture:
 
 ## Usage
 
-To run the agent, simply execute the `main.py` script:
+To run the agent, execute the main application script:
 
 ```bash
 python -m performance_diag_agent.main
 ```
 
-The agent will then perform the following steps:
-
-1.  Query the performance metrics for the specified instance.
-2.  Generate a Python script to visualize the CPU and memory usage.
-3.  Execute the script in the Daytona sandbox to create a `performance_chart.png` file.
-4.  Output a message confirming the successful generation of the visualization.
+The agent will then follow the workflow defined in its skill file to perform the end-to-end analysis.

@@ -13,7 +13,7 @@ async def main():
     )
 
     user_request = (
-        "Query the performance metrics for instance 'i-12345', then visualize the CPU and memory usage."
+        "Diagnose the performance of instance 'i-12345' and create a visualization of CPU and memory usage."
     )
 
     async for chunk in agent.astream(

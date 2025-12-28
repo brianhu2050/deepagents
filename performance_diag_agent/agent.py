@@ -6,7 +6,8 @@ from langchain_anthropic import ChatAnthropic
 
 from deepagents import create_deep_agent
 from deepagents.backends.daytona import DaytonaBackend
-from performance_diag_agent.tools import PerformanceDiagMiddleware
+from performance_diag_agent.skills_loader.middleware import SkillsMiddleware
+from performance_diag_agent.tools import query_metric, metric_analysis_visualize
 
 
 def create_performance_diag_agent(model_name: str, assistant_id: str):
@@ -24,14 +25,18 @@ def create_performance_diag_agent(model_name: str, assistant_id: str):
     daytona_sandbox = daytona_client.create()
     backend = DaytonaBackend(daytona_sandbox)
 
-    # Initialize the custom middleware
-    middleware = PerformanceDiagMiddleware(model)
+    # Initialize the SkillsMiddleware
+    skills_middleware = SkillsMiddleware(skills_dir="performance_diag_agent/skills")
+
+    # Define the list of tools
+    tools = [query_metric, metric_analysis_visualize]
 
     # Create the deep agent
     agent = create_deep_agent(
         model=model,
         system_prompt="You are a performance diagnosis expert.",
-        middleware=[middleware],
+        tools=tools,
+        middleware=[skills_middleware],
         backend=backend,
     )
 
