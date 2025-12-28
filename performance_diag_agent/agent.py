@@ -6,7 +6,7 @@ from langchain_anthropic import ChatAnthropic
 
 from deepagents import create_deep_agent
 from deepagents.backends.daytona import DaytonaBackend
-from performance_diag_agent.middleware import PerformanceDiagMiddleware
+from performance_diag_agent.tools import PerformanceDiagMiddleware
 
 
 def create_performance_diag_agent(model_name: str, assistant_id: str):
