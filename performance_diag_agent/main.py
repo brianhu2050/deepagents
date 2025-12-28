@@ -8,7 +8,7 @@ from performance_diag_agent.agent import create_performance_diag_agent
 async def main():
     """Main function to run the agent."""
     agent = create_performance_diag_agent(
-        model_name="claude-3-5-sonnet-20240620",
+        model_name="gpt-5.2",
         assistant_id="performance-diag-agent",
     )
 
@@ -25,6 +25,6 @@ async def main():
 
 if __name__ == "__main__":
     # For this example to run, you must have the following environment variables set:
-    # export ANTHROPIC_API_KEY="your-anthropic-api-key"
+    # export OPENAI_API_KEY="your-openai-api-key"
     # export DAYTONA_API_KEY="your-daytona-api-key"
     asyncio.run(main())

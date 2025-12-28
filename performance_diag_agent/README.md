@@ -30,10 +30,10 @@ This agent is built as a standalone application and is not an extension of the `
 
 2.  **Set API Keys:**
 
-    The agent requires API keys for both Anthropic (for the LLM) and Daytona (for the sandbox). These must be set as environment variables.
+    The agent requires API keys for both OpenAI (for the LLM) and Daytona (for the sandbox). These must be set as environment variables.
 
     ```bash
-    export ANTHROPIC_API_KEY="your-anthropic-api-key"
+    export OPENAI_API_KEY="your-openai-api-key"
     export DAYTONA_API_KEY="your-daytona-api-key"
     ```
 

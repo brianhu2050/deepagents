@@ -1,4 +1,5 @@
 ---
+name: "diagnostics"
 description: "Diagnoses and visualizes performance metrics for a given instance."
 ---
 

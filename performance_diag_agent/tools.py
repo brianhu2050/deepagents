@@ -3,7 +3,7 @@ import json
 import uuid
 
 from langchain.tools import ToolRuntime
-from langchain_anthropic import ChatAnthropic
+from langchain_core.language_models import BaseChatModel
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.tools import StructuredTool
 
@@ -30,7 +30,7 @@ async def _async_query_metric(runtime: ToolRuntime, instance_id: str) -> str:
     return f"Performance data saved to {file_path}"
 
 async def _async_metric_analysis_visualize(
-    runtime: ToolRuntime, data_path: str, request: str, model: ChatAnthropic
+    runtime: ToolRuntime, data_path: str, request: str, model: BaseChatModel
 ) -> str:
     """The asynchronous implementation for the metric_analysis_visualize tool."""
     backend = runtime.backend
@@ -77,7 +77,7 @@ async def _async_metric_analysis_visualize(
 # This function creates and configures the tools, returning them as a list.
 # This is a clean pattern for managing tool dependencies, like the LLM model.
 
-def get_performance_diag_tools(model: ChatAnthropic) -> list[StructuredTool]:
+def get_performance_diag_tools(model: BaseChatModel) -> list[StructuredTool]:
     """
     Creates and returns the list of tools for the performance diagnosis agent.
     """
