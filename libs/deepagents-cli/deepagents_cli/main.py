@@ -30,7 +30,6 @@ from deepagents_cli.integrations.sandbox_factory import (
 from deepagents_cli.skills import execute_skills_command, setup_skills_parser
 from deepagents_cli.tools import fetch_url, http_request, web_search
 from deepagents_cli.ui import TokenTracker, show_help
-from deepagents_cli.performance_middleware import PerformanceAnalysisMiddleware
 
 
 def check_cli_dependencies() -> None:
@@ -99,9 +98,6 @@ def parse_args():
 
     # Skills command - setup delegated to skills module
     setup_skills_parser(subparsers)
-
-    # Performance agent command
-    subparsers.add_parser("run-performance-agent", help="Run the performance analysis agent")
 
     # Default interactive mode
     parser.add_argument(
@@ -428,59 +424,6 @@ async def main(
             sys.exit(1)
 
 
-code_generator_subagent = {
-    "name": "code-generator",
-    "description": "Writes Python code to plot performance data.",
-    "system_prompt": (
-        "You are a Python expert specializing in data visualization. "
-        "Your task is to write a Python script that:\n"
-        "1.  Accepts performance data as a JSON string.\n"
-        "2.  Parses the JSON data.\n"
-        "3.  Uses the `matplotlib` library to create a plot of CPU and memory usage over time.\n"
-        "4.  Saves the plot to a file named `performance_chart.png`.\n"
-        "Do not execute the code; only write the Python script."
-    ),
-    "tools": [],
-}
-
-
-async def run_performance_agent(args) -> None:
-    """Run the performance analysis agent."""
-    model = create_model(args.model)
-    assistant_id = "performance-analyzer"
-    session_state = SessionState(auto_approve=args.auto_approve, no_splash=args.no_splash)
-
-    # Create agent with conditional tools
-    tools = [http_request, fetch_url]
-    if settings.has_tavily:
-        tools.append(web_search)
-
-    # Add the performance analysis middleware
-    middleware = [PerformanceAnalysisMiddleware()]
-
-    agent, composite_backend = create_cli_agent(
-        model=model,
-        assistant_id=assistant_id,
-        tools=tools,
-        middleware=middleware,
-        subagents=[code_generator_subagent],
-        sandbox_type="daytona",
-        auto_approve=session_state.auto_approve,
-    )
-
-    user_request = "Analyze the performance of instance 'i-12345' and generate a report."
-
-    await execute_task(
-        user_input=user_request,
-        agent=agent,
-        assistant_id=assistant_id,
-        session_state=session_state,
-        token_tracker=TokenTracker(),
-        backend=composite_backend,
-        image_tracker=ImageTracker(),
-    )
-
-
 def cli_main() -> None:
     """Entry point for console script."""
     # Fix for gRPC fork issue on macOS
@@ -506,8 +449,6 @@ def cli_main() -> None:
             reset_agent(args.agent, args.source_agent)
         elif args.command == "skills":
             execute_skills_command(args)
-        elif args.command == "run-performance-agent":
-            asyncio.run(run_performance_agent(args))
         else:
             # Create session state from args
             session_state = SessionState(auto_approve=args.auto_approve, no_splash=args.no_splash)
