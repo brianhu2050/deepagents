@@ -7,7 +7,7 @@ from langchain_anthropic import ChatAnthropic
 from deepagents import create_deep_agent
 from deepagents.backends.daytona import DaytonaBackend
 from performance_diag_agent.skills_loader.middleware import SkillsMiddleware
-from performance_diag_agent.tools import query_metric, metric_analysis_visualize
+from performance_diag_agent.tools import get_performance_diag_tools
 
 
 def create_performance_diag_agent(model_name: str, assistant_id: str):
@@ -28,8 +28,8 @@ def create_performance_diag_agent(model_name: str, assistant_id: str):
     # Initialize the SkillsMiddleware
     skills_middleware = SkillsMiddleware(skills_dir="performance_diag_agent/skills")
 
-    # Define the list of tools
-    tools = [query_metric, metric_analysis_visualize]
+    # Get the list of tools, passing the model to the factory
+    tools = get_performance_diag_tools(model)
 
     # Create the deep agent
     agent = create_deep_agent(
