@@ -8,11 +8,11 @@ This agent is built as a standalone application and is not an extension of the `
 
 -   **Tools (`tools.py`):** The agent's core capabilities are defined as distinct, asynchronous tools:
     -   `query_metric`: Fetches performance data. To handle potentially large datasets, it saves the data to a file within the sandbox and returns only the file path, preventing context window overflow.
-    -   `metric_analysis_visualize`: A "smart tool" that accepts a data file path and a user's natural language request. It uses an LLM to dynamically generate a Python visualization script, which it then executes in the sandbox to produce a chart.
+    -   `metric_analysis_visualize`: A "smart" tool that accepts a data file path and a user's natural language request. It uses an LLM to dynamically generate a Python visualization script, which it then executes in the sandbox to produce a chart.
 
 -   **Skills (`skills/diagnostics/SKILL.md`):** The agent's workflow is orchestrated by a `SKILL.md` file. This file provides a step-by-step guide that the agent follows, instructing it to first call `query_metric` and then pass the resulting file path to `metric_analysis_visualize`. This demonstrates how `deepagents` can follow structured, long-term plans.
 
--   **Skills Middleware (`skills_loader/`):** Since the `SkillsMiddleware` is part of the `deepagents-cli` and not the core `deepagents` library, a copy has been included in this project to make it self-contained.
+-   **Skills Middleware (`deepagents_cli.skills.middleware`):** The agent uses the official `SkillsMiddleware` from the `deepagents-cli` package to load and manage skills.
 
 -   **Backend (`DaytonaBackend`):** The agent is configured to use a real `DaytonaBackend`, providing a secure, isolated sandbox for all file operations and for executing the dynamically generated Python code.
 
@@ -20,9 +20,11 @@ This agent is built as a standalone application and is not an extension of the `
 
 1.  **Install Dependencies:**
 
-    This project uses a `pyproject.toml` file to manage dependencies. Install them using `pip`:
+    This project is part of a monorepo. To run it, you must first install the local `deepagents` and `deepagents-cli` packages in editable mode, followed by this project's dependencies.
 
     ```bash
+    pip install -e libs/deepagents
+    pip install -e libs/deepagents-cli
     pip install -e .
     ```
 

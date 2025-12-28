@@ -2,11 +2,11 @@
 import os
 
 from daytona import Daytona, DaytonaConfig
+from deepagents_cli.skills.middleware import SkillsMiddleware
 from langchain_anthropic import ChatAnthropic
 
 from deepagents import create_deep_agent
 from deepagents.backends.daytona import DaytonaBackend
-from performance_diag_agent.skills_loader.middleware import SkillsMiddleware
 from performance_diag_agent.tools import get_performance_diag_tools
 
 
@@ -26,7 +26,7 @@ def create_performance_diag_agent(model_name: str, assistant_id: str):
     backend = DaytonaBackend(daytona_sandbox)
 
     # Initialize the SkillsMiddleware
-    skills_middleware = SkillsMiddleware(skills_dir="performance_diag_agent/skills")
+    skills_middleware = SkillsMiddleware(skills_dir="performance_diag_agent/skills", assistant_id=assistant_id)
 
     # Get the list of tools, passing the model to the factory
     tools = get_performance_diag_tools(model)
