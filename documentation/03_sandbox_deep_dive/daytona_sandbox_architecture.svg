@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" font-family="sans-serif">
+    <defs>
+        <marker id="arrow-dts" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" stroke="#000000" />
+        </marker>
+        <filter id="shadow-dts">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
+            <feOffset dx="3" dy="3" />
+            <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+        <style>
+            .box { stroke-width: 2; filter: url(#shadow-dts); }
+            .agent-layer { fill: #E3F2FD; stroke: #64B5F6; }
+            .backend-box { fill: #FFFDE7; stroke: #FFD54F; }
+            .client-box { fill: #FCE4EC; stroke: #F06292; }
+            .remote-layer { fill: #F5F5F5; stroke: #BDBDBD; }
+            .title { font-size: 28px; text-anchor: middle; }
+            .subtitle { font-size: 20px; text-anchor: middle; }
+            .text { font-size: 16px; text-anchor: middle; }
+            .text-small { font-size: 13px; text-anchor: middle; }
+            .text-mono { font-size: 14px; font-family: monospace; }
+            .connector { stroke: #333; stroke-width: 2.5; marker-end: url(#arrow-dts); }
+            .api-flow { stroke: #D81B60; stroke-width: 2; stroke-dasharray: 8 4; marker-end: url(#arrow-dts); }
+        </style>
+    </defs>
+
+    <text x="700" y="50" class="title" font-size="28px" text-anchor="middle" fill="#000000">DaytonaBackend 技术架构图</text>
+    <text x="700" y="80" class="text" font-size="16px" text-anchor="middle" fill="#000000">适配器模式: 将 `SandboxBackendProtocol` 适配到 Daytona API</text>
+
+
+    <g id="agent-layer">
+        <rect x="50" y="120" width="400" height="700" rx="15" class="box agent-layer" stroke-width="2" filter="url(#shadow-dts)" fill="#E3F2FD" stroke="#64B5F6" />
+        <text x="250" y="160" class="subtitle" font-size="20px" text-anchor="middle" fill="#000000">Agent Runtim (本地)</text>
+
+        <text x="250" y="250" class="text" font-size="16px" text-anchor="middle" fill="#000000">`FilesystemMiddleware`</text>
+        <text x="250" y="280" class="text" font-size="16px" text-anchor="middle" fill="#000000">发起工具调用</text>
+
+        <rect x="100" y="320" width="300" height="80" rx="10" class="box agent-layer" style="fill: #BBDEFB;" stroke-width="2" filter="url(#shadow-dts)" fill="#E3F2FD" stroke="#64B5F6" />
+        <text x="250" y="350" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">execute("pytest")</text>
+
+        <rect x="100" y="420" width="300" height="80" rx="10" class="box agent-layer" style="fill: #BBDEFB;" stroke-width="2" filter="url(#shadow-dts)" fill="#E3F2FD" stroke="#64B5F6" />
+        <text x="250" y="450" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">read_file("/app/main.py")</text>
+
+        <rect x="100" y="520" width="300" height="80" rx="10" class="box agent-layer" style="fill: #BBDEFB;" stroke-width="2" filter="url(#shadow-dts)" fill="#E3F2FD" stroke="#64B5F6" />
+        <text x="250" y="550" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">download_files([...])</text>
+    </g>
+
+    <path d="M 450 360 H 550" class="connector" stroke="#333" stroke-width="2.5" marker-end="url(#arrow-dts)" />
+    <path d="M 450 460 H 550" class="connector" stroke="#333" stroke-width="2.5" marker-end="url(#arrow-dts)" />
+    <path d="M 450 560 H 550" class="connector" stroke="#333" stroke-width="2.5" marker-end="url(#arrow-dts)" />
+    <text x="500" y="330" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">委派请求</text>
+
+
+    <g id="backend-box">
+        <rect x="550" y="120" width="400" height="700" rx="15" class="box backend-box" stroke-width="2" filter="url(#shadow-dts)" fill="#FFFDE7" stroke="#FFD54F" />
+        <text x="750" y="160" class="subtitle" font-size="20px" text-anchor="middle" fill="#000000">DaytonaBackend (适配器)</text>
+
+        <text x="750" y="200" class="text" font-size="16px" text-anchor="middle" fill="#000000">实现了 `SandboxBackendProtocol`</text>
+
+        <rect x="600" y="300" width="300" height="100" rx="10" class="box backend-box" style="fill: #FFF59D;" stroke-width="2" filter="url(#shadow-dts)" fill="#FFFDE7" stroke="#FFD54F" />
+        <text x="750" y="330" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">.execute(cmd)</text>
+        <text x="750" y="360" class="text-small" fill="#C62828" font-size="13px" text-anchor="middle">**自实现**: 直接调用 Daytona API</text>
+
+        <rect x="600" y="410" width="300" height="100" rx="10" class="box backend-box" style="fill: #FFF59D;" stroke-width="2" filter="url(#shadow-dts)" fill="#FFFDE7" stroke="#FFD54F" />
+        <text x="750" y="440" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">.read_file(path)</text>
+        <text x="750" y="470" class="text-small" fill="#1A237E" font-size="13px" text-anchor="middle">**继承**: 调用自身的 execute("cat ...")</text>
+
+        <rect x="600" y="520" width="300" height="100" rx="10" class="box backend-box" style="fill: #FFF59D;" stroke-width="2" filter="url(#shadow-dts)" fill="#FFFDE7" stroke="#FFD54F" />
+        <text x="750" y="550" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">.download_files(paths)</text>
+        <text x="750" y="580" class="text-small" fill="#C62828" font-size="13px" text-anchor="middle">**自实现**: 批量 API 优化</text>
+
+        <text x="750" y="660" class="subtitle" font-size="20px" text-anchor="middle" fill="#000000">持有引用</text>
+        <path d="M 750 680 V 730" class="connector" stroke="#333" stroke-width="2.5" marker-end="url(#arrow-dts)" />
+
+        <rect x="600" y="730" width="300" height="70" rx="10" class="box client-box" stroke-width="2" filter="url(#shadow-dts)" fill="#FCE4EC" stroke="#F06292" />
+        <text x="750" y="765" class="text" font-size="16px" text-anchor="middle" fill="#000000">Daytona Client (`self._sandbox`)</text>
+    </g>
+
+    <path d="M 950 350 H 1050" class="api-flow" stroke="#D81B60" stroke-width="2" stroke-dasharray="8 4" marker-end="url(#arrow-dts)" />
+    <text x="1000" y="340" class="text-small" fill="#D81B60" font-size="13px" text-anchor="middle">process.exec()</text>
+
+    <path d="M 950 460 H 1050" class="api-flow" stroke="#D81B60" stroke-width="2" stroke-dasharray="8 4" marker-end="url(#arrow-dts)" />
+    <text x="1000" y="450" class="text-small" fill="#D81B60" font-size="13px" text-anchor="middle">process.exec("cat...")</text>
+
+    <path d="M 950 570 H 1050" class="api-flow" stroke="#D81B60" stroke-width="2" stroke-dasharray="8 4" marker-end="url(#arrow-dts)" />
+    <text x="1000" y="560" class="text-small" fill="#D81B60" font-size="13px" text-anchor="middle">fs.download_files()</text>
+
+
+    <g id="remote-layer">
+        <rect x="1050" y="120" width="300" height="700" rx="15" class="box remote-layer" stroke-width="2" filter="url(#shadow-dts)" fill="#F5F5F5" stroke="#BDBDBD" />
+        <text x="1200" y="160" class="subtitle" font-size="20px" text-anchor="middle" fill="#000000">Daytona (远程)</text>
+
+        <rect x="1075" y="300" width="250" height="100" rx="10" class="box remote-layer" style="fill: #CFD8DC;" stroke-width="2" filter="url(#shadow-dts)" fill="#F5F5F5" stroke="#BDBDBD" />
+        <text x="1200" y="340" class="text" font-size="16px" text-anchor="middle" fill="#000000">Daytona API Server</text>
+        <text x="1200" y="365" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">(gRPC / HTTP)</text>
+
+        <path d="M 1200 400 V 450" class="connector" stroke="#333" stroke-width="2.5" marker-end="url(#arrow-dts)" />
+        <text x="1200" y="430" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">转发命令</text>
+
+        <rect x="1075" y="450" width="250" height="150" rx="10" class="box remote-layer" style="fill: #ECEFF1;" stroke-width="2" filter="url(#shadow-dts)" fill="#F5F5F5" stroke="#BDBDBD" />
+        <text x="1200" y="480" class="text" font-size="16px" text-anchor="middle" fill="#000000">远程开发环境</text>
+        <text x="1200" y="510" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">(Container / VM)</text>
+        <text x="1200" y="540" class="text" font-size="16px" text-anchor="middle" fill="#000000">Shell</text>
+        <text x="1200" y="570" class="text-mono" fill="#455A64" font-size="14px" font-family="monospace">$ pytest</text>
+    </g>
+
+</svg>

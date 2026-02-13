@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" font-family="sans-serif">
+    <defs>
+        <marker id="arrow-seq" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#444" />
+        </marker>
+        <style>
+            .participant { font-size: 16px; font-weight: bold; text-anchor: middle; }
+            .lifeline { stroke: #555; stroke-dasharray: 5 5; }
+            .activation { rx: 4; ry: 4; fill: #81D4FA; stroke: #0288D1; stroke-width: 1.5; }
+            .message-line { stroke: #444; stroke-width: 2; marker-end: url(#arrow-seq); }
+            .message-label { font-size: 14px; fill: #333; }
+            .note { font-size: 13px; fill: #555; font-style: italic; }
+            .group-box { rx: 8; ry: 8; fill: rgba(255, 165, 0, 0.1); stroke: #FFA726; stroke-dasharray: 6 3; }
+        </style>
+    </defs>
+
+    <title>Deep Agents - Middleware Lifecycle Sequence Diagram</title>
+
+    <!-- Participants -->
+    <g id="participants">
+        <text x="150" y="50" class="participant">LangGraph Runtime</text>
+        <line x1="150" y1="70" x2="150" y2="850" class="lifeline" />
+
+        <text x="450" y="50" class="participant">AgentMiddleware Chain</text>
+        <line x1="450" y1="70" x2="450" y2="850" class="lifeline" />
+
+        <text x="750" y="50" class="participant">Large Language Model (LLM)</text>
+        <line x1="750" y1="70" x2="750" y2="850" class="lifeline" />
+
+        <text x="1050" y="50" class="participant">Tools (via Backend)</text>
+        <line x1="1050" y1="70" x2="1050" y2="850" class="lifeline" />
+    </g>
+
+    <!-- Sequence Flow -->
+    <g id="sequence">
+        <!-- 1. before_agent -->
+        <line x1="150" y1="100" x2="450" y2="100" class="message-line" />
+        <text x="160" y="95" class="message-label">1. invoke_agent(state)</text>
+        <rect x="445" y="100" width="10" height="80" class="activation" />
+        <text x="460" y="125" class="message-label">before_agent(state)</text>
+        <text x="460" y="145" class="note">e.g., PatchToolCallsMiddleware</text>
+        <line x1="450" y1="180" x2="150" y2="180" class="message-line" />
+        <text x="180" y="175" class="message-label">return patched_state</text>
+
+        <!-- 2. before_model_call -->
+        <rect x="145" y="200" width="10" height="300" class="activation" />
+        <line x1="150" y1="220" x2="450" y2="220" class="message-line" />
+        <text x="160" y="215" class="message-label">2. Prepare model request</text>
+        <rect x="445" y="220" width="10" height="260" class="activation" />
+        <text x="460" y="245" class="message-label">before_model_call(request)</text>
+        <text x="460" y="265" class="note">Modify request before handler</text>
+
+        <!-- 3. wrap_model_call -->
+        <rect x="100" y="290" width="700" height="150" class="group-box" />
+        <text x="110" y="310" class="note">Handler Scope</text>
+        <line x1="450" y1="330" x2="750" y2="330" class="message-line" />
+        <text x="460" y="325" class="message-label">3. wrap_model_call(request, handler)</text>
+        <rect x="745" y="330" width="10" height="60" class="activation" />
+        <text x="550" y="355" class="note">Middleware wraps the LLM call</text>
+        <line x1="750" y1="390" x2="450" y2="390" class="message-line" />
+        <text x="580" y="385" class="message-label">return model_response</text>
+        <text x="460" y="415" class="note">e.g., FilesystemMiddleware adds</text>
+        <text x="460" y="430" class="note">system prompts dynamically</text>
+
+        <!-- 4. after_model_call -->
+        <text x="460" y="465" class="message-label">after_model_call(response)</text>
+        <text x="460" y="485" class="note">Process response after handler</text>
+        <line x1="450" y1="500" x2="150" y2="500" class="message-line" />
+        <text x="180" y="495" class="message-label">return final_response</text>
+
+        <!-- 5. before_tool_call -->
+        <rect x="145" y="520" width="10" height="280" class="activation" />
+        <line x1="150" y1="540" x2="450" y2="540" class="message-line" />
+        <text x="160" y="535" class="message-label">5. Prepare tool request</text>
+        <rect x="445" y="540" width="10" height="240" class="activation" />
+        <text x="460" y="565" class="message-label">before_tool_call(request)</text>
+        <text x="460" y="585" class="note">Modify request before handler</text>
+
+        <!-- 6. wrap_tool_call -->
+        <rect x="300" y="610" width="850" height="130" class="group-box" />
+        <text x="310" y="630" class="note">Handler Scope</text>
+        <line x1="450" y1="650" x2="1050" y2="650" class="message-line" />
+        <text x="460" y="645" class="message-label">6. wrap_tool_call(request, handler)</text>
+        <rect x="1045" y="650" width="10" height="50" class="activation" />
+        <text x="650" y="675" class="note">Middleware wraps the tool execution</text>
+        <line x1="1050" y1="700" x2="450" y2="700" class="message-line" />
+        <text x="700" y="695" class="message-label">return tool_result</text>
+        <text x="460" y="725" class="note">e.g., FilesystemMiddleware can save</text>
+        <text x="460" y="740" class="note">large results to a file</text>
+
+        <!-- 7. after_tool_call -->
+        <text x="460" y="765" class="message-label">after_tool_call(result)</text>
+        <line x1="450" y1="780" x2="150" y2="780" class="message-line" />
+        <text x="180" y="775" class="message-label">return final_result</text>
+
+        <!-- 8. Final state update -->
+        <line x1="150" y1="820" x2="450" y2="820" class="message-line" />
+        <text x="160" y="815" class="message-label">8. Agent state is updated with results</text>
+    </g>
+</svg>

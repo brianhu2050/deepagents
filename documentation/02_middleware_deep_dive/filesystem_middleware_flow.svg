@@ -1,0 +1,138 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1100" viewBox="0 0 1400 1100" font-family="sans-serif">
+    <defs>
+        <marker id="arrow-fs" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" stroke="#000000" />
+        </marker>
+        <filter id="shadow-fs">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+            <feOffset dx="2" dy="2" />
+            <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+        <style>
+            .box { stroke-width: 1.5; filter: url(#shadow-fs); }
+            .agent-core { fill: #E3F2FD; stroke: #90CAF9; }
+            .middleware { fill: #FFF3E0; stroke: #FFB74D; }
+            .tool-gen { fill: #FFE0B2; stroke: #FF9800; }
+            .backend-proto { fill: #FCE4EC; stroke: #F48FB1; }
+            .backend-impl { fill: #F8BBD0; stroke: #F06292; }
+            .security { fill: #FFEBEE; stroke: #EF5350; }
+            .prompt-inject { fill: #E8F5E9; stroke: #A5D6A7; }
+            .large-file { fill: #E0F7FA; stroke: #4DD0E1; }
+            .title { font-size: 20px; text-anchor: middle; }
+            .subtitle { font-size: 16px; text-anchor: middle; }
+            .text { font-size: 14px; text-anchor: middle; }
+            .text-small { font-size: 12px; text-anchor: middle; }
+            .connector { stroke: #333; stroke-width: 2; marker-end: url(#arrow-fs); }
+            .flow-line { stroke: #666; stroke-width: 1.5; stroke-dasharray: 6 3; marker-end: url(#arrow-fs); }
+        </style>
+    </defs>
+
+    <text x="700" y="40" font-size="28" text-anchor="middle" fill="#000000">FilesystemMiddleware 架构与流程图</text>
+
+
+    <rect x="550" y="80" width="300" height="60" rx="10" class="box agent-core" stroke-width="1.5" filter="url(#shadow-fs)" fill="#E3F2FD" stroke="#90CAF9" />
+    <text x="700" y="115" class="title" font-size="20px" text-anchor="middle" fill="#000000">智能体核心 (Agent Core)</text>
+
+    <path d="M 700 140 V 190" class="connector" stroke="#333" stroke-width="2" marker-end="url(#arrow-fs)" />
+    <text x="730" y="165" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">发起工具调用</text>
+
+
+    <rect x="150" y="190" width="1100" height="850" rx="15" class="box middleware" stroke-width="1.5" filter="url(#shadow-fs)" fill="#FFF3E0" stroke="#FFB74D" />
+    <text x="700" y="225" class="title" font-size="20px" text-anchor="middle" fill="#000000">FilesystemMiddleware</text>
+
+
+    <g id="tool-generators">
+        <rect x="200" y="250" width="400" height="200" rx="10" class="box tool-gen" stroke-width="1.5" filter="url(#shadow-fs)" fill="#FFE0B2" stroke="#FF9800" />
+        <text x="400" y="280" class="subtitle" font-size="16px" text-anchor="middle" fill="#000000">工具生成器 (Tool Generators)</text>
+        <text x="400" y="310" class="text" font-size="14px" text-anchor="middle" fill="#000000">_ls_tool_generator()</text>
+        <text x="400" y="335" class="text" font-size="14px" text-anchor="middle" fill="#000000">_read_file_tool_generator()</text>
+        <text x="400" y="360" class="text" font-size="14px" text-anchor="middle" fill="#000000">_write_file_tool_generator()</text>
+        <text x="400" y="385" class="text" font-size="14px" text-anchor="middle" fill="#000000">_edit_file_tool_generator()</text>
+        <text x="400" y="410" class="text" font-size="14px" text-anchor="middle" fill="#000000">_glob_tool_generator()</text>
+        <text x="400" y="435" class="text" font-size="14px" text-anchor="middle" fill="#000000">_execute_tool_generator()</text>
+    </g>
+
+    <path d="M 500 250 V 120 H 550" class="flow-line" stroke="#666" stroke-width="1.5" stroke-dasharray="6 3" marker-end="url(#arrow-fs)" />
+     <text x="450" y="160" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">注册工具</text>
+
+
+
+    <g id="backend">
+        <rect x="200" y="470" width="1000" height="300" rx="10" class="box backend-proto" stroke-width="1.5" filter="url(#shadow-fs)" fill="#FCE4EC" stroke="#F48FB1" />
+        <text x="700" y="500" class="subtitle" font-size="16px" text-anchor="middle" fill="#000000">后端抽象层 (Backend Abstraction)</text>
+
+        <rect x="450" y="530" width="500" height="50" rx="5" class="box backend-proto" stroke-width="1.5" filter="url(#shadow-fs)" fill="#FCE4EC" stroke="#F48FB1" />
+        <text x="700" y="560" class="text" font-size="14px" text-anchor="middle" fill="#000000">BackendProtocol (接口)</text>
+
+        <rect x="450" y="590" width="500" height="50" rx="5" class="box backend-proto" stroke-width="1.5" filter="url(#shadow-fs)" fill="#FCE4EC" stroke="#F48FB1" />
+        <text x="700" y="620" class="text" font-size="14px" text-anchor="middle" fill="#000000">SandboxBackendProtocol (接口, 支持 execute)</text>
+
+        <path d="M 400 450 V 555 H 450" class="flow-line" stroke="#666" stroke-width="1.5" stroke-dasharray="6 3" marker-end="url(#arrow-fs)" />
+        <text x="390" y="500" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">依赖注入</text>
+
+
+        <g id="backend-impls">
+            <rect x="225" y="660" width="250" height="100" rx="5" class="box backend-impl" stroke-width="1.5" filter="url(#shadow-fs)" fill="#F8BBD0" stroke="#F06292" />
+            <text x="350" y="690" class="subtitle" font-size="16px" text-anchor="middle" fill="#000000">StateBackend</text>
+            <text x="350" y="715" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">(内存)</text>
+
+            <rect x="500" y="660" width="250" height="100" rx="5" class="box backend-impl" stroke-width="1.5" filter="url(#shadow-fs)" fill="#F8BBD0" stroke="#F06292" />
+            <text x="625" y="690" class="subtitle" font-size="16px" text-anchor="middle" fill="#000000">FilesystemBackend</text>
+            <text x="625" y="715" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">(本地磁盘)</text>
+
+            <rect x="775" y="660" width="250" height="100" rx="5" class="box backend-impl" stroke-width="1.5" filter="url(#shadow-fs)" fill="#F8BBD0" stroke="#F06292" />
+            <text x="900" y="690" class="subtitle" font-size="16px" text-anchor="middle" fill="#000000">ModalBackend</text>
+            <text x="900" y="715" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">(远程沙箱)</text>
+
+            <rect x="1050" y="660" width="125" height="100" rx="5" class="box backend-impl" stroke-width="1.5" filter="url(#shadow-fs)" fill="#F8BBD0" stroke="#F06292" />
+            <text x="1112.5" y="695" class="text" font-size="14px" text-anchor="middle" fill="#000000">...</text>
+        </g>
+        <path d="M 350 640 V 660" class="flow-line" stroke="#666" stroke-width="1.5" stroke-dasharray="6 3" marker-end="url(#arrow-fs)" />
+        <path d="M 625 640 V 660" class="flow-line" stroke="#666" stroke-width="1.5" stroke-dasharray="6 3" marker-end="url(#arrow-fs)" />
+        <path d="M 900 640 V 660" class="flow-line" stroke="#666" stroke-width="1.5" stroke-dasharray="6 3" marker-end="url(#arrow-fs)" />
+        <text x="700" y="650" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">具体实现</text>
+    </g>
+
+
+    <g id="middleware-methods">
+
+        <rect x="800" y="250" width="400" height="100" rx="10" class="box security" stroke-width="1.5" filter="url(#shadow-fs)" fill="#FFEBEE" stroke="#EF5350" />
+        <text x="1000" y="280" class="subtitle" font-size="16px" text-anchor="middle" fill="#000000">安全: _validate_path()</text>
+        <text x="1000" y="310" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">防止路径遍历</text>
+        <text x="1000" y="330" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">规范化路径</text>
+        <path d="M 600 350 H 800" class="flow-line" stroke="#666" stroke-width="1.5" stroke-dasharray="6 3" marker-end="url(#arrow-fs)" />
+        <text x="700" y="345" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">所有路径操作前调用</text>
+
+
+        <rect x="200" y="790" width="450" height="230" rx="10" class="box prompt-inject" stroke-width="1.5" filter="url(#shadow-fs)" fill="#E8F5E9" stroke="#A5D6A7" />
+        <text x="425" y="820" class="subtitle" font-size="16px" text-anchor="middle" fill="#000000">动态提示注入: wrap_model_call()</text>
+        <text x="425" y="850" class="text" font-size="14px" text-anchor="middle" fill="#000000">1. 检查后端能力 (是否支持 execute)</text>
+        <text x="425" y="880" class="text" font-size="14px" text-anchor="middle" fill="#000000">2. 生成基础文件系统 Prompt</text>
+        <text x="425" y="910" class="text" font-size="14px" text-anchor="middle" fill="#000000">3. (如果支持) 生成命令执行 Prompt</text>
+        <text x="425" y="940" class="text" font-size="14px" text-anchor="middle" fill="#000000">4. 过滤不可用工具</text>
+        <text x="425" y="970" class="text" font-size="14px" text-anchor="middle" fill="#000000">5. 将最终 Prompt 注入模型请求</text>
+        <text x="425" y="1000" class="text" font-size="14px" text-anchor="middle" fill="#000000">确保 LLM 知晓可用工具</text>
+
+
+        <rect x="750" y="790" width="450" height="230" rx="10" class="box large-file" stroke-width="1.5" filter="url(#shadow-fs)" fill="#E0F7FA" stroke="#4DD0E1" />
+        <text x="975" y="820" class="subtitle" font-size="16px" text-anchor="middle" fill="#000000">大结果处理: _intercept_large_tool_result()</text>
+        <text x="975" y="850" class="text" font-size="14px" text-anchor="middle" fill="#000000">1. 拦截工具返回结果</text>
+        <text x="975" y="880" class="text" font-size="14px" text-anchor="middle" fill="#000000">2. 检查内容是否超长</text>
+        <text x="975" y="910" class="text" font-size="14px" text-anchor="middle" fill="#000000">3. (如果超长) 将结果写入临时文件</text>
+        <path d="M 975 920 V 760 H 700 V 770" class="flow-line" stroke="#666" stroke-width="1.5" stroke-dasharray="6 3" marker-end="url(#arrow-fs)" />
+        <text x="830" y="775" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">调用 backend.write()</text>
+        <text x="975" y="940" class="text" font-size="14px" text-anchor="middle" fill="#000000">4. 返回引导消息 (路径+预览)</text>
+        <text x="975" y="970" class="text" font-size="14px" text-anchor="middle" fill="#000000">5. 引导 Agent 使用 read_file 分页读取</text>
+        <text x="975" y="1000" class="text" font-size="14px" text-anchor="middle" fill="#000000">防止上下文溢出</text>
+
+    </g>
+
+
+    <path d="M 700 760 V 1050" class="connector" stroke="#333" stroke-width="2" marker-end="url(#arrow-fs)" />
+    <text x="700" y="1075" class="title" font-size="20px" text-anchor="middle" fill="#000000">物理/虚拟环境 (文件系统, Shell)</text>
+
+</svg>

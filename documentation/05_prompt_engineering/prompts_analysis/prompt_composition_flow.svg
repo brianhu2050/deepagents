@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1400" viewBox="0 0 1000 1400" font-family="sans-serif">
+    <defs>
+        <marker id="arrow-pc" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#444" stroke="#000000" />
+        </marker>
+        <filter id="shadow-pc">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+            <feOffset dx="2" dy="2" />
+            <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+        <style>
+            .box { stroke-width: 1.5; filter: url(#shadow-pc); }
+            .prompt-base { fill: #E3F2FD; stroke: #90CAF9; }
+            .prompt-mw { fill: #FFF3E0; stroke: #FFB74D; }
+            .prompt-final { fill: #E8F5E9; stroke: #A5D6A7; }
+            .title { font-size: 24px; text-anchor: middle; }
+            .subtitle { font-size: 16px; }
+            .text { font-size: 14px; }
+            .text-mono { font-size: 13px; font-family: monospace; }
+            .connector { stroke: #444; stroke-width: 2; marker-end: url(#arrow-pc); }
+        </style>
+    </defs>
+
+    <text x="500" y="50" class="title" font-size="24px" text-anchor="middle" fill="#000000">System Prompt 动态组合流程图</text>
+    <text x="500" y="80" class="text" text-anchor="middle" font-size="14px" fill="#000000">展示各中间件如何通过 `wrap_model_call` 方法丰富最终的系统提示</text>
+
+
+    <g id="base-prompt">
+        <rect x="150" y="120" width="700" height="120" rx="10" class="box prompt-base" stroke-width="1.5" filter="url(#shadow-pc)" fill="#E3F2FD" stroke="#90CAF9" />
+        <text x="170" y="155" class="subtitle" font-size="16px" fill="#000000">1. 基础系统提示 (Base System Prompt)</text>
+        <text x="170" y="185" class="text" font-size="14px" fill="#000000">这是在创建 Agent 时定义的基础指令或“人格”。</text>
+        <text x="170" y="215" class="text-mono" fill="#0277BD" font-size="13px" font-family="monospace">"You are a helpful AI assistant..."</text>
+    </g>
+
+    <path d="M 500 240 V 290" class="connector" stroke="#444" stroke-width="2" marker-end="url(#arrow-pc)" />
+    <text x="510" y="270" class="text" font-size="14px" fill="#000000">进入 Middleware 链</text>
+
+
+    <g id="fs-middleware">
+        <rect x="50" y="290" width="900" height="250" rx="15" class="box prompt-mw" stroke-width="1.5" filter="url(#shadow-pc)" fill="#FFF3E0" stroke="#FFB74D" />
+        <text x="70" y="325" class="subtitle" font-size="16px" fill="#000000">2. FilesystemMiddleware.wrap_model_call()</text>
+        <line x1="60" y1="340" x2="940" y2="340" stroke="#FFB74D" stroke-width="1" />
+
+        <text x="70" y="365" class="text" font-size="14px" fill="#000000">逻辑: 检查后端能力, 动态追加相关 Prompt。</text>
+
+        <rect x="70" y="390" width="860" height="60" rx="5" class="box prompt-base" stroke-width="1.5" filter="url(#shadow-pc)" fill="#E3F2FD" stroke="#90CAF9" />
+        <text x="80" y="420" class="text-mono" text-anchor="start" font-size="13px" font-family="monospace" fill="#000000">
+            <tspan>追加:</tspan> FILESYSTEM_SYSTEM_PROMPT ("## Filesystem Tools...")
+        </text>
+
+        <rect x="70" y="460" width="860" height="60" rx="5" class="box prompt-base" stroke-width="1.5" filter="url(#shadow-pc)" fill="#E3F2FD" stroke="#90CAF9" />
+        <text x="80" y="495" class="text-mono" text-anchor="start" font-size="13px" font-family="monospace" fill="#000000">
+            <tspan fill="#00796B">(如果后端支持 execute)</tspan>
+            <tspan> 追加: EXECUTION_SYSTEM_PROMPT ("## Execute Tool...")</tspan>
+        </text>
+    </g>
+
+    <path d="M 500 540 V 590" class="connector" stroke="#444" stroke-width="2" marker-end="url(#arrow-pc)" />
+
+
+    <g id="subagent-middleware">
+        <rect x="50" y="590" width="900" height="180" rx="15" class="box prompt-mw" stroke-width="1.5" filter="url(#shadow-pc)" fill="#FFF3E0" stroke="#FFB74D" />
+        <text x="70" y="625" class="subtitle" font-size="16px" fill="#000000">3. SubAgentMiddleware.wrap_model_call()</text>
+        <line x1="60" y1="640" x2="940" y2="640" stroke="#FFB74D" stroke-width="1" />
+
+        <text x="70" y="665" class="text" font-size="14px" fill="#000000">逻辑: 追加关于如何使用 `task` 工具进行任务委派的详细指南。</text>
+
+        <rect x="70" y="690" width="860" height="60" rx="5" class="box prompt-base" stroke-width="1.5" filter="url(#shadow-pc)" fill="#E3F2FD" stroke="#90CAF9" />
+        <text x="80" y="720" class="text-mono" text-anchor="start" font-size="13px" font-family="monospace" fill="#000000">
+            <tspan>追加:</tspan> TASK_SYSTEM_PROMPT ("## `task` (subagent spawner)...")
+        </text>
+    </g>
+
+    <path d="M 500 770 V 820" class="connector" stroke="#444" stroke-width="2" marker-end="url(#arrow-pc)" />
+
+
+    <g id="skills-middleware">
+        <rect x="50" y="820" width="900" height="220" rx="15" class="box prompt-mw" stroke-width="1.5" filter="url(#shadow-pc)" fill="#FFF3E0" stroke="#FFB74D" />
+        <text x="70" y="855" class="subtitle" font-size="16px" fill="#000000">4. SkillsMiddleware.wrap_model_call()</text>
+        <line x1="60" y1="870" x2="940" y2="870" stroke="#FFB74D" stroke-width="1" />
+
+        <text x="70" y="895" class="text" font-size="14px" fill="#000000">逻辑: 从状态加载技能列表, 填充模板, 追加技能使用指南。</text>
+
+        <rect x="70" y="920" width="860" height="100" rx="5" class="box prompt-base" stroke-width="1.5" filter="url(#shadow-pc)" fill="#E3F2FD" stroke="#90CAF9" />
+        <text x="80" y="950" class="text-mono" text-anchor="start" font-size="13px" font-family="monospace" fill="#000000">
+            <tspan>追加:</tspan> SKILLS_SYSTEM_PROMPT 模板, 其中填充了:
+        </text>
+        <text x="100" y="975" class="text-mono" fill="#00796B" text-anchor="start" font-size="13px" font-family="monospace">
+            - `{skills_locations}` (技能文件路径)
+        </text>
+        <text x="100" y="995" class="text-mono" fill="#00796B" text-anchor="start" font-size="13px" font-family="monospace">
+            - `{skills_list}` (动态生成的技能名称和描述列表)
+        </text>
+    </g>
+
+    <path d="M 500 1040 V 1090" class="connector" stroke="#444" stroke-width="2" marker-end="url(#arrow-pc)" />
+
+
+    <g id="final-prompt">
+        <rect x="150" y="1090" width="700" height="280" rx="10" class="box prompt-final" stroke-width="1.5" filter="url(#shadow-pc)" fill="#E8F5E9" stroke="#A5D6A7" />
+        <text x="170" y="1125" class="subtitle" font-size="16px" fill="#000000">5. 最终组合的系统提示 (Final System Prompt)</text>
+        <text x="170" y="1155" class="text" font-size="14px" fill="#000000">所有部分通过 `\n\n` 连接, 形成一个完整的上下文:</text>
+        <text x="170" y="1185" class="text-mono" fill="#0277BD" font-size="13px" font-family="monospace">1. 基础提示 (人格)</text>
+        <path d="M 170 1195 L 830 1195" stroke="#BDBDBD" stroke-width="1" stroke-dasharray="4 2" />
+        <text x="170" y="1215" class="text-mono" fill="#0277BD" font-size="13px" font-family="monospace">2. 文件系统与执行能力</text>
+        <path d="M 170 1225 L 830 1225" stroke="#BDBDBD" stroke-width="1" stroke-dasharray="4 2" />
+        <text x="170" y="1245" class="text-mono" fill="#0277BD" font-size="13px" font-family="monospace">3. 任务委派 (子代理) 思想</text>
+        <path d="M 170 1255 L 830 1255" stroke="#BDBDBD" stroke-width="1" stroke-dasharray="4 2" />
+        <text x="170" y="1275" class="text-mono" fill="#0277BD" font-size="13px" font-family="monospace">4. 可用技能列表与使用方法</text>
+        <path d="M 170 1285 L 830 1285" stroke="#BDBDBD" stroke-width="1" stroke-dasharray="4 2" />
+
+        <text x="500" y="1320" class="text" text-anchor="middle" font-size="14px" fill="#000000">
+            这个最终的 Prompt 被发送给 LLM, 作为其本轮推理的最高指令。
+        </text>
+    </g>
+</svg>

@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1400" viewBox="0 0 1800 1400" font-family="sans-serif">
+    <defs>
+        <marker id="arrow-e2e" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" stroke="#000000" />
+        </marker>
+        <filter id="shadow-e2e">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+            <feOffset dx="2" dy="2" />
+            <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+        <style>
+            .swimlane-title { font-size: 20px; text-anchor: middle; }
+            .step-box { fill: #FFF; stroke: #9E9E9E; stroke-width: 1.5; filter: url(#shadow-e2e); border-radius: 5px;}
+            .step-text { font-size: 14px; }
+            .func-name { font-family: monospace; font-size: 13px; fill: #00796B;}
+            .arrow { stroke: #333; stroke-width: 2; marker-end: url(#arrow-e2e); }
+            .label { font-size: 13px; fill: #555; }
+        </style>
+    </defs>
+
+    <title>Deep Agents E2E Planning Flow</title>
+    <text x="900" y="40" font-size="28" text-anchor="middle" fill="#000000">Deep Agents 端到端执行流程图 (E2E Flow)</text>
+
+
+    <g id="swimlanes">
+        <text x="150" y="100" class="swimlane-title" font-size="20px" text-anchor="middle" fill="#000000">main.py (CLI)</text>
+        <line x1="300" y1="80" x2="300" y2="1350" stroke="#BDBDBD" stroke-width="2" />
+
+        <text x="500" y="100" class="swimlane-title" font-size="20px" text-anchor="middle" fill="#000000">agent.py (Assembler)</text>
+        <line x1="700" y1="80" x2="700" y2="1350" stroke="#BDBDBD" stroke-width="2" />
+
+        <text x="900" y="100" class="swimlane-title" font-size="20px" text-anchor="middle" fill="#000000">execution.py (Engine)</text>
+        <line x1="1100" y1="80" x2="1100" y2="1350" stroke="#BDBDBD" stroke-width="2" />
+
+        <text x="1300" y="100" class="swimlane-title" font-size="20px" text-anchor="middle" fill="#000000">LangGraph (Core)</text>
+        <line x1="1500" y1="80" x2="1500" y2="1350" stroke="#BDBDBD" stroke-width="2" />
+    </g>
+
+
+    <text x="900" y="140" font-size="18" fill="#666" text-anchor="middle">--- 第一阶段: 初始化 ---</text>
+
+    <rect x="100" y="160" width="100" height="50" class="step-box" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-e2e)" border-radius="5px" />
+    <text x="150" y="180" text-anchor="middle" class="step-text" font-size="14px" fill="#000000">用户输入</text>
+    <text x="150" y="195" text-anchor="middle" class="func-name" font-family="monospace" font-size="13px" fill="#00796B">$ deepagents</text>
+
+    <path d="M 150 210 V 240" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-e2e)" />
+
+    <rect x="100" y="240" width="100" height="70" class="step-box" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-e2e)" border-radius="5px" />
+    <text x="150" y="260" text-anchor="middle" class="step-text" font-size="14px" fill="#000000">解析参数</text>
+    <text x="150" y="280" text-anchor="middle" class="func-name" font-family="monospace" font-size="13px" fill="#00796B">parse_args()</text>
+    <text x="150" y="295" text-anchor="middle" class="label" font-size="13px" fill="#555">--sandbox=modal</text>
+
+    <path d="M 150 310 V 340" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-e2e)" />
+
+    <rect x="100" y="340" width="100" height="70" class="step-box" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-e2e)" border-radius="5px" />
+    <text x="150" y="360" text-anchor="middle" class="step-text" font-size="14px" fill="#000000">启动主逻辑</text>
+    <text x="150" y="380" text-anchor="middle" class="func-name" font-family="monospace" font-size="13px" fill="#00796B">main()</text>
+    <text x="150" y="395" text-anchor="middle" class="label" font-size="13px" fill="#555">创建沙箱, 模型</text>
+
+    <path d="M 150 410 V 440" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-e2e)" />
+
+    <rect x="80" y="440" width="140" height="70" class="step-box" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-e2e)" border-radius="5px" />
+    <text x="150" y="460" text-anchor="middle" class="step-text" font-size="14px" fill="#000000">调用 Agent 会话</text>
+    <text x="150" y="480" text-anchor="middle" class="func-name" font-family="monospace" font-size="13px" fill="#00796B">_run_agent_session()</text>
+
+    <path d="M 220 475 H 430" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-e2e)" />
+    <text x="310" y="470" class="label" font-size="13px" fill="#555">创建 Agent</text>
+
+    <rect x="430" y="440" width="140" height="150" class="step-box" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-e2e)" border-radius="5px" />
+    <text x="500" y="460" text-anchor="middle" class="step-text" font-size="14px" fill="#000000">组装 Agent</text>
+    <text x="500" y="480" text-anchor="middle" class="func-name" font-family="monospace" font-size="13px" fill="#00796B">create_cli_agent()</text>
+    <text x="500" y="505" text-anchor="middle" class="label" font-size="13px" fill="#555">1. 实例化 Backend</text>
+    <text x="500" y="525" text-anchor="middle" class="label" font-size="13px" fill="#555">2. 实例化 Middleware</text>
+    <text x="500" y="545" text-anchor="middle" class="label" font-size="13px" fill="#555">3. 获取 System Prompt</text>
+    <text x="500" y="565" text-anchor="middle" class="label" font-size="13px" fill="#555">4. 配置 HITL</text>
+
+    <path d="M 570 515 H 1230" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-e2e)" />
+    <text x="880" y="510" class="label" font-size="13px" fill="#555">调用核心库 create_deep_agent()</text>
+
+    <rect x="1230" y="490" width="140" height="70" class="step-box" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-e2e)" border-radius="5px" />
+    <text x="1300" y="510" text-anchor="middle" class="step-text" font-size="14px" fill="#000000">构建图 (Graph)</text>
+    <text x="1300" y="530" text-anchor="middle" class="func-name" font-family="monospace" font-size="13px" fill="#00796B">Pregel(...)</text>
+    <text x="1300" y="545" text-anchor="middle" class="label" font-size="13px" fill="#555">返回 Agent 实例</text>
+
+    <path d="M 1230 525 H 570" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-e2e)" />
+
+    <path d="M 430 515 H 220" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-e2e)" />
+
+    <path d="M 150 510 V 580" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-e2e)" />
+
+    <rect x="80" y="580" width="140" height="70" class="step-box" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-e2e)" border-radius="5px" />
+    <text x="150" y="600" text-anchor="middle" class="step-text" font-size="14px" fill="#000000">启动交互循环</text>
+    <text x="150" y="620" text-anchor="middle" class="func-name" font-family="monospace" font-size="13px" fill="#00796B">simple_cli()</text>
+    <text x="150" y="635" text-anchor="middle" class="label" font-size="13px" fill="#555">等待用户输入...</text>
+
+
+    <text x="900" y="680" font-size="18" fill="#666" text-anchor="middle">--- 第二阶段: 任务执行 ---</text>
+
+    <path d="M 150 650 V 710" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-e2e)" />
+    <text x="180" y="690" class="label" font-size="13px" fill="#555">用户输入指令</text>
+
+    <rect x="80" y="710" width="140" height="70" class="step-box" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-e2e)" border-radius="5px" />
+    <text x="150" y="730" text-anchor="middle" class="step-text" font-size="14px" fill="#000000">派发任务</text>
+    <text x="150" y="750" text-anchor="middle" class="func-name" font-family="monospace" font-size="13px" fill="#00796B">simple_cli()</text>
+
+    <path d="M 220 745 H 830" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-e2e)" />
+    <text x="500" y="740" class="label" font-size="13px" fill="#555">调用 execute_task(user_input)</text>
+
+    <rect x="830" y="710" width="140" height="70" class="step-box" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-e2e)" border-radius="5px" />
+    <text x="900" y="730" text-anchor="middle" class="step-text" font-size="14px" fill="#000000">准备输入</text>
+    <text x="900" y="750" text-anchor="middle" class="func-name" font-family="monospace" font-size="13px" fill="#00796B">execute_task()</text>
+    <text x="900" y="765" text-anchor="middle" class="label" font-size="13px" fill="#555">stream_input = {...}</text>
+
+    <path d="M 970 745 H 1230" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-e2e)" />
+    <text x="1080" y="740" class="label" font-size="13px" fill="#555">调用 agent.astream()</text>
+
+    <rect x="1230" y="710" width="140" height="400" class="step-box" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-e2e)" border-radius="5px" />
+    <text x="1300" y="730" text-anchor="middle" class="step-text" font-size="14px" fill="#000000">Agent 图执行</text>
+    <text x="1300" y="750" text-anchor="middle" class="func-name" font-family="monospace" font-size="13px" fill="#00796B">agent.astream()</text>
+    <text x="1300" y="780" text-anchor="middle" class="label" font-size="13px" fill="#555">1. 调用 `before_agent`</text>
+    <text x="1300" y="810" text-anchor="middle" class="label" font-size="13px" fill="#555">2. 调用 `wrap_model_call`</text>
+    <text x="1300" y="840" text-anchor="middle" class="label" font-size="13px" fill="#555">3. 调用 LLM</text>
+    <text x="1300" y="870" text-anchor="middle" class="label" font-size="13px" fill="#555">4. LLM 返回 `tool_calls`</text>
+    <text x="1300" y="900" text-anchor="middle" class="label" font-size="13px" fill="#555">5. 调用 `wrap_tool_call`</text>
+    <text x="1300" y="930" text-anchor="middle" class="label" fill="#D32F2F" font-size="13px">6. 发现需批准的工具</text>
+    <text x="1300" y="960" text-anchor="middle" class="label" fill="#D32F2F" font-size="13px">7. **暂停**并产生中断</text>
+
+    <path d="M 1230 980 H 970" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-e2e)" />
+    <text x="1080" y="975" class="label" font-size="13px" fill="#555">返回 `__interrupt__` 事件</text>
+
+    <rect x="830" y="980" width="140" height="150" class="step-box" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-e2e)" border-radius="5px" />
+    <text x="900" y="1000" text-anchor="middle" class="step-text" font-size="14px" fill="#000000">处理中断</text>
+    <text x="900" y="1020" text-anchor="middle" class="func-name" font-family="monospace" font-size="13px" fill="#00796B">execute_task()</text>
+    <text x="900" y="1045" text-anchor="middle" class="label" font-size="13px" fill="#555">调用</text>
+    <text x="900" y="1060" text-anchor="middle" class="func-name" font-family="monospace" font-size="13px" fill="#00796B">prompt_for_tool_approval()</text>
+    <text x="900" y="1085" text-anchor="middle" class="label" font-size="13px" fill="#555">等待用户批准/拒绝</text>
+    <text x="900" y="1110" text-anchor="middle" class="label" font-size="13px" fill="#555">包装为 `Command(resume=...)`</text>
+
+    <path d="M 970 1055 H 1230" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-e2e)" />
+    <text x="1080" y="1050" class="label" font-size="13px" fill="#555">再次调用 astream, 传入 resume 命令</text>
+
+    <text x="1300" y="1135" text-anchor="middle" class="label" font-size="13px" fill="#555">8. 从中断处恢复</text>
+    <text x="1300" y="1160" text-anchor="middle" class="label" font-size="13px" fill="#555">9. 执行工具</text>
+    <text x="1300" y="1185" text-anchor="middle" class="label" font-size="13px" fill="#555">10. 返回 `ToolMessage`</text>
+    <text x="1300" y="1210" text-anchor="middle" class="label" font-size="13px" fill="#555">11. ...循环直至结束</text>
+
+    <path d="M 1230 1230 H 970" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-e2e)" />
+    <text x="1080" y="1225" class="label" font-size="13px" fill="#555">返回最终结果事件</text>
+
+    <rect x="830" y="1230" width="140" height="70" class="step-box" fill="#FFF" stroke="#9E9E9E" stroke-width="1.5" filter="url(#shadow-e2e)" border-radius="5px" />
+    <text x="900" y="1250" text-anchor="middle" class="step-text" font-size="14px" fill="#000000">渲染最终结果</text>
+    <text x="900" y="1270" text-anchor="middle" class="func-name" font-family="monospace" font-size="13px" fill="#00796B">execute_task()</text>
+
+    <path d="M 830 1265 H 150" class="arrow" stroke="#333" stroke-width="2" marker-end="url(#arrow-e2e)" />
+    <text x="500" y="1290" class="label" font-size="13px" fill="#555">流式输出到终端</text>
+    <text x="150" y="1320" text-anchor="middle" class="label" font-size="13px" fill="#555">等待下一次输入...</text>
+
+</svg>

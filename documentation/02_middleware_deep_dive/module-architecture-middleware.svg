@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1100" viewBox="0 0 1400 1100" font-family="sans-serif">
+    <defs>
+        <marker id="arrow-mw-detail" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" stroke="#000000" />
+        </marker>
+        <filter id="shadow-mw-detail">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
+            <feOffset dx="3" dy="3" />
+            <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+        <style>
+            .box { stroke-width: 2; filter: url(#shadow-mw-detail); }
+            .bg-rect { fill: #F5F5F5; stroke: #E0E0E0; }
+            .phase-box { fill: #E3F2FD; stroke: #90CAF9; }
+            .mw-box { fill: #FFFDE7; stroke: #FFF176; }
+            .state-box { fill: #E0F2F1; stroke: #80CBC4; }
+            .prompt-box { fill: #E8F5E9; stroke: #A5D6A7; }
+            .title { font-size: 28px; text-anchor: middle; }
+            .subtitle { font-size: 20px; text-anchor: middle; }
+            .text { font-size: 15px; text-anchor: middle; }
+            .text-small { font-size: 12px; text-anchor: middle; }
+            .text-mono { font-size: 14px; font-family: monospace; }
+            .connector { stroke: #333; stroke-width: 2.5; marker-end: url(#arrow-mw-detail); }
+            .data-flow { stroke: #00897B; stroke-width: 2; stroke-dasharray: 6 3; marker-end: url(#arrow-mw-detail); }
+        </style>
+    </defs>
+
+    <text x="700" y="50" class="title" font-size="28px" text-anchor="middle" fill="#000000">中间件 (Middleware) 协同工作流程详解</text>
+
+
+    <rect x="1050" y="100" width="300" height="180" rx="10" class="box state-box" stroke-width="2" filter="url(#shadow-mw-detail)" fill="#E0F2F1" stroke="#80CBC4" />
+    <text x="1200" y="135" class="subtitle" font-size="20px" text-anchor="middle" fill="#000000">AgentState</text>
+    <text x="1200" y="170" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">messages: [...]</text>
+    <text x="1200" y="195" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">files: {...}</text>
+    <text x="1200" y="220" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">skills_metadata: [...]</text>
+    <text x="1200" y="245" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">memory: {...}</text>
+
+
+    <g id="phase1">
+        <rect x="50" y="100" width="950" height="400" rx="15" class="box phase-box" stroke-width="2" filter="url(#shadow-mw-detail)" fill="#E3F2FD" stroke="#90CAF9" />
+        <text x="525" y="140" class="subtitle" font-size="20px" text-anchor="middle" fill="#000000">阶段 1: 运行前状态准备 (`before_agent`)</text>
+        <text x="525" y="170" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">在 Agent 逻辑开始前执行, 主要用于读取外部源和修复状态</text>
+
+        <rect x="100" y="200" width="380" height="120" rx="10" class="box mw-box" stroke-width="2" filter="url(#shadow-mw-detail)" fill="#FFFDE7" stroke="#FFF176" />
+        <text x="290" y="230" class="text" font-size="15px" text-anchor="middle" fill="#000000">PatchToolCallsMiddleware</text>
+        <text x="290" y="260" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">**职责**: 修复悬空的工具调用</text>
+        <text x="290" y="280" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">**动作**: 扫描 `messages`, 为未完成的</text>
+        <text x="290" y="300" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">`tool_call` 注入“已取消”的 `ToolMessage`</text>
+
+        <rect x="520" y="200" width="380" height="120" rx="10" class="box mw-box" stroke-width="2" filter="url(#shadow-mw-detail)" fill="#FFFDE7" stroke="#FFF176" />
+        <text x="710" y="230" class="text" font-size="15px" text-anchor="middle" fill="#000000">AgentMemoryMiddleware</text>
+        <text x="710" y="260" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">**职责**: 加载记忆</text>
+        <text x="710" y="280" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">**动作**: 从 `agent.md` 文件读取内容</text>
+        <text x="710" y="300" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">并填充到 `AgentState` 的 `memory` 字段</text>
+
+        <rect x="310" y="340" width="380" height="120" rx="10" class="box mw-box" stroke-width="2" filter="url(#shadow-mw-detail)" fill="#FFFDE7" stroke="#FFF176" />
+        <text x="500" y="370" class="text" font-size="15px" text-anchor="middle" fill="#000000">SkillsMiddleware</text>
+        <text x="500" y="400" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">**职责**: 发现可用技能</text>
+        <text x="500" y="420" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">**动作**: 扫描技能目录, 解析 `SKILL.md`</text>
+        <text x="500" y="440" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">元数据并填充到 `skills_metadata` 字段</text>
+
+        <path d="M 290 200 H 200 V 150 H 1050" class="data-flow" stroke="#00897B" stroke-width="2" stroke-dasharray="6 3" marker-end="url(#arrow-mw-detail)" />
+        <text x="625" y="115" class="text-small" fill="#00897B" font-size="12px" text-anchor="middle">读取 state['messages']</text>
+        <path d="M 1050 200 V 260 H 900" class="data-flow" stroke="#00897B" stroke-width="2" stroke-dasharray="6 3" marker-end="url(#arrow-mw-detail)" />
+        <text x="1000" y="240" class="text-small" fill="#00897B" font-size="12px" text-anchor="middle">覆写 state['messages']</text>
+
+        <path d="M 710 320 V 380 H 690" class="data-flow" stroke="#00897B" stroke-width="2" stroke-dasharray="6 3" marker-end="url(#arrow-mw-detail)" />
+        <path d="M 500 460 V 420 H 1050" class="data-flow" stroke="#00897B" stroke-width="2" stroke-dasharray="6 3" marker-end="url(#arrow-mw-detail)" />
+        <text x="775" y="440" class="text-small" fill="#00897B" font-size="12px" text-anchor="middle">更新 state</text>
+    </g>
+
+
+    <g id="phase2">
+        <rect x="50" y="550" width="1300" height="500" rx="15" class="box phase-box" stroke-width="2" filter="url(#shadow-mw-detail)" fill="#E3F2FD" stroke="#90CAF9" />
+        <text x="700" y="590" class="subtitle" font-size="20px" text-anchor="middle" fill="#000000">阶段 2: 模型调用前 Prompt 组合 (`wrap_model_call`)</text>
+        <text x="700" y="620" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">形成调用链, `ModelRequest` 被逐层“装饰”和丰富</text>
+
+        <rect x="100" y="650" width="250" height="100" rx="10" class="box prompt-box" stroke-width="2" filter="url(#shadow-mw-detail)" fill="#E8F5E9" stroke="#A5D6A7" />
+        <text x="225" y="680" class="text" font-size="15px" text-anchor="middle" fill="#000000">初始 Prompt</text>
+        <text x="225" y="710" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">"You are an AI..."</text>
+
+        <path d="M 350 700 H 400" class="connector" stroke="#333" stroke-width="2.5" marker-end="url(#arrow-mw-detail)" />
+
+        <rect x="400" y="650" width="280" height="200" rx="10" class="box mw-box" stroke-width="2" filter="url(#shadow-mw-detail)" fill="#FFFDE7" stroke="#FFF176" />
+        <text x="540" y="680" class="text" font-size="15px" text-anchor="middle" fill="#000000">SkillsMiddleware</text>
+        <text x="540" y="710" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">**职责**: 注入技能列表和用法</text>
+        <text x="540" y="740" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">**动作**: 读取 `skills_metadata`,</text>
+        <text x="540" y="760" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">填充模板, 追加到 Prompt</text>
+
+        <path d="M 680 700 H 730" class="connector" stroke="#333" stroke-width="2.5" marker-end="url(#arrow-mw-detail)" />
+
+        <rect x="730" y="650" width="280" height="200" rx="10" class="box mw-box" stroke-width="2" filter="url(#shadow-mw-detail)" fill="#FFFDE7" stroke="#FFF176" />
+        <text x="870" y="680" class="text" font-size="15px" text-anchor="middle" fill="#000000">SubAgentMiddleware</text>
+        <text x="870" y="710" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">**职责**: 注入任务委派指南</text>
+        <text x="870" y="740" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">**动作**: 追加关于何时及如何</text>
+        <text x="870" y="760" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">使用 `task` 工具的详细说明</text>
+
+        <path d="M 1010 700 H 1060" class="connector" stroke="#333" stroke-width="2.5" marker-end="url(#arrow-mw-detail)" />
+
+        <rect x="400" y="870" width="280" height="150" rx="10" class="box mw-box" stroke-width="2" filter="url(#shadow-mw-detail)" fill="#FFFDE7" stroke="#FFF176" />
+        <text x="540" y="900" class="text" font-size="15px" text-anchor="middle" fill="#000000">FilesystemMiddleware</text>
+        <text x="540" y="930" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">**职责**: 注入文件/执行能力</text>
+        <text x="540" y="960" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">**动作**: 检查后端, 追加工具用法,</text>
+        <text x="540" y="980" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">并可能过滤 `execute` 工具</text>
+
+        <rect x="1060" y="650" width="240" height="100" rx="10" class="box prompt-box" stroke-width="2" filter="url(#shadow-mw-detail)" fill="#E8F5E9" stroke="#A5D6A7" />
+        <text x="1180" y="680" class="text" font-size="15px" text-anchor="middle" fill="#000000">最终 Prompt</text>
+        <text x="1180" y="710" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">组合了所有部分的完整指令</text>
+
+        <path d="M 870 850 V 945 H 730" class="connector" stroke="#333" stroke-width="2.5" marker-end="url(#arrow-mw-detail)" />
+        <path d="M 400 775 H 225 V 800 H 400 " class="connector" stroke="#333" stroke-width="2.5" marker-end="url(#arrow-mw-detail)" />
+        <text x="315" y="790" class="text-small" font-size="12px" text-anchor="middle" fill="#000000">... 其他中间件 ...</text>
+        <path d="M 540 1020 V 1050 H 1180 V 750" class="connector" stroke="#333" stroke-width="2.5" marker-end="url(#arrow-mw-detail)" />
+        <text x="860" y="1040" class="text" font-size="15px" text-anchor="middle" fill="#000000">➡️ 发送给 LLM</text>
+
+
+        <path d="M 1200 280 V 700 H 1010 " class="data-flow" stroke="#00897B" stroke-width="2" stroke-dasharray="6 3" marker-end="url(#arrow-mw-detail)" />
+        <text x="1100" y="500" class="text-small" fill="#00897B" font-size="12px" text-anchor="middle">读取 state</text>
+
+    </g>
+
+</svg>

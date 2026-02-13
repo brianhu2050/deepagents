@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100" font-family="sans-serif">
+    <defs>
+        <marker id="arrow-bt-re" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" stroke="#000000" />
+        </marker>
+        <filter id="shadow-bt-re">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
+            <feOffset dx="3" dy="3" />
+            <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>
+        <style>
+            .box { stroke-width: 2; filter: url(#shadow-bt-re); }
+            .intent-layer { fill: #E3F2FD; stroke: #64B5F6; }
+            .bridge-layer { fill: #FFFDE7; stroke: #FFD54F; }
+            .execution-layer { fill: #FCE4EC; stroke: #F06292; }
+            .protocol-box { fill: #F3E5F5; stroke: #CE93D8; }
+            .impl-box { fill: #E1BEE7; stroke: #BA68C8; }
+            .composite-box { fill: #D1C4E9; stroke: #9575CD; }
+            .title { font-size: 28px; text-anchor: middle; }
+            .subtitle { font-size: 20px; text-anchor: middle; }
+            .text { font-size: 16px; text-anchor: middle; }
+            .text-small { font-size: 13px; text-anchor: middle; }
+            .text-mono { font-size: 14px; font-family: monospace; }
+            .code-ref { font-family: monospace; font-size: 13px; fill: #00796B; }
+            .connector { stroke: #333; stroke-width: 2.5; marker-end: url(#arrow-bt-re); }
+            .flow-line { stroke: #555; stroke-width: 1.5; stroke-dasharray: 8 4; marker-end: url(#arrow-bt-re); }
+        </style>
+    </defs>
+
+    <text x="800" y="50" class="title" font-size="28px" text-anchor="middle" fill="#000000">后端与工具 (Backend &amp; Tools) 架构详解 (v2)</text>
+    <text x="800" y="80" class="text" font-size="16px" text-anchor="middle" fill="#000000">意图 (Intent) 与 执行 (Execution) 的分离</text>
+
+
+    <text x="250" y="130" class="subtitle" font-size="20px" text-anchor="middle" fill="#000000">意图层 (LLM)</text>
+    <text x="800" y="130" class="subtitle" font-size="20px" text-anchor="middle" fill="#000000">桥接层 (Tools in Middleware)</text>
+    <text x="1350" y="130" class="subtitle" font-size="20px" text-anchor="middle" fill="#000000">执行层 (Backends)</text>
+    <line x1="500" y1="110" x2="500" y2="1050" stroke="#BDBDBD" stroke-width="2" />
+    <line x1="1100" y1="110" x2="1100" y2="1050" stroke="#BDBDBD" stroke-width="2" />
+
+
+    <g id="intent-layer">
+        <rect x="50" y="160" width="400" height="150" rx="15" class="box intent-layer" stroke-width="2" filter="url(#shadow-bt-re)" fill="#E3F2FD" stroke="#64B5F6" />
+        <text x="250" y="200" class="text" font-size="16px" text-anchor="middle" fill="#000000">LLM 生成决策</text>
+        <text x="250" y="240" class="text-mono" fill="#0D47A1" font-size="14px" font-family="monospace">Tool Call:</text>
+        <text x="250" y="265" class="text-mono" fill="#0D47A1" font-size="14px" font-family="monospace">read_file(path="/app/src/main.py")</text>
+    </g>
+
+    <path d="M 450 235 H 550" class="connector" stroke="#333" stroke-width="2.5" marker-end="url(#arrow-bt-re)" />
+
+
+    <g id="bridge-layer">
+        <rect x="550" y="160" width="500" height="850" rx="15" class="box bridge-layer" stroke-width="2" filter="url(#shadow-bt-re)" fill="#FFFDE7" stroke="#FFD54F" />
+        <text x="800" y="200" class="subtitle" font-size="20px" text-anchor="middle" fill="#000000">工具 (Tools)</text>
+        <text x="800" y="225" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">位于: `FilesystemMiddleware`</text>
+
+        <rect x="575" y="250" width="450" height="150" rx="10" class="box bridge-layer" style="fill: #FFF59D;" stroke-width="2" filter="url(#shadow-bt-re)" fill="#FFFDE7" stroke="#FFD54F" />
+        <text x="800" y="280" class="text" font-size="16px" text-anchor="middle" fill="#000000">read_file 工具</text>
+        <text x="800" y="310" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">1. 接收参数: `path`</text>
+        <text x="800" y="330" class="text-small" fill="#D32F2F" font-size="13px" text-anchor="middle">2. 安全校验: `_validate_path(path)`</text>
+        <text x="800" y="360" class="text" font-size="16px" text-anchor="middle" fill="#000000">3. 委派执行:</text>
+        <text x="800" y="380" class="code-ref" font-family="monospace" font-size="13px" fill="#00796B">self.backend.read(validated_path)</text>
+
+        <rect x="575" y="420" width="450" height="180" rx="10" class="box bridge-layer" style="fill: #FFF59D;" stroke-width="2" filter="url(#shadow-bt-re)" fill="#FFFDE7" stroke="#FFD54F" />
+        <text x="800" y="450" class="text" font-size="16px" text-anchor="middle" fill="#000000">execute 工具</text>
+        <text x="800" y="480" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">1. 接收参数: `command`</text>
+        <text x="800" y="510" class="text-small" fill="#00796B" font-size="13px" text-anchor="middle">2. 条件性可用:</text>
+        <text x="800" y="530" class="code-ref" font-family="monospace" font-size="13px" fill="#00796B">isinstance(backend, SandboxBackendProtocol)</text>
+        <text x="800" y="560" class="text" font-size="16px" text-anchor="middle" fill="#000000">3. 委派执行:</text>
+        <text x="800" y="580" class="code-ref" font-family="monospace" font-size="13px" fill="#00796B">self.backend.execute(command)</text>
+    </g>
+
+    <path d="M 1025 365 H 1125" class="connector" stroke="#333" stroke-width="2.5" marker-end="url(#arrow-bt-re)" />
+    <path d="M 1025 565 H 1125" class="connector" stroke="#333" stroke-width="2.5" marker-end="url(#arrow-bt-re)" />
+    <text x="1060" y="355" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">调用 .read()</text>
+    <text x="1060" y="555" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">调用 .execute()</text>
+
+
+    <g id="execution-layer">
+        <rect x="1150" y="160" width="400" height="220" rx="10" class="box protocol-box" stroke-width="2" filter="url(#shadow-bt-re)" fill="#F3E5F5" stroke="#CE93D8" />
+        <text x="1350" y="190" class="subtitle" font-size="20px" text-anchor="middle" fill="#000000">接口协议 (Strategy Interface)</text>
+        <text x="1350" y="220" class="code-ref" font-family="monospace" font-size="13px" fill="#00796B">`protocol.py`</text>
+        <text x="1350" y="250" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">BackendProtocol</text>
+        <text x="1350" y="275" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">  .read(), .write(), .ls()...</text>
+        <text x="1350" y="310" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">SandboxBackendProtocol</text>
+        <text x="1350" y="335" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">  (inherits from above)</text>
+        <text x="1350" y="360" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">  + .execute()</text>
+
+        <path d="M 1350 380 V 410" class="flow-line" stroke="#555" stroke-width="1.5" stroke-dasharray="8 4" marker-end="url(#arrow-bt-re)" />
+        <text x="1350" y="400" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">被具体实现</text>
+
+        <rect x="1125" y="410" width="450" height="600" rx="15" class="box execution-layer" stroke-width="2" filter="url(#shadow-bt-re)" fill="#FCE4EC" stroke="#F06292" />
+        <text x="1350" y="440" class="subtitle" font-size="20px" text-anchor="middle" fill="#000000">具体后端 (Concrete Strategies)</text>
+        <text x="1350" y="460" class="code-ref" font-family="monospace" font-size="13px" fill="#00796B">`backends/*.py`</text>
+
+        <rect x="1150" y="480" width="180" height="150" rx="10" class="box impl-box" stroke-width="2" filter="url(#shadow-bt-re)" fill="#E1BEE7" stroke="#BA68C8" />
+        <text x="1240" y="510" class="text" font-size="16px" text-anchor="middle" fill="#000000">FilesystemBackend</text>
+        <text x="1240" y="540" class="code-ref" font-family="monospace" font-size="13px" fill="#00796B">.read()</text>
+        <text x="1240" y="560" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">实现: `Path.read_text()`</text>
+        <text x="1240" y="590" class="code-ref" font-family="monospace" font-size="13px" fill="#00796B">.execute()</text>
+        <text x="1240" y="610" class="text-small" fill="#D32F2F" font-size="13px" text-anchor="middle">未实现</text>
+
+        <rect x="1370" y="480" width="180" height="150" rx="10" class="box impl-box" stroke-width="2" filter="url(#shadow-bt-re)" fill="#E1BEE7" stroke="#BA68C8" />
+        <text x="1460" y="510" class="text" font-size="16px" text-anchor="middle" fill="#000000">DaytonaBackend</text>
+        <text x="1460" y="540" class="code-ref" font-family="monospace" font-size="13px" fill="#00796B">.read()</text>
+        <text x="1460" y="560" class="text-small" fill="#1A237E" font-size="13px" text-anchor="middle">继承: `BaseSandbox`</text>
+        <text x="1460" y="590" class="code-ref" font-family="monospace" font-size="13px" fill="#00796B">.execute()</text>
+        <text x="1460" y="610" class="text-small" fill="#C62828" font-size="13px" text-anchor="middle">自实现: API call</text>
+
+        <rect x="1150" y="650" width="400" height="120" rx="10" class="box base-box" stroke-width="2" filter="url(#shadow-bt-re)" />
+        <text x="1350" y="680" class="subtitle" font-size="20px" text-anchor="middle" fill="#000000">BaseSandbox (抽象基类)</text>
+        <text x="1350" y="710" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">为子类提供 `read` 等方法的默认实现</text>
+        <text x="1350" y="740" class="code-ref" font-family="monospace" font-size="13px" fill="#00796B">def read(): return self.execute("cat...")</text>
+
+        <rect x="1150" y="790" width="400" height="200" rx="10" class="box composite-box" stroke-width="2" filter="url(#shadow-bt-re)" fill="#D1C4E9" stroke="#9575CD" />
+        <text x="1350" y="820" class="subtitle" font-size="20px" text-anchor="middle" fill="#000000">CompositeBackend (路由器)</text>
+        <text x="1350" y="850" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">根据路径前缀将请求路由到不同后端</text>
+        <text x="1170" y="880" text-anchor="start" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">def read(self, path):</text>
+        <text x="1190" y="900" text-anchor="start" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">  if path.startswith("/mem"):</text>
+        <text x="1210" y="920" text-anchor="start" class="text-mono" fill="#1A237E" font-size="14px" font-family="monospace">
+            return self.routes["/mem"].read()
+        </text>
+        <text x="1190" y="940" text-anchor="start" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">  else:</text>
+        <text x="1210" y="960" text-anchor="start" class="text-mono" fill="#1A237E" font-size="14px" font-family="monospace">
+            return self.default.read()
+        </text>
+
+    </g>
+
+</svg>

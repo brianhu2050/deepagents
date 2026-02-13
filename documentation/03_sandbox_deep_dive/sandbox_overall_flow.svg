@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ns0:svg xmlns:ns0="http://www.w.org/2000/svg" width="1200" height="1500" viewBox="0 0 1200 1500" font-family="sans-serif">
+    <ns0:defs>
+        <ns0:marker id="arrow-sof" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <ns0:path d="M 0 0 L 10 5 L 0 10 z" fill="#333" stroke="#000000" />
+        </ns0:marker>
+        <ns0:filter id="shadow-sof">
+            <ns0:feGaussianBlur in="SourceAlpha" stdDeviation="4" />
+            <ns0:feOffset dx="3" dy="3" />
+            <ns0:feMerge>
+                <ns0:feMergeNode />
+                <ns0:feMergeNode in="SourceGraphic" />
+            </ns0:feMerge>
+        </ns0:filter>
+        <ns0:style>
+            .box { stroke-width: 2; filter: url(#shadow-sof); }
+            .layer-box { fill: #F5F5F5; stroke: #BDBDBD; }
+            .agent-box { fill: #E3F2FD; stroke: #64B5F6; }
+            .mw-box { fill: #FFFDE7; stroke: #FFD54F; }
+            .protocol-box { fill: #F3E5F5; stroke: #CE93D8; }
+            .base-box { fill: #EDE7F6; stroke: #B39DDB; }
+            .impl-box { fill: #FCE4EC; stroke: #F06292; }
+            .title { font-size: 28px; text-anchor: middle; }
+            .subtitle { font-size: 20px; text-anchor: middle; }
+            .text { font-size: 16px; text-anchor: middle; }
+            .text-small { font-size: 13px; text-anchor: middle; }
+            .text-mono { font-size: 14px; font-family: monospace; }
+            .connector { stroke: #333; stroke-width: 2.5; marker-end: url(#arrow-sof); }
+        </ns0:style>
+    </ns0:defs>
+
+    <ns0:text x="600" y="50" class="title" font-size="28px" text-anchor="middle" fill="#000000">Sandbox 整体实现与调用流程</ns0:text>
+
+
+    <ns0:g id="agent-layer">
+        <ns0:rect x="50" y="100" width="1100" height="200" rx="15" class="box layer-box" stroke-width="2" filter="url(#shadow-sof)" fill="#F5F5F5" stroke="#BDBDBD" />
+        <ns0:text x="600" y="140" class="subtitle" font-size="20px" text-anchor="middle" fill="#000000">1. Agent 核心 &amp; 中间件层</ns0:text>
+
+        <ns0:rect x="100" y="180" width="450" height="100" rx="10" class="box agent-box" stroke-width="2" filter="url(#shadow-sof)" fill="#E3F2FD" stroke="#64B5F6" />
+        <ns0:text x="325" y="210" class="text" font-size="16px" text-anchor="middle" fill="#000000">LLM 决策</ns0:text>
+        <ns0:text x="325" y="240" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">(基于被动态注入的 `EXECUTION_SYSTEM_PROMPT`)</ns0:text>
+        <ns0:text x="325" y="265" class="text-mono" fill="#0D47A1" font-size="14px" font-family="monospace">Tool Call: execute("npm test")</ns0:text>
+
+        <ns0:rect x="650" y="180" width="450" height="100" rx="10" class="box mw-box" stroke-width="2" filter="url(#shadow-sof)" fill="#FFFDE7" stroke="#FFD54F" />
+        <ns0:text x="875" y="210" class="text" font-size="16px" text-anchor="middle" fill="#000000">FilesystemMiddleware</ns0:text>
+        <ns0:text x="875" y="240" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">捕获工具调用, 准备委派</ns0:text>
+        <ns0:text x="875" y="265" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">self.backend.execute("npm test")</ns0:text>
+    </ns0:g>
+
+    <ns0:path d="M 550 230 H 650" class="connector" stroke="#333" stroke-width="2.5" marker-end="url(#arrow-sof)" />
+    <ns0:path d="M 875 280 V 350" class="connector" stroke="#333" stroke-width="2.5" marker-end="url(#arrow-sof)" />
+    <ns0:text x="885" y="320" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">调用 backend 实例</ns0:text>
+
+
+    <ns0:g id="protocol-layer">
+        <ns0:rect x="50" y="350" width="1100" height="200" rx="15" class="box layer-box" stroke-width="2" filter="url(#shadow-sof)" fill="#F5F5F5" stroke="#BDBDBD" />
+        <ns0:text x="600" y="390" class="subtitle" font-size="20px" text-anchor="middle" fill="#000000">2. 协议层 (The "What")</ns0:text>
+
+        <ns0:rect x="400" y="430" width="400" height="100" rx="10" class="box protocol-box" stroke-width="2" filter="url(#shadow-sof)" fill="#F3E5F5" stroke="#CE93D8" />
+        <ns0:text x="600" y="460" class="text" font-size="16px" text-anchor="middle" fill="#000000">SandboxBackendProtocol</ns0:text>
+        <ns0:text x="600" y="490" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">定义了必须实现的接口</ns0:text>
+        <ns0:text x="600" y="515" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">def execute(self, command: str) -&gt; ExecuteResponse:</ns0:text>
+    </ns0:g>
+
+    <ns0:path d="M 600 530 V 600" class="connector" stroke="#333" stroke-width="2.5" marker-end="url(#arrow-sof)" />
+    <ns0:text x="610" y="570" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">被抽象基类实现</ns0:text>
+
+
+    <ns0:g id="abc-layer">
+        <ns0:rect x="50" y="600" width="1100" height="300" rx="15" class="box layer-box" stroke-width="2" filter="url(#shadow-sof)" fill="#F5F5F5" stroke="#BDBDBD" />
+        <ns0:text x="600" y="640" class="subtitle" font-size="20px" text-anchor="middle" fill="#000000">3. 抽象基类层 (The "How, Generally")</ns0:text>
+
+        <ns0:rect x="400" y="680" width="400" height="200" rx="10" class="box base-box" stroke-width="2" filter="url(#shadow-sof)" fill="#EDE7F6" stroke="#B39DDB" />
+        <ns0:text x="600" y="710" class="text" font-size="16px" text-anchor="middle" fill="#000000">BaseSandbox</ns0:text>
+        <ns0:text x="600" y="740" class="text-small" fill="#C62828" font-size="13px" text-anchor="middle">**强制**子类实现 `execute`</ns0:text>
+        <ns0:text x="600" y="760" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">@abstractmethod</ns0:text>
+        <ns0:text x="600" y="780" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">def execute(...)</ns0:text>
+        <ns0:line x1="420" y1="800" x2="780" y2="800" stroke="#B39DDB" stroke-width="1.5" />
+        <ns0:text x="600" y="825" class="text-small" fill="#1A237E" font-size="13px" text-anchor="middle">**提供**基于 `execute` 的文件操作</ns0:text>
+        <ns0:text x="600" y="845" class="text-mono" font-size="14px" font-family="monospace" fill="#000000">def read(self, path):</ns0:text>
+        <ns0:text x="600" y="865" class="text-mono" font-size="12" font-family="monospace" fill="#000000">  return self.execute(f"cat {path}")</ns0:text>
+    </ns0:g>
+
+    <ns0:path d="M 600 880 V 950" class="connector" stroke="#333" stroke-width="2.5" marker-end="url(#arrow-sof)" />
+    <ns0:text x="610" y="920" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">被具体子类继承</ns0:text>
+
+
+    <ns0:g id="impl-layer">
+        <ns0:rect x="50" y="950" width="1100" height="500" rx="15" class="box layer-box" stroke-width="2" filter="url(#shadow-sof)" fill="#F5F5F5" stroke="#BDBDBD" />
+        <ns0:text x="600" y="990" class="subtitle" font-size="20px" text-anchor="middle" fill="#000000">4. 具体实现层 (The "How, Specifically")</ns0:text>
+
+        <ns0:rect x="80" y="1030" width="320" height="150" rx="10" class="box impl-box" stroke-width="2" filter="url(#shadow-sof)" fill="#FCE4EC" stroke="#F06292" />
+        <ns0:text x="240" y="1060" class="text" font-size="16px" text-anchor="middle" fill="#000000">DaytonaBackend</ns0:text>
+        <ns0:text x="240" y="1090" class="text-mono" fill="#C62828" font-size="14px" font-family="monospace">def execute(...):</ns0:text>
+        <ns0:text x="240" y="1115" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">  return daytona.process.exec(...)</ns0:text>
+        <ns0:text x="240" y="1145" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">(同步阻塞式 API)</ns0:text>
+
+        <ns0:rect x="440" y="1030" width="320" height="150" rx="10" class="box impl-box" stroke-width="2" filter="url(#shadow-sof)" fill="#FCE4EC" stroke="#F06292" />
+        <ns0:text x="600" y="1060" class="text" font-size="16px" text-anchor="middle" fill="#000000">ModalBackend</ns0:text>
+        <ns0:text x="600" y="1090" class="text-mono" fill="#C62828" font-size="14px" font-family="monospace">def execute(...):</ns0:text>
+        <ns0:text x="600" y="1115" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">  proc = modal.sandbox.exec(...)</ns0:text>
+        <ns0:text x="600" y="1130" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">  proc.wait()</ns0:text>
+        <ns0:text x="600" y="1155" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">(异步风格 API, 需显式等待)</ns0:text>
+
+        <ns0:rect x="800" y="1030" width="320" height="150" rx="10" class="box impl-box" stroke-width="2" filter="url(#shadow-sof)" fill="#FCE4EC" stroke="#F06292" />
+        <ns0:text x="960" y="1060" class="text" font-size="16px" text-anchor="middle" fill="#000000">RunloopBackend</ns0:text>
+        <ns0:text x="960" y="1090" class="text-mono" fill="#C62828" font-size="14px" font-family="monospace">def execute(...):</ns0:text>
+        <ns0:text x="960" y="1115" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">  return runloop.devboxes...</ns0:text>
+        <ns0:text x="960" y="1130" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">  .execute_and_await_completion(...)</ns0:text>
+        <ns0:text x="960" y="1155" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">(同步高级别 API)</ns0:text>
+
+        <ns0:text x="600" y="1220" class="text" font-size="16px" text-anchor="middle" fill="#000000">调用 `execute` 时...</ns0:text>
+        <ns0:path d="M 875 280 V 1030 H 600" class="connector" stroke-dasharray="8 4" stroke="#333" stroke-width="2.5" marker-end="url(#arrow-sof)" />
+        <ns0:text x="750" y="900" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">假设 `ModalBackend` 被选中</ns0:text>
+
+        <ns0:text x="600" y="1280" class="text" font-size="16px" text-anchor="middle" fill="#000000">调用 `read` (未被子类覆盖) 时...</ns0:text>
+        <ns0:path d="M 600, 880 C 600,880 200,950 200,1200" stroke="#333" stroke-width="2.5" fill="none" marker-end="url(#arrow-sof)" stroke-dasharray="8 4" />
+        <ns0:text x="350" y="1250" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">1. 调用 `BaseSandbox.read()`</ns0:text>
+        <ns0:path d="M 200, 1200 C 200,1200 450,1230 450,1180" stroke="#333" stroke-width="2.5" fill="none" marker-end="url(#arrow-sof)" stroke-dasharray="8 4" />
+        <ns0:text x="320" y="1320" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">2. `BaseSandbox.read()` 内部</ns0:text>
+        <ns0:text x="320" y="1340" class="text-small" font-size="13px" text-anchor="middle" fill="#000000">   调用 `self.execute()` (即 `ModalBackend.execute()`)</ns0:text>
+
+    </ns0:g>
+
+</ns0:svg>
